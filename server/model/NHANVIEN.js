@@ -2,12 +2,10 @@ const mongoose = require('mongoose');
 
 const Nhanvien =  new mongoose.Schema({
     usernameNV:{
-        type:String,
-        required:true
+        type:String
     },
     nameNV: {
-        type:String,
-        required:true
+        type:String
     },
     passwordNV:{
         type:String,
@@ -19,11 +17,9 @@ const Nhanvien =  new mongoose.Schema({
     },
     addressNV:{
         type:String,
-        required:true,
     },
     phoneNV:{
         type:String,
-        required:true,
     },
     pin:{
         type:String,

@@ -1,5 +1,8 @@
 const NhanvienModel = require('../model/NHANVIEN');
+const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
 
+dotenv.config();
 const NhanvienController = {
     getAll: async (req, res) => {
         try {
@@ -18,8 +21,11 @@ const NhanvienController = {
     },
     addNV: async (req, res) => {
         try {
+            const genSalt = await bcrypt.genSalt(Number(process.env.NODE_GENSALT));
+            const hashed = await bcrypt.hash(req.body.passwordNV, genSalt);
             const newNV = new NhanvienModel({
-                ...req.body
+                ...req.body,
+                passwordNV:hashed
             })
             await newNV.save();
             return res.status(200).json({
@@ -58,7 +64,7 @@ const NhanvienController = {
     },
     updateNV: async (req, res) => {
         try {
-            const updatedNV = await NhanvienModel.findByIdAndUpdate(req.params.id, ...req.body, { new: true });
+            const updatedNV = await NhanvienModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
             if (!updatedNV) {
                 return res.json({
                     EC: 0,
@@ -66,7 +72,7 @@ const NhanvienController = {
                 })
             }
             return res.status(200).json({
-                EC: 0,
+                EC: 1,
                 updatedNV
             })
         } catch (err) {

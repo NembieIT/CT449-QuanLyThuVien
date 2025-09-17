@@ -1,4 +1,8 @@
 const UserAccModel = require('../../model/USERACCOUNT');
+const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const UserAccController = {
     loginUser: async (req, res) => {
@@ -6,7 +10,7 @@ const UserAccController = {
             usernameUser: req.body.username
         })
         if (validUsername) {
-            const validPassword = (req.body.password === validUsername.passwordUser);
+            const validPassword = await bcrypt.compare(req.body.password, validUsername.passwordUser);
             if (validPassword) {
                 return res.status(200).json({
                     EC: 1,
@@ -37,8 +41,12 @@ const UserAccController = {
                     message: "Username hoặc email đã tồn tại ! "
                 })
             }
+            const genSalt = await bcrypt.genSalt(Number(process.env.NODE_GENSALT));
+            const hashed = await bcrypt.hash(req.body.password, genSalt);
             const newUser = new UserAccModel({
-                ...req.body
+                usernameUser:req.body.username,
+                emailUser:req.body.email,
+                passwordUser:hashed,
             })
             await newUser.save();
             return res.status(200).json({

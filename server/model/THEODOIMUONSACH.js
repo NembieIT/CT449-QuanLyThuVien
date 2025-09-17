@@ -5,7 +5,7 @@ const BorrowBook = new mongoose.Schema({
         type: String,
         required:true,
     },
-    bookid:{
+    userid:{
         type:String,
         required:true,
     },

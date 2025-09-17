@@ -1,4 +1,5 @@
 const NhanvienModel = require('../../model/NHANVIEN');
+const bcrypt = require('bcrypt');
 
 const AuthNVControler = {
     loginNV: async (req, res) => {
@@ -6,7 +7,7 @@ const AuthNVControler = {
             usernameNV: req.body.username
         })
         if (validUsername) {
-            const validPassword = (req.body.password === validUsername.passwordNV);
+            const validPassword = await bcrypt.compare(req.body.password, validUsername.passwordNV);
             if (validPassword) {
                 return res.status(200).json({
                     EC: 1,
