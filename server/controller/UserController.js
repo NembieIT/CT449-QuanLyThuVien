@@ -1,4 +1,5 @@
 const DocgiaModel = require('../model/DOCGIA');
+const AccUserModel = require('../model/USERACCOUNT');
 
 const DocgiaController = {
     getAll: async (req, res) => {
@@ -16,7 +17,7 @@ const DocgiaController = {
             });
         }
     },
-    addUser: async (req, res) => {
+    addUserInfo: async (req, res) => {
         try {
             const newUser = new DocgiaModel({
                 ...req.body

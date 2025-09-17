@@ -11,13 +11,11 @@ const Nhanvien =  new mongoose.Schema({
     },
     passwordNV:{
         type:String,
-        required:true
+        default:"admin111"
     },
-    chucvu:{
+    role:{
         type:String,
-        enum:["Nhân viên", "Admin"],
-        default:"Nhân viên",
-        required:true,
+        default:"NV"
     },
     addressNV:{
         type:String,
@@ -26,8 +24,12 @@ const Nhanvien =  new mongoose.Schema({
     phoneNV:{
         type:String,
         required:true,
+    },
+    pin:{
+        type:String,
+        default:"1111"
     }
-});
+}, {timestamps:true});
 const NhanvienModel = mongoose.model('Nhanvien', Nhanvien);
 
 module.exports = NhanvienModel;

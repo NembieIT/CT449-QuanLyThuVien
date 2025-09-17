@@ -24,6 +24,10 @@ const Docgia =  new mongoose.Schema({
     phone:{
         type:String,
         required:true,
+    },
+    usernameUSer:{
+        type:String,
+        default:null
     }
 });
 const DocgiaModel = mongoose.model('DOCGIA', Docgia);
