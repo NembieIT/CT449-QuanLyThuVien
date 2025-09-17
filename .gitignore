@@ -1,0 +1,19 @@
+# Thư mục phụ thuộc
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Hệ điều hành
+.DS_Store
+Thumbs.db
+
+# Môi trường
+.env
