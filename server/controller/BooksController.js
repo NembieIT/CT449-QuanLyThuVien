@@ -1,14 +1,19 @@
-const DocgiaModel = require('../model/DOCGIA');
-const AccUserModel = require('../model/USERACCOUNT');
+const BooksModel = require('../model/SACH');
 
-const DocgiaController = {
+const BooksController = {
     getAll: async (req, res) => {
         try {
-            const data = await DocgiaModel.find({});
-            return res.status(200).json({
-                EC: 1,
-                data
-            });
+            const data = await BooksModel.find({});
+            if(data){
+                return res.status(200).json({
+                    EC:1,
+                    data
+                })
+            }
+            return res.json({
+                EC:0,
+                message:"Không có dữ liệu ! "
+            })
         } catch (err) {
             console.log("Loi backend", err);
             return res.json({
@@ -17,12 +22,12 @@ const DocgiaController = {
             });
         }
     },
-    addUserInfo: async (req, res) => {
+    addBook: async (req, res) => {
         try {
-            const newUser = new DocgiaModel({
+            const newBook = new BooksModel({
                 ...req.body
             })
-            await newUser.save();
+            await newBook.save();
             return res.status(200).json({
                 EC: 1
             })
@@ -34,45 +39,23 @@ const DocgiaController = {
             });
         }
     },
-    findUser: async (req, res) => {
+    findBook: async (req, res) => {
         try {
-            const fullName = req.body.name;
-            const user = await DocgiaModel.find({
-                $or: [
-                    { holot: req.body.name },
-                    { ten: req.body.name }
+            const book = await BooksModel.findOne({
+                $or:[
+                    { TENSACH : req.body.value },
+                    { TACGIA : req.body.value }
                 ]
-            });
-            if(!user){
-                return res.json({
-                    EC:0,
-                    message:"Not Exist"
-                })
-            }
-            return res.status(200).json({
-                EC: 1,
-                user
             })
-        } catch (err) {
-            console.log("Loi backend", err);
-            return res.json({
-                EC: 0,
-                message: "Có lỗi ở backend"
-            });
-        }
-    },
-    updateUser: async (req, res) => {
-        try {
-            const updatedUser = await DocgiaModel.findByIdAndUpdate(req.params.id, ...req.body, { new: true });
-            if (!updatedUser) {
+            if (!book) {
                 return res.json({
                     EC: 0,
-                    messgae: "Không tìm thấy độc giả"
+                    message: "Not Exist"
                 })
             }
             return res.status(200).json({
                 EC: 1,
-                updatedUser
+                book
             })
         } catch (err) {
             console.log("Loi backend", err);
@@ -82,13 +65,34 @@ const DocgiaController = {
             });
         }
     },
-    deleteUser: async (req, res) => {
+    updateBook: async (req, res) => {
         try {
-            const deleted = await DocgiaModel.findByIdAndDelete(req.params.id);
+            const updatedBook = await BooksModel.findByIdAndUpdate(req.params.id, ...req.body, { new: true });
+            if (!updatedBook) {
+                return res.json({
+                    EC: 0,
+                    messgae: "Không tìm thấy sách ! "
+                })
+            }
+            return res.status(200).json({
+                EC: 1,
+                updatedBook
+            })
+        } catch (err) {
+            console.log("Loi backend", err);
+            return res.json({
+                EC: 0,
+                message: "Có lỗi ở backend"
+            });
+        }
+    },
+    deleteBook: async (req, res) => {
+        try {
+            const deleted = await BooksModel.findByIdAndDelete(req.params.id);
             if (!deleted) {
                 return res.json({
                     EC: 0,
-                    message: "Không tìm thấy độc giả"
+                    message: "Không tìm thấy nhân viên"
                 })
             }
             return res.status(200).json({
@@ -104,4 +108,4 @@ const DocgiaController = {
     }
 }
 
-module.exports = DocgiaController;
+module.exports = BooksController;

@@ -1,14 +1,19 @@
-const DocgiaModel = require('../model/DOCGIA');
-const AccUserModel = require('../model/USERACCOUNT');
+const NXBModel = require('../model/NXB');
 
-const DocgiaController = {
+const NXBController = {
     getAll: async (req, res) => {
         try {
-            const data = await DocgiaModel.find({});
-            return res.status(200).json({
-                EC: 1,
-                data
-            });
+            const data = await NXBModel.find({});
+            if(data){
+                return res.status(200).json({
+                    EC:1,
+                    data
+                })
+            }
+            return res.json({
+                EC:0,
+                message:"Không có dữ liệu ! "
+            })
         } catch (err) {
             console.log("Loi backend", err);
             return res.json({
@@ -17,12 +22,24 @@ const DocgiaController = {
             });
         }
     },
-    addUserInfo: async (req, res) => {
+    addNXB: async (req, res) => {
         try {
-            const newUser = new DocgiaModel({
+            const IsvalidNXB = await NXBModel.findOne({
+                $or:[
+                    { MANXB : req.body.manxb },
+                    { TENNXB : req.body.tennxb }
+                ]
+            })
+            if(IsvalidNXB){
+                return res.json({
+                    EC:0,
+                    message:"Đã tồn tại NXB ! "
+                })
+            }
+            const newNXB = new NXBModel({
                 ...req.body
             })
-            await newUser.save();
+            await newNXB.save();
             return res.status(200).json({
                 EC: 1
             })
@@ -34,45 +51,23 @@ const DocgiaController = {
             });
         }
     },
-    findUser: async (req, res) => {
+    findNXB: async (req, res) => {
         try {
-            const fullName = req.body.name;
-            const user = await DocgiaModel.find({
-                $or: [
-                    { holot: req.body.name },
-                    { ten: req.body.name }
+            const nxb = await NXBModel.findOne({
+                $or:[
+                    { MANXB : req.body.value },
+                    { TENNXB : req.body.value }
                 ]
-            });
-            if(!user){
-                return res.json({
-                    EC:0,
-                    message:"Not Exist"
-                })
-            }
-            return res.status(200).json({
-                EC: 1,
-                user
             })
-        } catch (err) {
-            console.log("Loi backend", err);
-            return res.json({
-                EC: 0,
-                message: "Có lỗi ở backend"
-            });
-        }
-    },
-    updateUser: async (req, res) => {
-        try {
-            const updatedUser = await DocgiaModel.findByIdAndUpdate(req.params.id, ...req.body, { new: true });
-            if (!updatedUser) {
+            if (!nxb) {
                 return res.json({
                     EC: 0,
-                    messgae: "Không tìm thấy độc giả"
+                    message: "Not Exist"
                 })
             }
             return res.status(200).json({
                 EC: 1,
-                updatedUser
+                nxb
             })
         } catch (err) {
             console.log("Loi backend", err);
@@ -82,13 +77,34 @@ const DocgiaController = {
             });
         }
     },
-    deleteUser: async (req, res) => {
+    updateNXB: async (req, res) => {
         try {
-            const deleted = await DocgiaModel.findByIdAndDelete(req.params.id);
+            const updatedNXB = await NXBModel.findByIdAndUpdate(req.params.id, ...req.body, { new: true });
+            if (!updatedNXB) {
+                return res.json({
+                    EC: 0,
+                    messgae: "Không tìm thấy NXB ! "
+                })
+            }
+            return res.status(200).json({
+                EC: 1,
+                updatedNXB
+            })
+        } catch (err) {
+            console.log("Loi backend", err);
+            return res.json({
+                EC: 0,
+                message: "Có lỗi ở backend"
+            });
+        }
+    },
+    deleteNXB: async (req, res) => {
+        try {
+            const deleted = await NXBModel.findByIdAndDelete(req.params.id);
             if (!deleted) {
                 return res.json({
                     EC: 0,
-                    message: "Không tìm thấy độc giả"
+                    message: "Không tìm thấy NXB"
                 })
             }
             return res.status(200).json({
@@ -104,4 +120,4 @@ const DocgiaController = {
     }
 }
 
-module.exports = DocgiaController;
+module.exports = NXBController;
