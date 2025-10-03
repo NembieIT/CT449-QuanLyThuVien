@@ -5,5 +5,5 @@
     </div>
 </template>
 <script setup>
-    import NavbarUser from '../../components/navbarUser.vue';
+import NavbarUser from '../../components/client/navbarUser.vue';
 </script>

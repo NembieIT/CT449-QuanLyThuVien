@@ -8,7 +8,7 @@
             <div class="flex items-center justify-center gap-5 text-2xl md:text-3xl">
                 <i class="fa-solid fa-moon"></i>
                 <i class="fa-solid fa-bell"></i>
-                <img class="cursor-pointer" src="../assets/vue.svg" alt="Avt">
+                <img class="cursor-pointer" src="../../assets/vue.svg" alt="Avt">
             </div>
         </nav>
     </div>

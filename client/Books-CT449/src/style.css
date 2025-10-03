@@ -1,12 +1,15 @@
 @import "tailwindcss";
-@theme{
-  
+@theme {
+  --color-sidebarItem: rgba(187, 187, 187, 0.5);
 }
-*{
-    box-sizing:border-box;
-    transition:0.3 ease;
+body {
+  webkit--scrollbar: none;
 }
-i{
-    cursor:pointer;
-    color:rgba(255,255,255,0.75);
+* {
+  box-sizing: border-box;
+  transition: 0.3 ease;
+}
+i {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.75);
 }
