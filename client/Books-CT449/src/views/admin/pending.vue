@@ -6,8 +6,16 @@
             <SidebarAdmin></SidebarAdmin>
         </Motion>
 
-        <div class="w-[95%] md:w-[70vw] h-full rounded-2xl p-5 bg-[rgba(59,59,59)]">
+        <div class="w-[95%] md:w-[70vw] h-full flex flex-col gap-5 rounded-2xl p-5 bg-[rgba(59,59,59)]">
             <NavbarAdmin></NavbarAdmin>
+            <div class="flex gap-5">
+                <Badge title="Chờ duyệt" :pending="cntPend" class="bg-blue-400"></Badge>
+                <Badge title="Hoàn thành" :pending="cntDone" class="bg-green-400"></Badge>
+                <Badge title="Trễ" :pending="cntLate" class="bg-red-400"></Badge>
+            </div>
+            <div>
+                <BorrowItem></BorrowItem>
+            </div>
         </div>
 
     </div>
@@ -17,6 +25,8 @@
     import { ref, onMounted } from "vue"
     import NavbarAdmin from '../../components/admin/navbarAdmin.vue'
     import SidebarAdmin from '../../components/admin/sidebarAdmin.vue'
+    import Badge from '../../components/admin/badge.vue'
+    import BorrowItem from '../../components/admin/borrowItem.vue'
     import { Motion } from "@motionone/vue";
 
     const load = ref(true)
