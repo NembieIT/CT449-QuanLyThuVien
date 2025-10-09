@@ -1,15 +1,34 @@
 <template lang="">
-    <div class="p-5 w-full h-full bg-white rounded-2xl overflow-hidden flex flex-col items-center justify-start gap-5">
-        <div class="w-full flex items-center justify-center p-5">
+    <div
+        class="p-5 w-full h-full bg-white rounded-2xl overflow-hidden flex flex-col items-center justify-start gap-[5%] border-red-400">
+        <div v-if="mobileSize" class="w-full flex items-center justify-end">
+            <i @click="toggleSidebar" class="fa-solid fa-xmark hover:scale-150 transition-all"></i>
+        </div>
+        <div class="w-full flex items-center justify-center p-5 h-[15%] border">
             <img src="../../assets/vue.svg" alt="Logo">
         </div>
-        <div class="mt-15 flex flex-col items-center justify-center gap-5 w-full">
-            <SidebarItem title="Homepage" icon="fa-house"></SidebarItem>
-            <SidebarItem title="Homepage" icon="fa-house"></SidebarItem>
-            <SidebarItem title="Homepage" icon="fa-house"></SidebarItem>
+        <div class="flex flex-col items-center justify-start gap-5 w-full h-[70%]">
+            <SidebarItem goto="/homepage" title="Tất cả" icon="fa-house"></SidebarItem>
+            <SidebarItem goto="/pending" title="Đợi duyệt" icon="fa-house"></SidebarItem>
+            <SidebarItem goto="/nhanvien" title="Danh sách nhân viên" icon="fa-house"></SidebarItem>
+            <SidebarItem goto="/nhanvien" title="Danh sách phạt" icon="fa-house"></SidebarItem>
+            <SidebarItem goto="/nhanvien" title="Doanh thu" icon="fa-house"></SidebarItem>
+        </div>
+
+        <div class="justify-self-end h-[5%] w-full flex flex-col items-center justify-center">
+            <h2>CT449 - QuanLyThuVien</h2>
+            <h2>B2303803 - Mai Tien Dung</h2>
         </div>
     </div>
 </template>
 <script setup>
-    import SidebarItem from './sidebarItem.vue';
+import { defineProps } from 'vue';
+import SidebarItem from './sidebarItem.vue';
+defineProps({
+    mobileSize: Boolean
+})
+const emit = defineEmits(['toggleSidebar']);
+function toggleSidebar() {
+    emit('toggleSidebar');
+}
 </script>

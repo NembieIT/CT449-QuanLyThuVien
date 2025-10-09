@@ -1,6 +1,7 @@
 <template lang="">
     <div class="h-[10%]">
-        <nav class="bg-gray-500/50 p-5 h-[100%] w-full rounded-2xl flex items-center justify-between">
+        <nav class="bg-gray-500/50 p-5 h-[100%] w-full rounded-[10px] flex items-center justify-between">
+            <button v-if="mobileSize" @click="toggleSidebar"><i class="fa-solid fa-bars hover:text-white transition-all"></i></button>
             <div>
                 <h1>Xin chào Tiến Dũng !</h1>
             </div>
@@ -13,6 +14,13 @@
         </nav>
     </div>
 </template>
-<script>
-
+<script setup>
+import { defineProps, defineEmits } from 'vue';
+defineProps({
+    mobileSize: Boolean
+})
+const emit = defineEmits(['toggleSidebar'])
+function toggleSidebar() {
+    emit('toggleSidebar');
+}
 </script>

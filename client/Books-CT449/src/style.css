@@ -1,6 +1,33 @@
 @import "tailwindcss";
 @theme {
+  --font-text1: "Nunito", "sans-serif";
   --color-sidebarItem: rgba(187, 187, 187, 0.5);
+  --color-backgroundItemAD: #d1d5db;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;              /* độ rộng dọc */
+  height: 8px;             /* độ cao ngang */
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent; /* đường ray trong suốt */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,.25); /* hơi mờ */
+  border-radius: 999px;
+  border: 2px solid transparent;     /* tạo khoảng cách với track */
+  background-clip: padding-box;      /* giữ bo tròn đẹp */
+  transition: background-color .2s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0,0,0,.4);  /* đậm hơn khi hover */
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: rgba(0,0,0,.55);
 }
 body {
   webkit--scrollbar: none;
@@ -11,5 +38,5 @@ body {
 }
 i {
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.75);
+  /* color: rgba(255, 255, 255, 0.75); */
 }

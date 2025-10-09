@@ -1,12 +1,12 @@
 <template lang="">
-    <div :class="class" class="bg-black/50 rounded-[5px] md:px-5 px-2 py-2 font-bold text-[15px] md:text-2xl">
-        <span>{{title}} : {{pending}}</span>
+    <div :class="class" class="rounded-[10px] md:px-5 px-2 py-2 font-bold text-[15px] md:text-[16px] text-gray-900">
+        <span>{{title}} : {{count}}</span>
     </div>
 </template>
 <script setup>
 defineProps({
     title: String,
-    pending: Number,
+    count: Number,
     class: String
 })
 </script>
