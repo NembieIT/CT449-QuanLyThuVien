@@ -6,15 +6,28 @@
             <SidebarAdmin></SidebarAdmin>
         </Motion>
 
-        <div class="w-[95%] md:w-[70vw] h-full flex flex-col gap-5 rounded-2xl p-5 bg-[rgba(59,59,59)]">
+        <div class="w-[95%] md:w-[70vw] h-full flex flex-col gap-[5%] rounded-2xl p-5 bg-white">
             <NavbarAdmin></NavbarAdmin>
-            <div class="flex gap-5">
-                <Badge title="Chờ duyệt" :pending="cntPend" class="bg-blue-400"></Badge>
-                <Badge title="Hoàn thành" :pending="cntDone" class="bg-green-400"></Badge>
-                <Badge title="Trễ" :pending="cntLate" class="bg-red-400"></Badge>
+            <div class="flex items-center justify-between border px-5">
+                <div class="flex gap-5">
+                    <Badge title="Chờ duyệt" :pending="cntPend" class="bg-blue-400"></Badge>
+                    <Badge title="Hoàn thành" :pending="cntDone" class="bg-green-400"></Badge>
+                    <Badge title="Trễ" :pending="cntLate" class="bg-red-400"></Badge>
+                </div>
+                <div>
+                    <span>Filter</span>
+                </div>
             </div>
-            <div>
+            <div class="flex flex-col gap-5 p-5 h-[55%] border overflow-hidden">
                 <BorrowItem></BorrowItem>
+                <BorrowItem></BorrowItem>
+                <BorrowItem></BorrowItem>
+                <BorrowItem></BorrowItem>
+                <BorrowItem></BorrowItem>
+                <BorrowItem></BorrowItem>
+            </div>
+            <div class="h-[10%] border">
+                <span>pagination</span>
             </div>
         </div>
 

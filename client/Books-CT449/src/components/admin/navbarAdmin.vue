@@ -1,6 +1,6 @@
 <template lang="">
-    <div>
-        <nav class="bg-gray-500/50 p-5 h-[10vh] w-full flex items-center justify-between">
+    <div class="h-[10%]">
+        <nav class="bg-gray-500/50 p-5 h-[100%] w-full rounded-2xl flex items-center justify-between">
             <div>
                 <h1>Xin chào Tiến Dũng !</h1>
             </div>

@@ -1,6 +1,5 @@
 <template lang="">
-    <div
-        class="p-5 w-full h-full bg-[#5b5b5b] rounded-2xl overflow-hidden flex flex-col items-center justify-start gap-5">
+    <div class="p-5 w-full h-full bg-white rounded-2xl overflow-hidden flex flex-col items-center justify-start gap-5">
         <div class="w-full flex items-center justify-center p-5">
             <img src="../../assets/vue.svg" alt="Logo">
         </div>
