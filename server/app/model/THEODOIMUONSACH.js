@@ -1,28 +1,28 @@
 const mongoose = require('mongoose');
 
 const BorrowBook = new mongoose.Schema({
-    userid : {
+    userid: {
         type: String,
-        required:true,
+        required: true,
     },
-    userid:{
-        type:String,
-        required:true,
+    bookid: {
+        type: String,
+        required: true,
     },
-    ngaymuon:{
-        type:Date,
-        required:true
+    ngaymuon: {
+        type: Date,
+        required: true
     },
-    ngaytra:{
-        type:Date,
-        default:null,
+    ngaytra: {
+        type: Date,
+        default: null,
     },
     status: {
-        type:String,
-        enum:["pending", "done", "late", "borrowing"],
-        default:"pending"
+        type: String,
+        enum: ["pending", "done", "late", "borrowing"],
+        default: "pending"
     }
-}, {timestamps:true})
+}, { timestamps: true })
 
 const BorrowBookModel = mongoose.model('BorrowBook', BorrowBook);
-module.exports=BorrowBookModel;
+module.exports = BorrowBookModel;

@@ -4,12 +4,15 @@
         <div v-if="mobileSize" class="w-full flex items-center justify-end">
             <i @click="toggleSidebar" class="fa-solid fa-xmark hover:scale-150 transition-all"></i>
         </div>
-        <div class="w-full flex items-center justify-center p-5 h-[15%] border">
-            <img src="../../assets/vue.svg" alt="Logo">
+        <div class="w-full flex items-center justify-center p-5 h-[15%]">
+            <img src="../../../public/Red_and_Blue_Modern_School_Logo-removebg-preview.png" alt="Logo">
         </div>
         <div class="flex flex-col items-center justify-start gap-5 w-full h-fit">
             <SidebarItem goto="/all" title="Tất cả" icon="fa-house"></SidebarItem>
             <SidebarItem goto="/pending" title="Đợi duyệt" icon="fa-house"></SidebarItem>
+            <SidebarItem goto="/books" title="Sách" icon="fa-house"></SidebarItem>
+            <SidebarItem goto="/nxb" title="Nhà xuất bản" icon="fa-house"></SidebarItem>
+            <SidebarItem goto="/user" title="Danh sách người dùng" icon="fa-house"></SidebarItem>
             <SidebarItem goto="/nhanvien" title="Danh sách nhân viên" icon="fa-house"></SidebarItem>
             <SidebarItem goto="/doanhthu" title="Doanh thu" icon="fa-house"></SidebarItem>
         </div>

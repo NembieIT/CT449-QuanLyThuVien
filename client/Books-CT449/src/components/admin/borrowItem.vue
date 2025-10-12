@@ -14,13 +14,15 @@
                 <span class="text-2xl text-green-500">{{status}}</span>
             </div>
             <div class="flex items-center w-fit lg:w-full justify-center gap-5">
-                <button
+                <button v-if="page=='all' || page=='pending'"
                     class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-green-300 border transition-all duration-300">Duyệt
                     đơn</button>
-                <button
+                <button v-if="page=='all' || page=='pending'"
                     class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Từ
                     chối</button>
-                <button
+                <button v-if="page=='user'" @click="handleDelete(id)"
+                    class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá người dùng</button>
+                <button @click="handleDetail(id)"
                     class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-black/20 border transition-all duration-300">Xem
                     chi tiết</button>
             </div>
@@ -28,11 +30,20 @@
     </div>
 </template>
 <script setup>
-    import { defineProps } from 'vue';
-    defineProps({
-        name: String,
-        email: String,
-        phone: String,
-        status: String
-    })
+import { defineProps, defineEmits } from 'vue';
+defineProps({
+    id: String,
+    name: String,
+    email: String,
+    phone: String,
+    status: String,
+    page: String
+})
+const emit = defineEmits(['details', 'deleteUser']);
+function handleDetail(id) {
+    emit('details', id);
+}
+function handleDelete(id) {
+    emit('deleteUser', id);
+}
 </script>

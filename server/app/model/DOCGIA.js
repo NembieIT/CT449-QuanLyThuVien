@@ -1,34 +1,36 @@
 const mongoose = require('mongoose');
 
-const Docgia =  new mongoose.Schema({
+const Docgia = new mongoose.Schema({
     holot: {
-        type:String,
-        default:""
+        type: String,
+        default: ""
     },
-    ten:{
-        type:String,
-        required:true,
+    ten: {
+        type: String,
+        required: true,
     },
-    ngaysinh:{
-        type:Date,
-        required:true,
+    ngaysinh: {
+        type: Date,
+        required: true,
     },
-    sex:{
-        type:Boolean,
-        required:true
+    sex: {
+        type: String,
+        required: true
     },
-    address:{
-        type:String,
-        required:true,
+    address: {
+        type: String,
+        required: true,
     },
-    phone:{
-        type:String,
-        required:true,
+    phone: {
+        type: String,
+        required: true,
     },
-    usernameUSer:{
-        type:String,
-        default:null
-    }
+    usernameUser: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+
 });
 const DocgiaModel = mongoose.model('DOCGIA', Docgia);
 

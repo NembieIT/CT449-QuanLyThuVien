@@ -32,7 +32,7 @@ const UserAccController = {
             const IsvalidUsername = await UserAccModel.findOne({
                 $or: [
                     { usernameUser: req.body.username },
-                    { emailUser: req.body.email }
+                    ...(req.body.email ? [{ emailUser: req.body.email }] : [])
                 ]
             })
             if (IsvalidUsername) {
@@ -41,12 +41,12 @@ const UserAccController = {
                     message: "Username hoặc email đã tồn tại ! "
                 })
             }
-            const genSalt = await bcrypt.genSalt(Number(process.env.NODE_GENSALT));
+            const genSalt = await bcrypt.genSalt(Number(process.env.NODE_GENSALT || 10));
             const hashed = await bcrypt.hash(req.body.password, genSalt);
             const newUser = new UserAccModel({
-                usernameUser:req.body.username,
-                emailUser:req.body.email,
-                passwordUser:hashed,
+                usernameUser: req.body.username,
+                emailUser: req.body.email,
+                passwordUser: hashed,
             })
             await newUser.save();
             return res.status(200).json({

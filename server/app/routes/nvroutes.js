@@ -32,4 +32,4 @@ router.post('/borrow/search', BorrowController.findBorrow);
 router.put('/borrow/edit/:id', BorrowController.updateBorrow);
 router.delete('/borrow/delete/:id', BorrowController.deleteBorrow);
 
-module.exports=router;
+module.exports = router;

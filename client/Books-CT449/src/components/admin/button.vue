@@ -1,5 +1,5 @@
 <template lang="">
-    <router-link :to="`/admin${goto}`" :class="`${btnclass} border p-2 rounded-[10px] cursor-pointer`"><span><i
+    <router-link :to="goto?`/admin${goto}`:''" :class="`${btnclass} border p-2 rounded-[10px] cursor-pointer`"><span><i
                 :class="`fa-solid ${icon}`"></i></span> {{title}}</router-link>
 </template>
 <script setup>

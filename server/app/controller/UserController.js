@@ -19,8 +19,13 @@ const DocgiaController = {
     },
     addUserInfo: async (req, res) => {
         try {
+            const userAccount = await AccUserModel.findOne({ usernameUser: req.body.username });
+            if (!userAccount) {
+                return res.status(400).json({ EC: 0, message: "Không tìm thấy tài khoản!" });
+            }
             const newUser = new DocgiaModel({
-                ...req.body
+                ...req.body,
+                usernameUser: userAccount._id
             })
             await newUser.save();
             return res.status(200).json({
@@ -43,10 +48,10 @@ const DocgiaController = {
                     { ten: req.body.name }
                 ]
             });
-            if(!user){
+            if (!user) {
                 return res.json({
-                    EC:0,
-                    message:"Not Exist"
+                    EC: 0,
+                    message: "Not Exist"
                 })
             }
             return res.status(200).json({
@@ -84,11 +89,18 @@ const DocgiaController = {
     },
     deleteUser: async (req, res) => {
         try {
+            const docgia = await DocgiaModel.findById(req.params.id);
+            const userAccount = await AccUserModel.findByIdAndDelete(docgia.usernameUser);
             const deleted = await DocgiaModel.findByIdAndDelete(req.params.id);
             if (!deleted) {
                 return res.json({
                     EC: 0,
                     message: "Không tìm thấy độc giả"
+                })
+            } else if (!userAccount) {
+                return res.json({
+                    EC: 0,
+                    message: "Không tìm thấy tài khoản độc giả"
                 })
             }
             return res.status(200).json({
