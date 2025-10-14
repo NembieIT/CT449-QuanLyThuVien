@@ -19,6 +19,7 @@ const routes = [
   { path: "/admin/doanhthu", name: "DoanhthuAdmin", component: Borrow },
   { path: "/admin/addborrow", name: "AddBorrow", component: FormBorrow },
   { path: "/admin/adduser", name: "AddUser", component: FormUser },
+  { path: "/admin/adduser/:id", name: "EditUser", component: FormUser },
   { path: "/", name: "Home", component: Home },
   { path: "/about", name: "About", component: About },
 ];

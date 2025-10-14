@@ -70,13 +70,17 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, defineProps, onBeforeMount } from 'vue';
+import { useRoute } from 'vue-router';
 import { dataSex } from '../../data/data.js';
 import { toast } from 'vue3-toastify'
 import dayjs from 'dayjs'
 import UserService from "../../services/admin/user.service.js";
 
 const otherSex = ref(false);
+const route = useRoute();
+const id = ref('');
+const user = ref(null);
 
 const formState = reactive({
     holot: '',
@@ -137,4 +141,9 @@ const onFinishFailed = errorInfo => {
     })
     console.log("Error : ", errorInfo);
 };
+
+onBeforeMount(async () => {
+    id.value = route.fullPath.split('/')[3];
+    user.value = (await UserService.getID(id.value)).user[0];
+})
 </script>
