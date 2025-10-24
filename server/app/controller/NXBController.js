@@ -34,7 +34,9 @@ const NXBController = {
         });
       }
       const newNXB = new NXBModel({
-        ...req.body,
+        MANXB: req.body.manxb,
+        TENNXB: req.body.tennxb,
+        DIACHI: req.body.diachi
       });
       await newNXB.save();
       return res.status(200).json({
@@ -51,7 +53,7 @@ const NXBController = {
   findNXB: async (req, res) => {
     try {
       const nxb = await NXBModel.findOne({
-        $or: [{ MANXB: req.body.value }, { TENNXB: req.body.value }],
+        _id: req.params.id
       });
       if (!nxb) {
         return res.json({
@@ -75,7 +77,11 @@ const NXBController = {
     try {
       const updatedNXB = await NXBModel.findByIdAndUpdate(
         req.params.id,
-        ...req.body,
+        {
+          MANXB: req.body.manxb,
+          TENNXB: req.body.tennxb,
+          DIACHI: req.body.diachi
+        },
         { new: true }
       );
       if (!updatedNXB) {

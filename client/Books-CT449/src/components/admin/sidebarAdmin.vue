@@ -1,6 +1,6 @@
 <template lang="">
     <div
-        class="relative p-5 w-full h-full bg-white rounded-2xl flex flex-col items-center justify-start gap-[5%] border-red-400 overflow-hidden">
+        class="relative p-5 w-full h-full bg-white rounded-2xl flex flex-col items-center justify-start gap-[5%] border-red-400 overflow-x-hidden overflow-y-auto">
         <div v-if="mobileSize" class="w-full flex items-center justify-end">
             <i @click="toggleSidebar" class="fa-solid fa-xmark hover:scale-150 transition-all"></i>
         </div>

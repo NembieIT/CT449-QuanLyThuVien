@@ -95,7 +95,15 @@ const DocgiaController = {
     try {
       const updatedUser = await DocgiaModel.findByIdAndUpdate(
         req.params.id,
-        ...req.body,
+        {
+          holot: req.body.holot,
+          ten: req.body.ten,
+          ngaysinh: req.body.ngaysinh,
+          sex: req.body.sex,
+          address: req.body.address,
+          phone: req.body.phone,
+          usernameuser: req.body.usernameuser,
+        },
         { new: true }
       );
       if (!updatedUser) {
