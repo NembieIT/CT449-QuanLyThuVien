@@ -25,7 +25,12 @@ const BooksController = {
     addBook: async (req, res) => {
         try {
             const newBook = new BooksModel({
-                ...req.body
+                TENSACH: req.body.tensach,
+                DONGIA: req.body.dongia,
+                SOQUYEN: req.body.soquyen,
+                NAMXUATBAN: req.body.namxuatban,
+                MANXB:req.body.manxb,
+                TACGIA:req.body.tacgia
             })
             await newBook.save();
             return res.status(200).json({
@@ -65,9 +70,42 @@ const BooksController = {
             });
         }
     },
+    findBookByID: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const book = await BooksModel.findById({
+                _id:id
+            })
+            if (!book) {
+                return res.json({
+                    EC: 0,
+                    message: "Not Exist"
+                })
+            }
+            return res.status(200).json({
+                EC: 1,
+                book
+            })
+        } catch (err) {
+            console.log("Loi backend", err);
+            return res.json({
+                EC: 0,
+                message: "Có lỗi ở backend"
+            });
+        }
+    },
     updateBook: async (req, res) => {
         try {
-            const updatedBook = await BooksModel.findByIdAndUpdate(req.params.id, ...req.body, { new: true });
+            const updatedBook = await BooksModel.findByIdAndUpdate(req.params.id,
+                {
+                    TENSACH: req.body.tensach,
+                    DONGIA: req.body.dongia,
+                    SOQUYEN: req.body.soquyen,
+                    NAMXUATBAN: req.body.namxuatban,
+                    MANXB:req.body.manxb,
+                    TACGIA:req.body.tacgia
+                }
+                , { new: true });
             if (!updatedBook) {
                 return res.json({
                     EC: 0,

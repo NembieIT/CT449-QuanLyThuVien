@@ -30,7 +30,9 @@ const Docgia = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-
+    borrowing: {
+        type: Array
+    }
 });
 const DocgiaModel = mongoose.model('DOCGIA', Docgia);
 

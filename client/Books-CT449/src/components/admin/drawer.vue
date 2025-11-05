@@ -5,10 +5,10 @@
                 <p class="text-5xl font-bold mb-10 uppercase text-emerald-400">Thông tin chi tiết</p>
                 <div v-if="props.currentDetail">
                     <p v-for="(value, key) in props.currentDetail" :key="key" class="text-2xl font-text1 font-bold">
-                        <span v-if="!dataDisplayDetail.includes(key)">
+                        <span v-if="!dataDisplayDetailIgnore.includes(key)">
                             {{ formatLabelUser(key) }}:
                         </span>
-                        <span class="text-red-500" v-if="!dataDisplayDetail.includes(key)">
+                        <span class="text-red-500" v-if="!dataDisplayDetailIgnore.includes(key)">
                             {{ formatValue(key, value) }}
                         </span>
                     </p>
@@ -24,7 +24,7 @@
 <script setup>
 import { defineEmits, ref, onMounted, watch, onBeforeMount } from 'vue';
 import Button from './button.vue'
-import { dataDisplayDetail, dataFormatName } from '../../data/data.js'
+import { dataDisplayDetailIgnore, dataFormatName, dataAdd } from '../../data/data.js'
 
 const props = defineProps({
     show: Boolean,
@@ -33,20 +33,15 @@ const props = defineProps({
 })
 
 function FormatAdd(key) {
-    const dataAdd = {
-        user: 'user',
-        nhanvien: 'nv',
-        nxb: 'nxb'
-    }
     return dataAdd[key] || dataAdd;
 }
 
-// 🧩 Hàm đổi tên key cho dễ đọc hơn
+// Hàm đổi tên key cho dễ đọc hơn
 const formatLabelUser = (key) => {
-    return dataFormatName[key] || key // Nếu không có trong map thì giữ nguyên key
+    return dataFormatName[key] || key
 }
 
-// 🧩 Hàm xử lý giá trị đặc biệt (ví dụ ngày sinh)
+// Hàm xử lý giá trị đặc biệt (ví dụ ngày sinh)
 const formatValue = (key, value) => {
     if (key === 'ngaysinh' && value) {
         return new Date(value).toLocaleDateString('vi-VN')

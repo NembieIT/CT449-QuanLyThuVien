@@ -29,6 +29,9 @@
                 <button v-if="page=='nxb'" @click="handleDelete(props.id)"
                     class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá
                     nhà xuất bản</button>
+                <button v-if="page=='books'" @click="handleDelete(props.id)"
+                    class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá
+                    sách</button>
                 <button @click="handleDetail(props.id)"
                     class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-black/20 border transition-all duration-300">Xem
                     chi tiết</button>
@@ -37,7 +40,7 @@
     </div>
 </template>
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, onMounted } from 'vue';
 const props = defineProps({
     id: String,
     prop1: String,

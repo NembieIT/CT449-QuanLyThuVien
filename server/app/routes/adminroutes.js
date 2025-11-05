@@ -27,11 +27,12 @@ router.get("/adduser/:id", UserController.findUserByID);
 router.put("/user/edit/:id", UserController.updateUser);
 router.delete("/user/:id", UserController.deleteUser);
 
-// CRUD Books
+// CRUD Books (done)
 router.get("/books", BooksController.getAll);
-router.post("/books/search", BooksController.findBook);
+router.get("/books/:id", BooksController.findBookByID);
+router.post("/addbook/", BooksController.addBook);
 router.put("/books/edit/:id", BooksController.updateBook);
-router.delete("/books/delete/:id", BooksController.deleteBook);
+router.delete("/books/:id", BooksController.deleteBook);
 
 // CRUD NXB (done)
 router.get("/nxb", NXBController.getAll);
@@ -42,8 +43,9 @@ router.delete("/nxb/:id", NXBController.deleteNXB);
 
 // CRUD BorrowBook
 router.get("/borrow", BorrowController.getAll);
-router.post("/borrow/search", BorrowController.findBorrow);
+router.get("/borrow/:id", BorrowController.findBorrowID);
+router.post("/addborrow", BorrowController.addBorrow);
 router.put("/borrow/edit/:id", BorrowController.updateBorrow);
-router.delete("/borrow/delete/:id", BorrowController.deleteBorrow);
+router.delete("/borrow/:id", BorrowController.deleteBorrow);
 
 module.exports = router;

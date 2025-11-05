@@ -2,11 +2,13 @@ const mongoose = require('mongoose');
 
 const BorrowBook = new mongoose.Schema({
     userid: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'DOCGIA',                          
         required: true,
     },
     bookid: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'SACH',                          
         required: true,
     },
     ngaymuon: {
@@ -14,7 +16,7 @@ const BorrowBook = new mongoose.Schema({
         required: true
     },
     ngaytra: {
-        type: Date,
+        type: String,
         default: null,
     },
     status: {

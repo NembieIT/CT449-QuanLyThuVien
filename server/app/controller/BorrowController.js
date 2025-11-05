@@ -1,19 +1,15 @@
 const BorrowBookModel = require('../model/THEODOIMUONSACH');
+const BookModel = require('../model/SACH');
+const UserModel = require('../model/DOCGIA');
 
 const BorrowController = {
     getAll: async (req, res) => {
         try {
-            const result = await BorrowBookModel.aggregate([
-                {
-                    $facet: {
-                        data: [{ $sort: { createdAt: -1 } }],
-                        pending: [{ $match: { status: "pending" } }, { $count: "count" }],
-                        borrowing: [{ $match: { status: "borrowing" } }, { $count: "count" }],
-                        late: [{ $match: { status: "late" } }, { $count: "count" }],
-                        done: [{ $match: { status: "done" } }, { $count: "count" }],
-                    }
-                }
-            ]);
+            var result = await BorrowBookModel.find().sort({
+                createdAt: -1
+            })
+            .populate('bookid')
+            .populate('userid')
             if (result) {
                 return res.status(200).json({
                     EC: 1,
@@ -34,18 +30,34 @@ const BorrowController = {
     },
     addBorrow: async (req, res) => {
         try {
-            const IsvalidBorrow = await BorrowBookModel.findOne({
-                _id: req.params.id,
-                soluong: { $gt: 0 }
+            const IsvalidBorrow = await BookModel.findOne({
+                _id: req.body.bookid,
+                SOQUYEN: { $gt: 0 }
             });
             if (IsvalidBorrow) {
                 const newBorrow = new BorrowBookModel({
-                    ...req.body
+                    userid: req.body.userid,
+                    bookid: req.body.bookid,
+                    ngaymuon: req.body.ngaymuon,
+                    ngaytra: req.body.ngaytra,
+                    status: req.body.status
                 })
-                await newBorrow.save();
-                return res.status(200).json({
-                    EC:1
+                const savedBorrow = await newBorrow.save();
+                const userBorrow = await UserModel.findById({
+                    _id:req.body.userid
                 })
+                if(userBorrow){
+                    userBorrow.borrowing=[];
+                    userBorrow.borrowing.push(savedBorrow._id);
+                    return res.status(200).json({
+                        EC:1
+                    })
+                }else{
+                    return res.json({
+                        EC:0,
+                        message:"Người dùng không tồn tại !"
+                    })
+                }
             }
             return res.status(200).json({
                 EC: 0,
@@ -66,6 +78,30 @@ const BorrowController = {
                     { userid: req.body.value },
                     { userid: req.body.value }
                 ]
+            })
+            if (!borrow) {
+                return res.json({
+                    EC: 0,
+                    message: "Not Exist"
+                })
+            }
+            return res.status(200).json({
+                EC: 1,
+                borrow
+            })
+        } catch (err) {
+            console.log("Loi backend", err);
+            return res.json({
+                EC: 0,
+                message: "Có lỗi ở backend"
+            });
+        }
+    },
+    findBorrowID: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const borrow = await BorrowBookModel.findOne({
+                _id:id
             })
             if (!borrow) {
                 return res.json({

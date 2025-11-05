@@ -25,7 +25,7 @@ const NXBController = {
   addNXB: async (req, res) => {
     try {
       const IsvalidNXB = await NXBModel.findOne({
-        $or: [{ MANXB: req.body.manxb }, { TENNXB: req.body.tennxb }],
+        $or: [{ MANXB: req.body.manxb||req.body.manxbnew }, { TENNXB: req.body.tennxb||req.body.tennxbnew }],
       });
       if (IsvalidNXB) {
         return res.json({
@@ -34,9 +34,9 @@ const NXBController = {
         });
       }
       const newNXB = new NXBModel({
-        MANXB: req.body.manxb,
-        TENNXB: req.body.tennxb,
-        DIACHI: req.body.diachi
+        MANXB: req.body.manxb||req.body.manxbnew,
+        TENNXB: req.body.tennxb||req.body.tennxbnew,
+        DIACHI: req.body.diachi||req.body.diachinxbnew
       });
       await newNXB.save();
       return res.status(200).json({
