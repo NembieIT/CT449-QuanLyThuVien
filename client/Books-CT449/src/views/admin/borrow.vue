@@ -11,11 +11,11 @@
             <NavbarAdmin :mobileSize="mobileSize" @toggleSidebar="toggleSidebar"></NavbarAdmin>
             <div class="flex items-center justify-between px-5 bg-backgroundItemAD p-3 rounded-[10px]">
                 <div class="flex gap-5">
-                    <Badge v-if="page=='pending' || page=='all'" title="Chờ duyệt" :count="cntPend" class="bg-blue-600">
+                    <Badge v-if="page=='pending' || page=='all'" title="Chờ duyệt" :count="cntPend" class="bg-blue-400">
                     </Badge>
-                    <Badge v-if="page=='all'" title="Hoàn thành" :count="cntDone" class="bg-green-600">
+                    <Badge v-if="page=='all'" title="Hoàn thành" :count="cntDone" class="bg-green-400">
                     </Badge>
-                    <Badge v-if="page=='all'" title="Trễ" :count="cntLate" class="bg-red-600">
+                    <Badge v-if="page=='all'" title="Trễ" :count="cntLate" class="bg-red-400">
                     </Badge>
                     <Badge v-if="page=='user'" title="Tổng số user" :count="cntUser" class="bg-white">
                     </Badge>
@@ -74,8 +74,8 @@
         :prop2="item.TENNXB" :prop3="item.DIACHI" :page="page" @details="handleDetails" @delete="handleDelete">
     </BorrowItem>
     <BorrowItem v-if="page==='books'" v-for="(item, index) in visibleTask" :key="index" :id="item._id"
-        :prop1="item.TENSACH" :prop2="item.DONGIA" :prop3="item.SOQUYEN" :page="page" @details="handleDetails"
-        @delete="handleDelete">
+        :prop1="item.TENSACH" :prop2="item.DONGIA/1000+' Nghìn'" :prop3="item.SOQUYEN" :page="page"
+        @details="handleDetails" @delete="handleDelete">
     </BorrowItem>
     <h3 v-if="!visibleTask.length>0">Not Found</h3>
 </div>
@@ -195,6 +195,14 @@ async function handleDetails(id) {
         }
         detail.userid = detailBorrow.userid.ten
         detail.bookid = detailBorrow.bookid.TENSACH
+    } else if (page.value == 'pending') {
+        var detailPending = await dataBorrow.find(item => item._id == id);
+        detail = {
+            ...detailPending
+        }
+        detail.userid = detailPending.userid.ten
+        detail.bookid = detailPending.bookid.TENSACH
+        console.log(detail);
     }
     currentDetail.value = detail;
     showDetail.value = true;
@@ -383,14 +391,24 @@ onMounted(async () => {
             dataBorrow = res.result
         })
     if (dataBorrow) {
+        dataBorrow = dataBorrow.map(item => ({
+            ...item,
+            ngaymuon: item.ngaymuon
+                ? new Date(item.ngaymuon).toLocaleDateString('vi-VN')
+                : null,
+        }));
+        dataBorrow.forEach(item => {
+            if (item.status == 'borrowing') {
+                const today = new Date().toLocaleDateString('vi-VN');
+                const ngaytra = new Date(item.ngaytra).toLocaleDateString('vi-VN');
+                if (ngaytra < today) {
+                    item.status = 'late'
+                    console.log(item);
+                }
+            }
+        })
         FilterDataAll();
     }
-    dataBorrow = dataBorrow.map(item => ({
-        ...item,
-        ngaymuon: item.ngaymuon
-            ? new Date(item.ngaymuon).toLocaleDateString('vi-VN')
-            : null,
-    }));
 
     // GetDataUser
     dataUser = await UserControllerApi.getUser();

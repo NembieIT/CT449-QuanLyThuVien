@@ -8,8 +8,8 @@ const BorrowController = {
             var result = await BorrowBookModel.find().sort({
                 createdAt: -1
             })
-            .populate('bookid')
-            .populate('userid')
+                .populate('bookid')
+                .populate('userid')
             if (result) {
                 return res.status(200).json({
                     EC: 1,
@@ -35,33 +35,45 @@ const BorrowController = {
                 SOQUYEN: { $gt: 0 }
             });
             if (IsvalidBorrow) {
+                var ngaytra;
+                const ngaymuon = new Date(req.body.ngaymuon);
+                const ngaymuonCal = ngaymuon.getTime();
+                if (req.body.ngaytra == 'threeday') {
+                    ngaytra = new Date(ngaymuonCal + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
+                } else if (req.body.ngaytra == 'oneweek') {
+                    ngaytra = new Date(ngaymuonCal + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
+                } else if (req.body.ngaytra == 'twoweek') {
+                    ngaytra = new Date(ngaymuonCal + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
+                } else {
+                    ngaytra = new Date(ngaymuonCal + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
+                }
                 const newBorrow = new BorrowBookModel({
                     userid: req.body.userid,
                     bookid: req.body.bookid,
                     ngaymuon: req.body.ngaymuon,
-                    ngaytra: req.body.ngaytra,
+                    ngaytra: ngaytra,
                     status: req.body.status
                 })
                 const savedBorrow = await newBorrow.save();
                 const userBorrow = await UserModel.findById({
-                    _id:req.body.userid
+                    _id: req.body.userid
                 })
-                if(userBorrow){
-                    userBorrow.borrowing=[];
+                if (userBorrow) {
+                    userBorrow.borrowing = [];
                     userBorrow.borrowing.push(savedBorrow._id);
                     return res.status(200).json({
-                        EC:1
+                        EC: 1
                     })
-                }else{
+                } else {
                     return res.json({
-                        EC:0,
-                        message:"Người dùng không tồn tại !"
+                        EC: 0,
+                        message: "Người dùng không tồn tại !"
                     })
                 }
             }
             return res.status(200).json({
                 EC: 0,
-                message:"Sách đã hết ! "
+                message: "Sách đã hết ! "
             })
         } catch (err) {
             console.log("Loi backend", err);
@@ -101,7 +113,7 @@ const BorrowController = {
         try {
             const id = req.params.id;
             const borrow = await BorrowBookModel.findOne({
-                _id:id
+                _id: id
             })
             if (!borrow) {
                 return res.json({

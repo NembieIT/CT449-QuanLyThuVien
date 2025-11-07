@@ -6,7 +6,7 @@
                 autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed"
                 class="w-full flex flex-col gap-4 justify-center items-center">
                 <h1 class="text-2xl font-bold font-text1">
-                    {{ BorrowEdit ? 'CHỈNH SỬA SÁCH' : 'THÊM SÁCH MỚI' }}
+                    {{ BorrowEdit ? 'CHỈNH SỬA ĐƠN' : 'THÊM ĐƠN MỚI' }}
                 </h1>
                 <h2 class="text-[15px] font-bold font-text1">Quay lại trang admin : <router-link
                         to="/admin/all">Back</router-link>
@@ -27,7 +27,7 @@
                         </a-select>
                     </a-form-item>
 
-                    <a-form-item v-if="otherBook" label="ID Sách khác" name="bookid">
+                    <a-form-item v-if="otherBook" label="ID Sách" name="bookid">
                         <a-input v-model:value="formState.bookid" />
                     </a-form-item>
 
@@ -41,7 +41,7 @@
                         :rules="[{ required: true, message: 'Vui lòng chọn thời gian trả sách!' }]">
                         <a-select v-model:value="formState.ngaytra" placeholder="Chọn thời gian trả sách">
                             <a-select-option v-for="(item,index) in dataDate" :key="index"
-                                :value="item">{{item}}</a-select-option>
+                                :value="item[index]">{{item}}</a-select-option>
                         </a-select>
                     </a-form-item>
 
@@ -82,6 +82,7 @@ const route = useRoute();
 const id = ref('');
 const BorrowEdit = ref(null);
 const isLoaded = ref(false);
+const otherBook = ref(false);
 var dataBook = ref([]);
 
 const formState = reactive({
@@ -108,7 +109,6 @@ const handleOther = (e) => {
 }
 
 const onFinish = async values => {
-    console.log(values);
     const res = await BorrowControllerApi.addBorrow(values);
     console.log(res);
     if (res.EC == 1) {
@@ -136,8 +136,8 @@ const onFinishFailed = errorInfo => {
 
 onMounted(async () => {
     id.value = route.params.id;
-    BorrowEdit.value = (await BorrowControllerApi.getID(id.value));
-    console.log(BorrowEdit.value);
+    if (id.value) BorrowEdit.value = (await BorrowControllerApi.getID(id.value));
+    dataBook.value = await BookControllerApi.getBook();
     isLoaded.value = true;
 })
 </script>

@@ -11,7 +11,10 @@
         </div>
         <div class="flex items-center justify-end gap-2 md:gap-7 w-fit">
             <div class="w-[200px] md:w-[350px] text-center">
-                <span class="text-2xl text-green-500">{{props.status}}</span>
+                <span v-if="props.status=='pending'" class="text-2xl text-gray-800">{{dataStatus[props.status]}}</span>
+                <span v-if="props.status=='done'" class="text-2xl text-green-500">{{dataStatus[props.status]}}</span>
+                <span v-if="props.status=='borrowing'" class="text-2xl text-blue-500">{{dataStatus[props.status]}}</span>
+                <span v-if="props.status=='late'" class="text-2xl text-red-800">{{dataStatus[props.status]}}</span>
             </div>
             <div class="flex items-center w-fit lg:w-full justify-end gap-5">
                 <button v-if="page=='all' || page=='pending'"
@@ -41,10 +44,11 @@
 </template>
 <script setup>
 import { defineProps, defineEmits, onMounted } from 'vue';
+import { dataStatus } from '../../data/data'
 const props = defineProps({
     id: String,
     prop1: String,
-    prop2: String,
+    prop2: String || Number,
     prop3: String,
     status: String,
     page: String
@@ -56,5 +60,4 @@ function handleDetail(id) {
 function handleDelete(id) {
     emit('delete', id);
 }
-
 </script>
