@@ -5,22 +5,22 @@
             <a-form :model="formState" name="basic" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
                 autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed"
                 class="w-full flex flex-col gap-4 justify-center items-center">
-                <h1 class="text-2xl font-bold font-text1">
+                <h1 class="text-4xl font-bold font-text1">
                     {{ BorrowEdit ? 'CHỈNH SỬA ĐƠN' : 'THÊM ĐƠN MỚI' }}
                 </h1>
                 <h2 class="text-[15px] font-bold font-text1">Quay lại trang admin : <router-link
                         to="/admin/all">Back</router-link>
                 </h2>
                 <div class="w-[80%]">
+                    <a-spin v-if="loading" class="absolute" :indicator="indicator" />
                     <a-form-item label="ID người mượn" name="userid"
-                        :rules="[{ required: true, message: 'Hãy điền ID người mượn!' }]">
-                        <a-input v-model:value="formState.userid" />
+                        :rules="BorrowEdit? ([]): ([{ required: true, message: 'Hãy điền ID người mượn!' }])">
+                        <a-input v-model:value="formState.userid" :placeholder="BorrowEdit?._id || 'ID Người mượn'" />
                     </a-form-item>
 
                     <a-form-item label="Tên sách" name="bookid"
-                        :rules="[{ required: true, message: 'Hãy chọn ID sách!' }]">
-                        <a-select @select="handleOther" v-model:value="formState.bookid"
-                            placeholder="please select your bookID">
+                        :rules="BorrowEdit? ([]):([{ required: true, message: 'Hãy chọn ID sách!' }])">
+                        <a-select @select="handleOther" v-model:value="formState.bookid">
                             <a-select-option value="other">Tuỳ chọn khác</a-select-option>
                             <a-select-option v-for="(item,index) in dataBook" :key="index"
                                 :value="item._id">{{item.TENSACH}}</a-select-option>
@@ -31,22 +31,22 @@
                         <a-input v-model:value="formState.bookid" />
                     </a-form-item>
 
-                    <a-form-item label="Ngày mượn sách" required name="ngaymuon"
-                        :rules="[{ required: true, message: 'Vui lòng chọn ngày mượn sách!' },{ validator: validateBirthday }]">
+                    <a-form-item label="Ngày mượn sách" name="ngaymuon"
+                        :rules="BorrowEdit?([]):([{ required: true, message: 'Vui lòng chọn ngày mượn sách!' },{ validator: validateBirthday }])">
                         <a-date-picker v-model:value="formState.ngaymuon" show-time type="date"
                             placeholder="Vui lòng chọn ngày mượn" style="width: 100%" />
                     </a-form-item>
 
-                    <a-form-item label="Ngày trả sách" required name="ngaytra"
-                        :rules="[{ required: true, message: 'Vui lòng chọn thời gian trả sách!' }]">
+                    <a-form-item label="Ngày trả sách" name="ngaytra"
+                        :rules="BorrowEdit?([]):([{ required: true, message: 'Vui lòng chọn thời gian trả sách!' }])">
                         <a-select v-model:value="formState.ngaytra" placeholder="Chọn thời gian trả sách">
                             <a-select-option v-for="(item,index) in dataDate" :key="index"
                                 :value="item[index]">{{item}}</a-select-option>
                         </a-select>
                     </a-form-item>
 
-                    <a-form-item label="Trạng thái đơn" required name="status"
-                        :rules="[{ required: true, message: 'Vui lòng chọn trạng thái đơn!' }]">
+                    <a-form-item label="Trạng thái đơn" name="status"
+                        :rules="BorrowEdit?([]):([{ required: true, message: 'Vui lòng chọn trạng thái đơn!' }])">
                         <a-select v-model:value="formState.status" placeholder="Chọn trạng thái đơn">
                             <a-select-option v-for="(item,index) in dataStatus" :key="index"
                                 :value="index">{{item}}</a-select-option>
@@ -81,6 +81,7 @@ const indicator = h(LoadingOutlined, {
 const route = useRoute();
 const id = ref('');
 const BorrowEdit = ref(null);
+const loading = ref(false);
 const isLoaded = ref(false);
 const otherBook = ref(false);
 var dataBook = ref([]);
@@ -109,25 +110,79 @@ const handleOther = (e) => {
 }
 
 const onFinish = async values => {
-    const res = await BorrowControllerApi.addBorrow(values);
-    console.log(res);
-    if (res.EC == 1) {
-        toast.success("Tạo đơn thành công !", {
-            autoClose: 1600,
-            theme: "dark"
-        })
-        setTimeout(() => {
-            window.location.reload();
-        }, 1600);
+    loading.value = true;
+    if (BorrowEdit.value) {
+        const dataUpdate = {};
+        for (const key in values) {
+            if (values[key] !== '' && values[key] !== null && values[key] !== undefined) {
+                dataUpdate[key] = values[key];
+            }
+        }
+        dataUpdate.ngaymuon = BorrowEdit.value.ngaymuon;
+        if (Object.keys(dataUpdate).length > 0) {
+            try {
+                const res = await BorrowControllerApi.updateBorrow(id.value, dataUpdate);
+                if (res.EC == 1) {
+                    toast.success("Chỉnh sửa thành công !", {
+                        autoClose: 1600,
+                        theme: "dark"
+                    })
+                    loading.value = false;
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1600);
+                } else {
+                    toast.error(res.message, {
+                        autoClose: 1600,
+                        theme: "dark"
+                    })
+                    loading.value = false;
+                }
+            } catch (err) {
+                loading.value = false
+                toast.error("Loi server", {
+                    autoClose: 1600,
+                    theme: "dark"
+                })
+                console.log(err);
+            }
+        } else {
+            loading.value = false;
+            toast.error("Vui lòng điền thông tin cần sửa !", {
+                autoClose: 1600,
+                theme: "dark"
+            })
+        }
     } else {
-        toast.error(res.message, {
-            autoClose: 1600,
-            theme: "dark"
-        })
+        try {
+            const res = await BorrowControllerApi.addBorrow(values);
+            if (res.EC == 1) {
+                toast.success("Tạo đơn thành công !", {
+                    autoClose: 1600,
+                    theme: "dark"
+                })
+                loading.value = false;
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1600);
+            } else {
+                toast.error(res.message, {
+                    autoClose: 1600,
+                    theme: "dark"
+                })
+                loading.value = false;
+            }
+        } catch (err) {
+            loading.value = false;
+            toast.error("Vui lòng điền thông tin cần sửa !", {
+                autoClose: 1600,
+                theme: "dark"
+            })
+        }
     }
 };
 const onFinishFailed = errorInfo => {
-    toast.error("Tạo đơn không thành công !", {
+    toast.error("Vui lòng nhập thông tin !", {
         autoClose: 1600,
         theme: "dark"
     })
@@ -136,7 +191,7 @@ const onFinishFailed = errorInfo => {
 
 onMounted(async () => {
     id.value = route.params.id;
-    if (id.value) BorrowEdit.value = (await BorrowControllerApi.getID(id.value));
+    if (id.value) BorrowEdit.value = (await BorrowControllerApi.getID(id.value)).borrow;
     dataBook.value = await BookControllerApi.getBook();
     isLoaded.value = true;
 })

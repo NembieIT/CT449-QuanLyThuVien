@@ -10,7 +10,7 @@
                 autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed"
                 class="w-full flex flex-col gap-4 justify-center items-center">
                 <a-spin v-if="loading" class="absolute" :indicator="indicator" />
-                <h1 class="text-2xl font-bold font-text1">
+                <h1 class="text-4xl font-bold font-text1">
                     {{ userEdit ? 'CHỈNH SỬA NGƯỜI DÙNG' : 'THÊM NGƯỜI DÙNG MỚI' }}
                 </h1>
                 <h2 class="text-[15px] font-bold font-text1">Quay lại trang admin : <router-link
@@ -75,134 +75,134 @@
     </div>
 </template>
 <script setup>
-    import { reactive, ref, defineProps, onBeforeMount, onMounted } from 'vue';
-    import { useRoute } from 'vue-router';
-    import { dataSex } from '../../data/data.js';
-    import { toast } from 'vue3-toastify'
-    import dayjs from 'dayjs'
-    import UserControllerApi from "../../controllerApi/user.admincontroller.js";
+import { reactive, ref, defineProps, onBeforeMount, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { dataSex } from '../../data/data.js';
+import { toast } from 'vue3-toastify'
+import dayjs from 'dayjs'
+import UserControllerApi from "../../controllerApi/user.admincontroller.js";
 
-    import { LoadingOutlined } from '@ant-design/icons-vue';
-    import { h } from 'vue';
-    const indicator = h(LoadingOutlined, {
-        style: {
-            fontSize: '24px',
-        },
-        spin: true,
-    });
+import { LoadingOutlined } from '@ant-design/icons-vue';
+import { h } from 'vue';
+const indicator = h(LoadingOutlined, {
+    style: {
+        fontSize: '24px',
+    },
+    spin: true,
+});
 
-    const route = useRoute();
-    const id = ref('');
-    const userEdit = ref(null);
-    const loading = ref(false);
-    const isLoaded = ref(false);
+const route = useRoute();
+const id = ref('');
+const userEdit = ref(null);
+const loading = ref(false);
+const isLoaded = ref(false);
 
-    const formState = reactive({
-        holot: '',
-        ten: '',
-        ngaysinh: null,
-        sex: '',
-        address: '',
-        phone: '',
-        username: '',
-        password: ''
-    });
+const formState = reactive({
+    holot: '',
+    ten: '',
+    ngaysinh: null,
+    sex: '',
+    address: '',
+    phone: '',
+    username: '',
+    password: ''
+});
 
-    const validateBirthday = async (_rule, value) => {
-        if (dayjs(value).isAfter(dayjs(), 'day')) {
-            return Promise.reject('Ngày sinh không được lớn hơn ngày hiện tại!')
-        }
-        return Promise.resolve()
+const validateBirthday = async (_rule, value) => {
+    if (dayjs(value).isAfter(dayjs(), 'day')) {
+        return Promise.reject('Ngày sinh không được lớn hơn ngày hiện tại!')
     }
+    return Promise.resolve()
+}
 
-    async function onFinish(values) {
-        const { holot, ten, ngaysinh, sex, address, phone, ...payload } = values
-        loading.value = true;
-        if (userEdit.value) {
-            const dataUpdate = {};
-            for (const key in values) {
-                if (values[key] !== '' && values[key] !== null && values[key] !== undefined) {
-                    dataUpdate[key] = values[key];
-                }
+async function onFinish(values) {
+    const { holot, ten, ngaysinh, sex, address, phone, ...payload } = values
+    loading.value = true;
+    if (userEdit.value) {
+        const dataUpdate = {};
+        for (const key in values) {
+            if (values[key] !== '' && values[key] !== null && values[key] !== undefined) {
+                dataUpdate[key] = values[key];
             }
-            if (Object.keys(dataUpdate).length > 0) {
-                try {
-                    const { password, ...payload } = values
-                    const res = await UserControllerApi.updateUser(id.value, dataUpdate)
-                    if (res.EC == 1) {
-                        loading.value = false
-                        toast.success("OK cu", {
-                            autoClose: 1600
-                        })
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1600);
-                    } else {
-                        loading.value = false
-                        toast.error(res.message, {
-                            autoClose: 1600,
-                            theme: "dark"
-                        })
-                    }
-                } catch (err) {
-                    loading.value = false
-                    toast.error("Loi server", {
-                        autoClose: 1600,
-                        theme: "dark"
-                    })
-                    console.log(err);
-                }
-            } else {
-                loading.value = false
-                toast.error("Vui lòng điền thông tin cần sửa", {
-                    autoClose: 1600
-                })
-            }
-        } else {
+        }
+        if (Object.keys(dataUpdate).length > 0) {
             try {
-                const res = await UserControllerApi.adduserAccount(payload);
-                if (res.EC === 1) {
-                    const { password, ...payload } = values
-                    const res = await UserControllerApi.adduserInfo(payload);
-                    if (res.EC === 1) {
-                        loading.value = false;
-                        toast.success("Thêm thành công !", {
-                            autoClose: 1600,
-                            theme: "dark"
-                        })
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1600);
-                    }
+                const { password, ...payload } = values
+                const res = await UserControllerApi.updateUser(id.value, dataUpdate)
+                if (res.EC == 1) {
+                    loading.value = false
+                    toast.success("OK cu", {
+                        autoClose: 1600
+                    })
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1600);
                 } else {
-                    loading.value = false;
+                    loading.value = false
                     toast.error(res.message, {
                         autoClose: 1600,
                         theme: "dark"
                     })
                 }
             } catch (err) {
-                loading.value = false;
+                loading.value = false
                 toast.error("Loi server", {
                     autoClose: 1600,
                     theme: "dark"
                 })
                 console.log(err);
             }
+        } else {
+            loading.value = false
+            toast.error("Vui lòng điền thông tin cần sửa", {
+                autoClose: 1600
+            })
         }
-    };
-    const onFinishFailed = errorInfo => {
-        loading.value = false;
-        toast.error("Tạo đơn không thành công !", {
-            autoClose: 1600,
-            theme: "dark"
-        })
-        console.log("Error : ", errorInfo);
-    };
-
-    onMounted(async () => {
-        id.value = route.params.id;
-        userEdit.value = (await UserControllerApi.getID(id.value))?.user?.[0];
-        isLoaded.value = true;
+    } else {
+        try {
+            const res = await UserControllerApi.adduserAccount(payload);
+            if (res.EC === 1) {
+                const { password, ...payload } = values
+                const res = await UserControllerApi.adduserInfo(payload);
+                if (res.EC === 1) {
+                    loading.value = false;
+                    toast.success("Thêm thành công !", {
+                        autoClose: 1600,
+                        theme: "dark"
+                    })
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1600);
+                }
+            } else {
+                loading.value = false;
+                toast.error(res.message, {
+                    autoClose: 1600,
+                    theme: "dark"
+                })
+            }
+        } catch (err) {
+            loading.value = false;
+            toast.error("Loi server", {
+                autoClose: 1600,
+                theme: "dark"
+            })
+            console.log(err);
+        }
+    }
+};
+const onFinishFailed = errorInfo => {
+    loading.value = false;
+    toast.error("Tạo đơn không thành công !", {
+        autoClose: 1600,
+        theme: "dark"
     })
+    console.log("Error : ", errorInfo);
+};
+
+onMounted(async () => {
+    id.value = route.params.id;
+    if (id.value) userEdit.value = (await UserControllerApi.getID(id.value))?.user?.[0];
+    isLoaded.value = true;
+})
 </script>

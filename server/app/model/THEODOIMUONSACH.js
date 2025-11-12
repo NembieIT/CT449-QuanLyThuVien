@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 const BorrowBook = new mongoose.Schema({
     userid: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'DOCGIA',                          
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'DOCGIA',
         required: true,
     },
     bookid: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'SACH',                          
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SACH',
         required: true,
     },
     ngaymuon: {
@@ -21,7 +21,7 @@ const BorrowBook = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["pending", "done", "late", "borrowing"],
+        enum: ["pending", "done", "late", "borrowing", "deny"],
         default: "pending"
     }
 }, { timestamps: true })

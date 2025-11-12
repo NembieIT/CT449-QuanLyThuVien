@@ -10,7 +10,7 @@
                 autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed"
                 class="w-full flex flex-col gap-4 justify-center items-center">
                 <a-spin v-if="loading" class="absolute" :indicator="indicator" />
-                <h1 class="text-2xl font-bold font-text1">
+                <h1 class="text-4xl font-bold font-text1">
                     {{ nvEdit ? 'CHỈNH SỬA NHÂN VIÊN' : 'THÊM NHÂN VIÊN MỚI' }}
                 </h1>
                 <h2 class="text-[15px] font-bold font-text1">Quay lại trang admin : <router-link
@@ -156,7 +156,7 @@ const onFinishFailed = errorInfo => {
 
 onMounted(async () => {
     id.value = route.params.id;
-    nvEdit.value = (await NVControllerApi.getID(id.value))?.NV;
+    if (id.value) nvEdit.value = (await NVControllerApi.getID(id.value))?.NV;
     isLoaded.value = true;
 })
 </script>

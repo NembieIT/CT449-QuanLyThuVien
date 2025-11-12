@@ -47,7 +47,8 @@ export const dataAdd = {
     nhanvien: 'nv',
     nxb: 'nxb',
     books: 'book',
-    all: 'borrow'
+    all: 'borrow',
+    pending: 'borrow'
 }
 
 export const dataDate = {
@@ -61,5 +62,6 @@ export const dataStatus = {
     done: "Đã xong",
     pending: "Đang chờ",
     late: "Trễ",
-    borrowing: "Đang mượn"
+    borrowing: "Đang mượn",
+    deny: "Từ chối"
 }

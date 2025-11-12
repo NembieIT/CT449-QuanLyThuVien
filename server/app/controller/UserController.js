@@ -4,7 +4,14 @@ const AccUserModel = require("../model/USERACCOUNT");
 const DocgiaController = {
   getAll: async (req, res) => {
     try {
-      const data = await DocgiaModel.find({});
+      const data = await DocgiaModel.find({})
+        .populate({
+          path: 'borrowing',
+          populate: {
+            path: 'bookid',
+            select: 'TENSACH -_id'
+          }
+        });
       return res.status(200).json({
         EC: 1,
         data,
@@ -48,7 +55,14 @@ const DocgiaController = {
       const fullName = req.body.name;
       const user = await DocgiaModel.find({
         $or: [{ holot: req.body.name }, { ten: req.body.name }],
-      });
+      })
+        .populate({
+          path: 'borrowing',
+          populate: {
+            path: 'bookid',
+            select: 'TENSACH -_id'
+          }
+        });
       if (!user) {
         return res.json({
           EC: 0,
@@ -72,7 +86,14 @@ const DocgiaController = {
       const id = req.params.id;
       const user = await DocgiaModel.find({
         _id: id,
-      });
+      })
+        .populate({
+          path: 'borrowing',
+          populate: {
+            path: 'bookid',
+            select: 'TENSACH -_id'
+          }
+        });
       if (!user) {
         return res.json({
           EC: 0,

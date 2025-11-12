@@ -1,6 +1,6 @@
 <template lang="">
     <router-link :to="`/admin${goto}`"
-        class="bg-black flex items-center justify-start gap-5 p-2 w-full h-full overflow-clip text-[18px] text-white rounded-[10px] cursor-pointer hover:opacity-80 transition-all">
+        :class="`${darkmode?'bg-white text-black':'bg-black text-white'} flex items-center justify-start gap-5 p-2 w-full h-full overflow-clip text-[18px] rounded-[10px] cursor-pointer hover:opacity-80 transition-all`">
         <i :class="['fa-solid ',icon]"></i>
         <h2>{{title}}</h2>
     </router-link>
@@ -9,6 +9,7 @@
 defineProps({
     title: String,
     icon: String,
-    goto: String
+    goto: String,
+    darkmode: Boolean
 })
 </script>

@@ -10,7 +10,7 @@
                 autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed"
                 class="w-full flex flex-col gap-4 justify-center items-center">
                 <a-spin v-if="loading" class="absolute" :indicator="indicator" />
-                <h1 class="text-2xl font-bold font-text1">
+                <h1 class="text-4xl font-bold font-text1">
                     {{ BookEdit ? 'CHỈNH SỬA SÁCH' : 'THÊM SÁCH MỚI' }}
                 </h1>
                 <h2 class="text-[15px] font-bold font-text1">Quay lại trang admin : <router-link
@@ -223,9 +223,9 @@ const onFinishFailed = errorInfo => {
 };
 
 onMounted(async () => {
-    id.value = route.params.id || '';
+    id.value = route.params.id;
     dataNXB = (await NXBControllerApi.getNXB());
-    BookEdit.value = (await BookControllerApi.getID(id.value))?.book;
+    if (id.value) BookEdit.value = (await BookControllerApi.getID(id.value))?.book;
     isLoaded.value = true;
 })
 </script>

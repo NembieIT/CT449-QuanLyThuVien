@@ -23,6 +23,27 @@ const AuthAdminController = {
             EC: 0,
             message: "Tài khoản không tồn tại ! "
         })
-    }
+    },
+    // regAD: async (req, res) => {
+    //     try {
+    //         const genSalt = await bcrypt.genSalt(Number(process.env.NODE_GENSALT || 10));
+    //         const hashed = await bcrypt.hash(req.body.password, genSalt);
+    //         const newAD = new AdminModel({
+    //             usernameAD: req.body.username,
+    //             passwordAD: hashed,
+    //         })
+    //         await newAD.save();
+    //         return res.status(200).json({
+    //             EC: 1,
+    //             message: "Đăng ký thành công ! "
+    //         })
+    //     } catch (err) {
+    //         console.log("Loi backend", err);
+    //         return res.json({
+    //             EC: 0,
+    //             message: "Có lỗi ở backend"
+    //         });
+    //     }
+    // }
 }
 module.exports = AuthAdminController;

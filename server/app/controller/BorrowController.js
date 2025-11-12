@@ -1,6 +1,7 @@
 const BorrowBookModel = require('../model/THEODOIMUONSACH');
 const BookModel = require('../model/SACH');
 const UserModel = require('../model/DOCGIA');
+const DocgiaController = require('../controller/UserController');
 
 const BorrowController = {
     getAll: async (req, res) => {
@@ -35,32 +36,50 @@ const BorrowController = {
                 SOQUYEN: { $gt: 0 }
             });
             if (IsvalidBorrow) {
-                var ngaytra;
-                const ngaymuon = new Date(req.body.ngaymuon);
-                const ngaymuonCal = ngaymuon.getTime();
-                if (req.body.ngaytra == 'threeday') {
-                    ngaytra = new Date(ngaymuonCal + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
-                } else if (req.body.ngaytra == 'oneweek') {
-                    ngaytra = new Date(ngaymuonCal + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
-                } else if (req.body.ngaytra == 'twoweek') {
-                    ngaytra = new Date(ngaymuonCal + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
-                } else {
-                    ngaytra = new Date(ngaymuonCal + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
-                }
-                const newBorrow = new BorrowBookModel({
-                    userid: req.body.userid,
-                    bookid: req.body.bookid,
-                    ngaymuon: req.body.ngaymuon,
-                    ngaytra: ngaytra,
-                    status: req.body.status
-                })
-                const savedBorrow = await newBorrow.save();
-                const userBorrow = await UserModel.findById({
-                    _id: req.body.userid
-                })
+                const userBorrow = await UserModel.findById(req.body.userid)
+                    .populate('borrowing')
                 if (userBorrow) {
-                    userBorrow.borrowing = [];
-                    userBorrow.borrowing.push(savedBorrow._id);
+                    var ngaytra;
+                    const ngaymuon = new Date(req.body.ngaymuon);
+                    const ngaymuonCal = ngaymuon.getTime();
+                    if (req.body.ngaytra == 'threeday') {
+                        ngaytra = new Date(ngaymuonCal + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
+                    } else if (req.body.ngaytra == 'oneweek') {
+                        ngaytra = new Date(ngaymuonCal + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
+                    } else if (req.body.ngaytra == 'twoweek') {
+                        ngaytra = new Date(ngaymuonCal + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
+                    } else {
+                        ngaytra = new Date(ngaymuonCal + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
+                    }
+                    const newBorrow = new BorrowBookModel({
+                        userid: req.body.userid,
+                        bookid: req.body.bookid,
+                        ngaymuon: req.body.ngaymuon,
+                        ngaytra: ngaytra,
+                        status: req.body.status
+                    })
+                    const savedBorrow = await newBorrow.save();
+                    if (req.body.status == 'borrowing') {
+                        var isValid = true;
+                        if (userBorrow.borrowing.length > 0) {
+                            userBorrow.borrowing.forEach(async item => {
+                                if (item.bookid == req.body.bookid) isValid = false
+                            })
+                        }
+                        if (isValid) {
+                            try {
+                                userBorrow.borrowing.push(savedBorrow);
+                                await UserModel.findByIdAndUpdate(req.body.userid, userBorrow)
+                            } catch (err) {
+                                console.log("Co loi khi updateUser borrowing");
+                            }
+                        } else {
+                            return res.json({
+                                EC: 0,
+                                message: "Bạn đang mượn sách này !"
+                            })
+                        }
+                    }
                     return res.status(200).json({
                         EC: 1
                     })
@@ -135,7 +154,46 @@ const BorrowController = {
     },
     updateBorrow: async (req, res) => {
         try {
-            const updatedBorrow = await BorrowBookModel.findByIdAndUpdate(req.params.id, ...req.body, { new: true });
+            var ngaytra;
+            if (req.body.ngaytra) {
+                const ngaymuon = new Date(req.body.ngaymuon);
+                const ngaymuonCal = ngaymuon.getTime();
+                if (req.body.ngaytra == 'threeday') {
+                    ngaytra = new Date(ngaymuonCal + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
+                } else if (req.body.ngaytra == 'oneweek') {
+                    ngaytra = new Date(ngaymuonCal + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
+                } else if (req.body.ngaytra == 'twoweek') {
+                    ngaytra = new Date(ngaymuonCal + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
+                } else {
+                    ngaytra = new Date(ngaymuonCal + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN');
+                }
+            } else {
+                ngaytra = req.body.ngaytra
+            }
+            const updatedBorrow = await BorrowBookModel.findByIdAndUpdate(
+                req.params.id || req.body.idborrow,
+                {
+                    userid: req.body.userid,
+                    bookid: req.body.bookid,
+                    ngaymuon: req.body.ngaymuon,
+                    ngaytra: ngaytra,
+                    status: req.body.status
+                },
+                { new: true }
+            );
+            if (req.body.status == 'deny' || req.body.status == 'done') {
+                const user = await UserModel.findById(updatedBorrow.userid);
+                user.borrowing = user.borrowing.filter(item => item != req.body.idborrow);
+                await UserModel.findByIdAndUpdate(user._id, user);
+            } else if (req.body.status == 'borrowing') {
+                const user = await UserModel.findById(updatedBorrow.userid);
+                try {
+                    user.borrowing.push(req.body.idborrow);
+                    await UserModel.findByIdAndUpdate(user._id, user)
+                } catch (err) {
+                    console.log("Co loi khi updateUser borrowing");
+                }
+            }
             if (!updatedBorrow) {
                 return res.json({
                     EC: 0,
