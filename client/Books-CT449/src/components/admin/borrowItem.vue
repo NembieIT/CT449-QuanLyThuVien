@@ -1,24 +1,26 @@
 <template lang="">
     <div
-        class="flex items-center justify-start md:justify-between gap-5 p-2 md:p-5 rounded-[10px] bg-backgroundItemAD min-h-[20%] overflow-x-auto">
-        <div class="flex items-center justify-start md:justify-between gap-7 min-w-full md:min-w-[60%]">
-            <img src="../../assets/vue.svg" alt="AVT">
-            <div class="flex items-center justify-center gap-7">
-                <h3>{{props.prop1}}</h3>
-                <h3>{{props.prop2}}</h3>
-                <h3>{{props.prop3}}</h3>
+        :class="`flex flex-col items-start md:flex-row md:items-center justify-start md:justify-between gap-5 p-2 md:p-5 rounded-[10px] ${darkmode?'bg-gray-800':'bg-backgroundItemAD'} min-h-[20%] overflow-auto md:overflow-hidden`">
+        <div class="flex items-center justify-between gap-7 w-full xl:w-[60%]">
+            <div class="flex items-center justify-start gap-5 w-[60%] md:w-[70%]">
+                <img src="../../assets/vue.svg" alt="AVT">
+                <div :class="`flex items-center justify-start gap-7 ${darkmode?'text-white':''} font-bold`">
+                    <h3>{{props.prop1}}</h3>
+                    <h3>{{props.prop2}}</h3>
+                    <h3>{{props.prop3}}</h3>
+                </div>
             </div>
-            <div class="w-[200px] md:w-[350px] text-center flex items-center justify-end">
+            <div class="w-[40%] md:w-[30%] text-center flex items-center justify-end">
                 <span v-if="props.status=='pending'"
-                    class="text-2xl text-blue-500 bg-black/15 p-2 rounded-2xl">{{dataStatus[props.status]}}</span>
+                    :class="`w-full font-text2 text-2xl text-blue-500 ${darkmode?'bg-white':'bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
                 <span v-if="props.status=='done'"
-                    class="text-2xl text-green-800 bg-black/15 p-2 rounded-2xl">{{dataStatus[props.status]}}</span>
+                    :class="`w-full font-text2 text-2xl text-green-800 ${darkmode?'bg-white':'bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
                 <span v-if="props.status=='borrowing'"
-                    class="text-2xl text-gray-700 bg-black/15 p-2 rounded-2xl">{{dataStatus[props.status]}}</span>
+                    :class="`w-full font-text2 text-2xl text-gray-700 ${darkmode?'bg-white':'bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
                 <span v-if="props.status=='late'"
-                    class="text-2xl text-yellow-600 bg-black/15 p-2 rounded-2xl">{{dataStatus[props.status]}}</span>
+                    :class="`w-full font-text2 text-2xl text-yellow-600 ${darkmode?'bg-white':'bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
                 <span v-if="props.status=='deny'"
-                    class="text-2xl text-red-600 bg-black/15 p-2 rounded-2xl">{{dataStatus[props.status]}}</span>
+                    :class="`w-full font-text2 text-2xl text-red-600 ${darkmode?'bg-white':'bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
             </div>
         </div>
         <div class="flex items-center justify-end gap-2 md:gap-7 min-w-fit">
@@ -61,7 +63,8 @@
         prop2: String || Number,
         prop3: String,
         status: String,
-        page: String
+        page: String,
+        darkmode: Boolean
     })
     const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete']);
     function handleDetail(id) {

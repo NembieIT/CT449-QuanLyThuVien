@@ -8,8 +8,7 @@ const Nhanvien =  new mongoose.Schema({
         type:String
     },
     passwordNV:{
-        type:String,
-        default:"admin111"
+        type:String
     },
     role:{
         type:String,

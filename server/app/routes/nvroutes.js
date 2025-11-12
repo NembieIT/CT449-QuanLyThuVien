@@ -1,12 +1,9 @@
 const router = require('express').Router();
 const UserController = require('../controller/UserController');
-const AuthNVControler = require('../controller/auth/AuthNVController');
 const BooksController = require('../controller/BooksController');
 const NXBController = require('../controller/NXBController');
 const BorrowController = require('../controller/BorrowController');
 
-// Auth NV
-router.post('/login', AuthNVControler.loginNV);
 
 // CRUD user
 router.get('/user-list', UserController.getAll);

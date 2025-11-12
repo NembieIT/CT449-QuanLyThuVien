@@ -7,10 +7,12 @@
             <SidebarAdmin :mobileSize="mobileSize" @toggleSidebar="toggleSidebar" :darkmode="darkmode"></SidebarAdmin>
         </Motion>
 
-        <div :class="`w-[95%] lg:w-[80vw] h-full flex flex-col gap-5 rounded-2xl p-5 ${darkmode?'bg-gray-900':'bg-white'}`">
-            <NavbarAdmin @toggleDarkmode="darkmode=!darkmode" :mobileSize="mobileSize" @toggleSidebar="toggleSidebar"></NavbarAdmin>
+        <div
+            :class="`w-[95%] lg:w-[80vw] h-full flex flex-col gap-5 rounded-2xl p-5 ${darkmode?'bg-gray-900':'bg-white'}`">
+            <NavbarAdmin @toggleDarkmode="darkmode=!darkmode" :mobileSize="mobileSize" @toggleSidebar="toggleSidebar">
+            </NavbarAdmin>
             <div
-                class="flex flex-col gap-5 md:flex-row items-start md:items-center justify-between px-5 bg-backgroundItemAD p-3 rounded-[10px]">
+                :class="`flex flex-col gap-5 md:flex-row items-start md:items-center justify-between px-5 ${darkmode?'bg-gray-700':'bg-backgroundItemAD'} p-3 rounded-[10px]`">
                 <div class="flex gap-2 md:gap-5">
                     <Badge v-if="page=='pending'" title="Chờ duyệt" :count="cntPend" class="bg-blue-400">
                     </Badge>
@@ -39,7 +41,7 @@
                         <a-input-search class="nv-search" v-if="page=='books'" v-model:value="value"
                             placeholder="Nhập tên sách" enter-button="Search" size="medium" @search="onSearch" />
                         <a-input-search class="nv-search" v-if="page=='nxb'" v-model:value="value"
-                            placeholder="Nhập tên NXB" enter-button="Search" size="medium" @search="onSearch" />
+                            placeholder="Nhập tên hoặc mã NXB" enter-button="Search" size="medium" @search="onSearch" />
                         <a-input-search class="nv-search" v-if="page=='user'" v-model:value="value"
                             placeholder="Nhập tên người dùng" enter-button="Search" size="medium" @search="onSearch" />
                         <a-input-search class="nv-search" v-if="page=='nhanvien'" v-model:value="value"
@@ -93,50 +95,57 @@
 </div>
 </div>
 <span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='user'">Tên | Email | SĐT</span>
-<span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='nhanvien'">Họ tên | Địa chỉ NV | SĐT</span>
+<span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='nhanvien'">Họ tên | Địa chỉ NV |
+    SĐT</span>
 <span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='nxb'">Mã NXB | Tên NXB | Địa chỉ</span>
-<span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='books'">Tên sách | Đơn giá | Số quyển</span>
-<span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='all' ||page=== 'pending'">Tên người dùng | Sách
+<span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='books'">Tên sách | Đơn giá | Số
+    quyển</span>
+<span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='all' ||page=== 'pending'">Tên người
+    dùng | Sách
     mượn | Ngày mượn</span>
-<div v-if="!visibleTask.length>0 && !loading" class="h-full w-full flex flex-col items-center justify-center gap-5">
-    <img src="../../../public/notfound.png" alt="NotFound" class="h-[80%]">
-    <h3 class="text-2xl uppercase text-gray-400">Chưa có dữ liệu</h3>
-</div>
-<div v-if="!loading" class="flex flex-col gap-[5%] h-[55%] overflow-hidden">
-    <BorrowItem v-if="page=='pending' || page==='all'" v-for="(item, index) in visibleTask" :id="item._id" :key="index"
-        :prop1="item.userid.ten" :prop2="item.bookid.TENSACH" :prop3="item.ngaymuon" :status="item.status" :page="page"
-        @details=handleDetails @accept="handleAccept" @deny="handleDeny" @complete="handleComplete"
-        @delete="handleDelete">
-    </BorrowItem>
-    <BorrowItem v-if="page==='user'" v-for="(item, index) in visibleTask" :key="index" :id="item._id" :prop1="item.ten"
-        :prop2="item.address" :prop3="item.phone" :status="item.status" :page="page" @details="handleDetails"
-        @delete="handleDelete">
-    </BorrowItem>
-    <BorrowItem v-if="page==='nhanvien'" v-for="(item, index) in visibleTask" :key="index" :id="item._id"
-        :prop1="item.nameNV" :prop2="item.addressNV" :prop3="item.phoneNV" :page="page" @details="handleDetails"
-        @delete="handleDelete">
-    </BorrowItem>
-    <BorrowItem v-if="page==='nxb'" v-for="(item, index) in visibleTask" :key="index" :id="item._id" :prop1="item.MANXB"
-        :prop2="item.TENNXB" :prop3="item.DIACHI" :page="page" @details="handleDetails" @delete="handleDelete">
-    </BorrowItem>
-    <BorrowItem v-if="page==='books'" v-for="(item, index) in visibleTask" :key="index" :id="item._id"
-        :prop1="item.TENSACH" :prop2="item.DONGIA/1000+' Nghìn'" :prop3="item.SOQUYEN" :page="page"
-        @details="handleDetails" @delete="handleDelete">
-    </BorrowItem>
-</div>
-<div class="h-[10%] flex items-center justify-between">
-    <div :class="`${darkmode?'bg-gray-100 p-2 rounded-[5px]':''}`">
-        <a-pagination v-model:current="current" :total="(totalPage*10)||0" show-less-items />
+<div class="h-full overflow-hidden">
+    <div v-if="!visibleTask.length>0 && !loading" class="h-[85%] mb-5 flex flex-col items-center justify-center gap-5">
+        <img src="../../../public/notfound.png" alt="NotFound" class="h-[80%]">
+        <h3 class="text-2xl uppercase text-gray-400">Chưa có dữ liệu</h3>
     </div>
-    <div class="flex gap-5">
-        <Button v-if="page==='all'" goto="/addborrow" title="Tạo đơn" icon="fa-plus" class="bg-green-400"></Button>
-        <Button v-if="page==='user'" goto="/adduser" title="Thêm người dùng" icon="fa-plus"
-            class="bg-green-400"></Button>
-        <Button v-if="page==='nhanvien'" goto="/addnv" title="Thêm nhân viên" icon="fa-plus"
-            class="bg-green-400"></Button>
-        <Button v-if="page==='nxb'" goto="/addnxb" title="Thêm nhà xuất bản" icon="fa-plus"
-            class="bg-green-400"></Button>
-        <Button v-if="page==='books'" goto="/addbook" title="Thêm sách" icon="fa-plus" class="bg-green-400"></Button>
+    <div v-if="!loading && visibleTask.length>0" class="flex flex-col gap-[5%] h-[85%] mb-5 overflow-hidden">
+        <BorrowItem v-if="page=='pending' || page==='all'" v-for="(item, index) in visibleTask" :id="item._id"
+            :key="index" :prop1="item.userid.ten" :prop2="item.bookid.TENSACH" :prop3="item.ngaymuon"
+            :status="item.status" :page="page" @details=handleDetails @accept="handleAccept" @deny="handleDeny"
+            @complete="handleComplete" @delete="handleDelete" :darkmode="darkmode">
+        </BorrowItem>
+        <BorrowItem v-if="page==='user'" v-for="(item, index) in visibleTask" :key="index" :id="item._id"
+            :prop1="item.ten" :prop2="item.address" :prop3="item.phone" :status="item.status" :page="page"
+            @details="handleDetails" @delete="handleDelete" :darkmode="darkmode">
+        </BorrowItem>
+        <BorrowItem v-if="page==='nhanvien'" v-for="(item, index) in visibleTask" :key="index" :id="item._id"
+            :prop1="item.nameNV" :prop2="item.addressNV" :prop3="item.phoneNV" :page="page" @details="handleDetails"
+            @delete="handleDelete" :darkmode="darkmode">
+        </BorrowItem>
+        <BorrowItem v-if="page==='nxb'" v-for="(item, index) in visibleTask" :key="index" :id="item._id"
+            :prop1="item.MANXB" :prop2="item.TENNXB" :prop3="item.DIACHI" :page="page" @details="handleDetails"
+            @delete="handleDelete" :darkmode="darkmode">
+        </BorrowItem>
+        <BorrowItem v-if="page==='books'" v-for="(item, index) in visibleTask" :key="index" :id="item._id"
+            :prop1="item.TENSACH" :prop2="item.DONGIA/1000+' Nghìn'" :prop3="item.SOQUYEN" :page="page"
+            @details="handleDetails" @delete="handleDelete" :darkmode="darkmode">
+        </BorrowItem>
+    </div>
+    <div class="h-[10%] flex items-center justify-between">
+        <div :class="`${darkmode?'bg-gray-700 p-2 rounded-[5px]':''}`">
+            <a-pagination v-model:current="current" :total="(totalPage*10)||0" show-less-items />
+        </div>
+        <div class="flex gap-5">
+            <Button v-if="page==='all'" goto="/addborrow" title="Tạo đơn" icon="fa-plus" class="bg-green-400"></Button>
+            <Button v-if="page==='user'" goto="/adduser" title="Thêm người dùng" icon="fa-plus"
+                class="bg-green-400"></Button>
+            <Button v-if="page==='nhanvien'" goto="/addnv" title="Thêm nhân viên" icon="fa-plus"
+                class="bg-green-400"></Button>
+            <Button v-if="page==='nxb'" goto="/addnxb" title="Thêm nhà xuất bản" icon="fa-plus"
+                class="bg-green-400"></Button>
+            <Button v-if="page==='books'" goto="/addbook" title="Thêm sách" icon="fa-plus"
+                class="bg-green-400"></Button>
+        </div>
     </div>
 </div>
 <a-spin v-if="loading" :indicator="indicator" />
@@ -208,7 +217,8 @@ function removeVietnameseTones(str) {
         .replace(/đ/g, 'd')
         .replace(/Đ/g, 'd')
         .toLowerCase()
-        .replace(/\s+/g, '');
+        .replace(/\s+/g, '')
+        .trim()
 }
 
 // Filter Data
@@ -243,7 +253,7 @@ const onSearch = searchValue => {
     } else if (page.value == 'books') {
         visibleTask.value = dataBooks.filter(item => (((removeVietnameseTones(item.TENSACH)).includes(search))));
     } else if (page.value == 'nxb') {
-        visibleTask.value = dataNXB.filter(item => (((removeVietnameseTones(item.TENNXB)).includes(search))));
+        visibleTask.value = dataNXB.filter(item => (((removeVietnameseTones(item.TENNXB)).includes(search)) || ((removeVietnameseTones(item.MANXB).includes(search)))));
     } else if (page.value == 'user') {
         visibleTask.value = dataUser.filter(item => (((removeVietnameseTones(item.ten)).includes(search)) || ((removeVietnameseTones(item.holot)).includes(search))));
     } else if (page.value == 'nhanvien') {

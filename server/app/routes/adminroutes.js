@@ -1,15 +1,11 @@
 const router = require("express").Router();
 const NhanvienController = require("../controller/NHANVIENController");
-const AuthADController = require("../controller/auth/AuthADController");
 const AuthUserController = require("../controller/auth/AuthUserController");
-const AuthNVController = require("../controller/auth/AuthNVController");
 const UserController = require("../controller/UserController");
 const BooksController = require("../controller/BooksController");
 const BorrowController = require("../controller/BorrowController");
 const NXBController = require("../controller/NXBController");
 
-// Auth AD
-router.post("/admin/login", AuthADController.loginAD);
 
 // CRUD nhan vien (done)
 router.get("/nhanvien", NhanvienController.getAll);

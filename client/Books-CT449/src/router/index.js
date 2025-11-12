@@ -11,8 +11,11 @@ import FormNV from "../views/admin/formNV.vue";
 import FormNXB from "../views/admin/formNXB.vue";
 import FormBook from "../views/admin/formBook.vue";
 
+import Auth from "../views/Auth.vue"
+
 // Khai báo routes
 const routes = [
+  //Route Admin
   { path: "/admin/pending", name: "PendingAdmin", component: Borrow },
   { path: "/admin/all", name: "HomepageAdmin", component: Borrow },
   { path: "/admin/user", name: "DSUser", component: Borrow },
@@ -30,8 +33,13 @@ const routes = [
   { path: "/admin/addnxb/:id", name: "EditNXB", component: FormNXB },
   { path: "/admin/addbook", name: "AddBook", component: FormBook },
   { path: "/admin/addbook/:id", name: "EditBook", component: FormBook },
+
+  //Route Client
   { path: "/", name: "Home", component: Home },
   { path: "/about", name: "About", component: About },
+
+  //Route Auth
+  { path: "/auth", name: "Auth", component: Auth },
 ];
 
 // Tạo router

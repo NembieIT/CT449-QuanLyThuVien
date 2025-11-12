@@ -21,11 +21,13 @@ const NhanvienController = {
   },
   addNV: async (req, res) => {
     try {
+      const hashed = await bcrypt.hash("adminCT449$NM7", 8);
       const newNV = new NhanvienModel({
         usernameNV: req.body.usernameNV,
         addressNV: req.body.addressNV,
         nameNV: req.body.nameNV,
         phoneNV: req.body.phoneNV,
+        passwordNV: hashed
       });
       await newNV.save();
       return res.status(200).json({

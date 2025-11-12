@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @theme {
   --font-text1: "Nunito", "sans-serif";
+  --font-text2: "Momo Trust Display", "sans-serif";
   --color-sidebarItem: rgba(187, 187, 187, 0.5);
   --color-backgroundItemAD: #d1d5db;
 }
