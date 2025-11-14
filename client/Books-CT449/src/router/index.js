@@ -1,10 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 // Import các trang
-import Home from "../views/user/Home.vue";
-import About from "../views/user/About.vue";
+import UserPage from "../views/user/UserPage.vue";
 import Borrow from "../views/admin/borrow.vue";
-import formBorrow from "../views/admin/formBorrow.vue";
 import FormUser from "../views/admin/formUser.vue";
 import FormBorrow from "../views/admin/formBorrow.vue";
 import FormNV from "../views/admin/formNV.vue";
@@ -35,8 +33,7 @@ const routes = [
   { path: "/admin/addbook/:id", name: "EditBook", component: FormBook },
 
   //Route Client
-  { path: "/", name: "Home", component: Home },
-  { path: "/about", name: "About", component: About },
+  { path: "/", name: "UserPage", component: UserPage },
 
   //Route Auth
   { path: "/auth", name: "Auth", component: Auth },
