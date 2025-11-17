@@ -33,7 +33,10 @@ const routes = [
   { path: "/admin/addbook/:id", name: "EditBook", component: FormBook },
 
   //Route Client
-  { path: "/", name: "UserPage", component: UserPage },
+  { path: "/trangchu", name: "UserHomePage", component: UserPage },
+  { path: "/category", name: "UserCategoryPage", component: UserPage },
+  { path: "/borrow", name: "UserBorrowPage", component: UserPage },
+  { path: "/favorite", name: "UserFavPage", component: UserPage },
 
   //Route Auth
   { path: "/auth", name: "Auth", component: Auth },

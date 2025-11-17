@@ -12,15 +12,15 @@
             </div>
             <div class="w-[40%] md:w-[30%] text-center flex items-center justify-end">
                 <span v-if="props.status=='pending'"
-                    :class="`w-full font-text2 text-2xl text-blue-500 ${darkmode?'bg-white':'bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
+                    :class="`w-full font-text2 text-[18px] text-blue-500 ${darkmode?'md:bg-white':'md:bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
                 <span v-if="props.status=='done'"
-                    :class="`w-full font-text2 text-2xl text-green-800 ${darkmode?'bg-white':'bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
+                    :class="`w-full font-text2 text-[18px] text-green-800 ${darkmode?'md:bg-white':'md:bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
                 <span v-if="props.status=='borrowing'"
-                    :class="`w-full font-text2 text-2xl text-gray-700 ${darkmode?'bg-white':'bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
+                    :class="`w-full font-text2 text-[18px] text-gray-700 ${darkmode?'md:bg-white':'md:bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
                 <span v-if="props.status=='late'"
-                    :class="`w-full font-text2 text-2xl text-yellow-600 ${darkmode?'bg-white':'bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
+                    :class="`w-full font-text2 text-[18px] text-yellow-600 ${darkmode?'md:bg-white':'md:bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
                 <span v-if="props.status=='deny'"
-                    :class="`w-full font-text2 text-2xl text-red-600 ${darkmode?'bg-white':'bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
+                    :class="`w-full font-text2 text-[18px] text-red-600 ${darkmode?'md:bg-white':'md:bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
             </div>
         </div>
         <div class="flex items-center justify-end gap-2 md:gap-7 min-w-fit">
@@ -55,31 +55,31 @@
     </div>
 </template>
 <script setup>
-    import { defineProps, defineEmits, onMounted } from 'vue';
-    import { dataStatus } from '../../data/data'
-    const props = defineProps({
-        id: String,
-        prop1: String,
-        prop2: String || Number,
-        prop3: String,
-        status: String,
-        page: String,
-        darkmode: Boolean
-    })
-    const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete']);
-    function handleDetail(id) {
-        emit('details', id);
-    }
-    function handleDelete(id) {
-        emit('delete', id);
-    }
-    function handleAccept(id) {
-        emit('accept', id);
-    }
-    function handleDeny(id) {
-        emit('deny', id);
-    }
-    function handleComplete(id) {
-        emit('complete', id);
-    }
+import { defineProps, defineEmits, onMounted } from 'vue';
+import { dataStatus } from '../../data/data'
+const props = defineProps({
+    id: String,
+    prop1: String,
+    prop2: String || Number,
+    prop3: String,
+    status: String,
+    page: String,
+    darkmode: Boolean
+})
+const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete']);
+function handleDetail(id) {
+    emit('details', id);
+}
+function handleDelete(id) {
+    emit('delete', id);
+}
+function handleAccept(id) {
+    emit('accept', id);
+}
+function handleDeny(id) {
+    emit('deny', id);
+}
+function handleComplete(id) {
+    emit('complete', id);
+}
 </script>

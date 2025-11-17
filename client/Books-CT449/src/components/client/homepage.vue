@@ -1,6 +1,6 @@
 <template>
-    <div class="h-full w-full p-5 flex flex-col gap-[6%] bg-gray-500/60">
-        <div class="h-[47%] w-full bg-white rounded-2xl p-5">
+    <div class="h-full w-full p-5 flex flex-col gap-[6%] overflow-scroll">
+        <div class="h-[65%] w-full bg-white p-5">
             <div class="h-[10%] flex items-center justify-between">
                 <span class="text-2xl uppercase">Sách hot !!!</span>
                 <div
@@ -44,7 +44,7 @@
                 </div>
             </div>
         </div>
-        <div class="h-[47%] w-full bg-white rounded-2xl p-5">
+        <div class="h-[65%] w-full bg-white p-5">
             <div class="h-[10%] flex items-center justify-between">
                 <span class="text-2xl uppercase">Sách mới nhất !</span>
                 <div
