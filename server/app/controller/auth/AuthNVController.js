@@ -1,5 +1,9 @@
 const NhanvienModel = require("../../model/NHANVIEN");
 const bcrypt = require("bcrypt");
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+
+dotenv.config();
 
 const AuthNVControler = {
   loginNV: async (req, res) => {
@@ -12,8 +16,10 @@ const AuthNVControler = {
         validUsername.passwordNV
       );
       if (validPassword) {
+        const accessToken = jwt.sign({username: req.body.username, role:'NV'}, process.env.ACCESS_TOKEN_SECRET);
         return res.status(200).json({
           EC: 1,
+          accessToken,
           message: "Đăng nhập thành công ! ",
         });
       }

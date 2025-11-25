@@ -6,6 +6,7 @@ const connectDB = require("./app/config/db");
 const ADRoutes = require("./app/routes/adminroutes");
 const AuthRoutes = require("./app/routes/authroutes");
 const NVRoutes = require("./app/routes/nvroutes");
+const Authenticated = require("./app/controller/auth/Authenticated");
 
 const app = express();
 dotenv.config();
@@ -14,7 +15,7 @@ app.use(cors());
 
 // Routes
 // app.use("/nhanvien", NVRoutes);
-app.use("/admin", ADRoutes);
+app.use("/admin", Authenticated.AuthenticationAD ,ADRoutes);
 app.use('/auth', AuthRoutes);
 
 // RunningServer

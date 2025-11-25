@@ -1,6 +1,7 @@
 const UserAccModel = require('../../model/USERACCOUNT');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
 
 dotenv.config();
 
@@ -12,8 +13,10 @@ const UserAccController = {
         if (validUsername) {
             const validPassword = await bcrypt.compare(req.body.password, validUsername.passwordUser);
             if (validPassword) {
+                const accessToken = jwt.sign({username: req.body.username, role:'USER'}, process.env.ACCESS_TOKEN_SECRET);
                 return res.status(200).json({
                     EC: 1,
+                    accessToken,
                     message: "Đăng nhập thành công ! "
                 })
             }

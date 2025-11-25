@@ -1,5 +1,9 @@
 const AdminModel = require('../../model/ADMIN');
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+
+dotenv.config();
 
 const AuthAdminController = {
     loginAD: async (req, res) => {
@@ -9,8 +13,10 @@ const AuthAdminController = {
         if (validUsername) {
             const validPassword = await bcrypt.compare(req.body.password, validUsername.passwordAD);
             if (validPassword) {
+                const accessToken = jwt.sign({username: req.body.username, role:'NV'}, process.env.ACCESS_TOKEN_SECRET);
                 return res.status(200).json({
                     EC: 1,
+                    accessToken,
                     message: "Đăng nhập thành công ! "
                 })
             }

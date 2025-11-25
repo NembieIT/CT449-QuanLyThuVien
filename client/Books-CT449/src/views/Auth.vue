@@ -76,92 +76,160 @@
             </div>
         </div>
     </div>
+    <a-modal v-model:open="openModel" title="Đăng nhập thành công !" :confirm-loading="confirmLoading" @ok="handleOkAD" @cancel="handleCancelAD">
+        <p>{{modalText}}</p>
+    </a-modal>
 </template>
 <script setup>
-    import { Motion } from "@motionone/vue";
-    import { reactive, ref, onMounted } from 'vue';
-    import { toast } from 'vue3-toastify'
-    import AuthController from "../controllerApi/auth.controller.js";
+import { Motion } from "@motionone/vue";
+import { reactive, ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify'
+import AuthController from "../controllerApi/auth.controller.js";
 
-    const formState = reactive({
-        username: '',
-        password: '',
-        admin: false
-    });
-    const changeForm = ref(false); //true = log, false = reg
-    const errMsg = ref(false);
-    const mobileSize = ref(false);
+const router = useRouter();
 
-    const formErr = ref({
-        username: false,
-        password: false,
-        email: false
-    });
+const defaultForm = {
+    username: '',
+    password: '',
+    admin: false
+};
+const formState = reactive({
+    username: '',
+    password: '',
+    admin: false
+});
+const changeForm = ref(false); //true = log, false = reg
+const errMsg = ref(false);
+const mobileSize = ref(false);
+const modalText = ref('Bạn muốn vào trang quản trị ?');
+const openModel = ref(false);
+const confirmLoading = ref(false);
 
-    function validForm() {
-        formErr.value.username = !formState.username;
-        formErr.value.password = !formState.password;
-        formErr.value.email = !formState.email;
-        errMsg.value = (formErr.value.username || formErr.value.password)
-    }
+const formErr = ref({
+    username: false,
+    password: false,
+    email: false
+});
 
-    async function handleSubmit(e) {
-        e.preventDefault();
-        validForm();
-        if (!formErr.value.username && !formErr.value.password) {
-            if (changeForm.value) { //login
-                if (formState.admin) {
-                    try {
-                        var admin = true;
-                        const res = await AuthController.loginAD(formState);
-                        if (res.EC == 1) {
-                            toast.success("Đăng nhập thành công !", {
-                                autoClose: 1600,
-                                theme: "dark"
-                            })
-                        } else {
-                            admin = false;
-                        }
-                        if (!admin) {
-                            try {
-                                const res = await AuthController.loginNV(formState);
-                                if (res.EC == 1) {
-                                    toast.success("Đăng nhập thành công !", {
-                                        autoClose: 1600,
-                                        theme: "dark"
-                                    })
-                                } else {
-                                    toast.error("Sai tài khoản hoặc mật khẩu !", {
-                                        autoClose: 1600,
-                                        theme: "dark"
-                                    })
-                                }
-                            } catch (err) {
-                                console.log(err);
-                            }
-                        }
-                    } catch (err) {
-                        console.log(err);
+function validForm() {
+    formErr.value.username = !formState.username;
+    formErr.value.password = !formState.password;
+    formErr.value.email = !formState.email;
+    errMsg.value = (formErr.value.username || formErr.value.password)
+}
+
+async function handleSubmit(e) {
+    e.preventDefault();
+    validForm();
+    if (!formErr.value.username && !formErr.value.password) {
+        if (changeForm.value) { //login
+            if (formState.admin) {
+                try { //co phai la` admin
+                    var admin = true;
+                    const res = await AuthController.loginAD(formState);
+                    if (res.EC == 1) {
+                        localStorage.setItem('accessToken', res.accessToken);
+                        toast.success(res.message, {
+                            autoClose: 1600,
+                            theme: "dark"
+                        })
+                        openModel.value = true;
+                    } else {
+                        admin = false; //neu la nhan vien
                     }
+                    if (!admin) { //nhanvien
+                        try {
+                            const res = await AuthController.loginNV(formState);
+                            if (res.EC == 1) {
+                                localStorage.setItem('accessToken', res.accessToken);
+                                toast.success(res.message, {
+                                    autoClose: 1600,
+                                    theme: "dark"
+                                })
+                                openModel.value = true;
+                            } else {
+                                toast.error(res.message, {
+                                    autoClose: 1600,
+                                    theme: "dark"
+                                })
+                            }
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    }
+                } catch (err) {
+                    console.log(err);
                 }
-            } else {
-                console.log('reg');
+            } else { //doc gia
+                try {
+                    const res = await AuthController.login(formState);
+                    if (res.EC == 1) {
+                        localStorage.setItem('accessToken', res.accessToken);
+                        toast.success(res.message, {
+                            autoClose: 1600,
+                            theme: "dark"
+                        })
+                        setTimeout(() => {
+                            router.push('/trangchu');
+                        }, 1600);
+                    } else {
+                        toast.error(res.message, {
+                            autoClose: 1600,
+                            theme: "dark"
+                        })
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        } else { //register doc gia
+            try {
+                const res = await AuthController.register(formState);
+                if (res.EC == 1) {
+                    Object.assign(formState, defaultForm);
+                    changeForm.value = true;
+                    toast.success(res.message, {
+                        autoClose: 1600,
+                        theme: "dark"
+                    })
+                } else {
+                    toast.error(res.message, {
+                        autoClose: 1600,
+                        theme: "dark"
+                    })
+                }
+            } catch (err) {
+                console.log(err);
             }
         }
     }
+}
 
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 1024) {
-            mobileSize.value = false
-        } else mobileSize.value = true
-    })
+const handleOkAD = () => {
+    modalText.value = 'Đang chuyển hướng...';
+    confirmLoading.value = true;
+    setTimeout(() => {
+        open.value = false;
+        confirmLoading.value = false;
+        router.push('/admin/all');
+    }, 2000);
+};
+const handleCancelAD = () => {
+    router.push('/trangchu');
+}
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 1024) {
+        mobileSize.value = false
+    } else mobileSize.value = true
+})
 
-    function getSize() {
-        if (window.innerWidth > 1024) return false;
-        return true;
-    }
+function getSize() {
+    if (window.innerWidth > 1024) return false;
+    return true;
+}
 
-    onMounted(() => {
-        mobileSize.value = getSize();
-    })
+onMounted(() => {
+    mobileSize.value = getSize();
+})
 </script>

@@ -21,13 +21,13 @@
                                 <a-menu-item>
                                     <div class="flex items-center justify-start gap-5">
                                         <UserOutlined />
-                                        <router-link>Giao diện người dùng</router-link>
+                                        <router-link to="/admin/all">Giao diện người dùng</router-link>
                                     </div>
                                 </a-menu-item>
                                 <a-menu-item>
                                     <div class="flex items-center justify-start gap-5">
                                         <LogoutOutlined />
-                                        <router-link to="/auth">Đăng xuất</router-link>
+                                        <button @click="logout">Đăng xuất</button>
                                     </div>
                                 </a-menu-item>
                             </a-menu>
@@ -40,6 +40,8 @@
 </template>
 <script setup>
 import { defineProps, defineEmits, ref } from 'vue';
+import AuthControllerApi from '../../controllerApi/auth.controller';
+
 defineProps({
     mobileSize: Boolean
 })
@@ -51,5 +53,8 @@ function toggleSidebar() {
 function toggleDarkmode() {
     emit('toggleDarkmode');
     darkmode.value = !darkmode.value
+}
+const logout = () => {
+    AuthControllerApi.logout();
 }
 </script>

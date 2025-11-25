@@ -13,4 +13,7 @@ router.post("/admin/login", AuthADController.loginAD);
 // Auth NV
 router.post('/nhanvien/login', AuthNVControler.loginNV);
 
+//Logout
+router.get('/logout', (req,res)=>{return res.sendStatus(204)}); //logout code
+
 module.exports = router;

@@ -40,6 +40,7 @@ const routes = [
 
   //Route Auth
   { path: "/auth", name: "Auth", component: Auth },
+  { path: "/auth/logout", name: "Logout", component: Auth },
 ];
 
 // Tạo router

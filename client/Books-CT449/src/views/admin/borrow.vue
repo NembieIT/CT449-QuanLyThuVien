@@ -1,5 +1,5 @@
 <template lang="">
-    <div class="relative w-full h-[100vh] flex items-start justify-center gap-5 p-2 font-text1"
+    <div v-if="!loading" class="relative w-full h-[100vh] flex items-start justify-center gap-5 p-2 font-text1"
         :style="{backgroundImage:`radial-gradient(125% 125% at 50% 90%, #000000 40%, #0d1a36 100%)`}">
         <Motion v-if="visible" :initial="{ x: -500 }" :animate="load ? { x: 0 } : {x: -500}"
             :transition="{ duration: 0.5 }"

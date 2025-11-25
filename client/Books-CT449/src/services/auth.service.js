@@ -14,6 +14,9 @@ const AuthService = {
   },
   async loginNV(data){
     return (await api.post("/nhanvien/login",data)).data;
+  },
+  async logout(){
+    return (await api.get("/logout"));
   }
 };
 
