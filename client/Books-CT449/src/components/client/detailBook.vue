@@ -11,7 +11,7 @@
                 id reiciendis laborum optio neque asperiores soluta?</span>
         </div>
         <div class="h-[10%] flex items-center justify-center">
-            <div
+            <div @click="openModel"
                 class="bg-white flex items-center justify-center w-[65%] p-3 rounded-[10px] hover:bg-blue-700 hover:text-white cursor-pointer transition-all">
                 <i class="fa-solid fa-book"></i>
                 <span>Mượn sách</span>
@@ -23,6 +23,10 @@
 import { defineProps } from 'vue';
 
 const props = defineProps({
-    Book: Object
+    book: Object
 })
+const emit = defineEmits(["openModel"]);
+const openModel = () => {
+    emit('openModel');
+}
 </script>

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 // Import các trang
 import UserPage from "../views/user/UserPage.vue";
+import InformPage from "../views/user/InformPage.vue";
 import Borrow from "../views/admin/borrow.vue";
 import FormUser from "../views/admin/formUser.vue";
 import FormBorrow from "../views/admin/formBorrow.vue";
@@ -37,6 +38,7 @@ const routes = [
   { path: "/category", name: "UserCategoryPage", component: UserPage },
   { path: "/borrow", name: "UserBorrowPage", component: UserPage },
   { path: "/favorite", name: "UserFavPage", component: UserPage },
+  { path: "/inform", name: "InformPage", component: InformPage },
 
   //Route Auth
   { path: "/auth", name: "Auth", component: Auth },

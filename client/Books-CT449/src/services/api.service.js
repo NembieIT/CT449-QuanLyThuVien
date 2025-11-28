@@ -18,11 +18,10 @@ export default (baseURL) => {
     instance.interceptors.response.use(
         (res) => {
             if (res.status === 204) {
-                console.log('vao res 204')
                 localStorage.removeItem('accessToken');
                 window.location.href = '/auth';
             }
-            return res;
+            return res; 
         },
         (err) => {
             if (err.response?.status === 401 || err.response?.status === 403) {
