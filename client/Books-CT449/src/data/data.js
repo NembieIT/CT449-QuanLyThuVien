@@ -10,46 +10,47 @@ export const dataSex = [
     }
 ]
 
-export const dataDisplayDetailIgnore = ['usernameUser', 'passwordNV', 'pin', '_id', 'createdAt', 'updatedAt', '__v'];
+export const dataDisplayDetailIgnore = ['usernameUser', 'passwordNV', 'pin', '_id', 'createdAt', 'updatedAt', '__v', 'IMAGEURL'];
 
 export const dataFormatName = {
-            holot: 'Họ lót',
-            ten: 'Tên',
-            ngaysinh: 'Ngày sinh',
-            sex: 'Giới tính',
-            address: 'Địa chỉ',
-            phone: 'Số điện thoại',
-            usernameUser: 'User ID',
-            nameNV: "Tên nhân viên",
-            role: "Chức danh",
-            addressNV: "Địa chỉ nhân viên",
-            phoneNV: "SĐT",
-            TENSACH: "Tên sách",
-            DONGIA: "Đơn giá",
-            SOQUYEN: "Số quyển",
-            NAMXUATBAN: "Năm xuất bản",
-            TACGIA: "Tác giả",
-            MANXB: "Mã nhà xuất bản",
-            TENNXB: "Tên nhà xuất bản",
-            DIACHI: "Địa chỉ",
-            borrowing:"Hiện đang mượn sách",
-            userid: "Tên người dùng",
-            bookid: "Tên sách",
-            ngaymuon: "Ngày mượn",
-            ngaytra: "Ngày trả",
-            status: "Trạng thái"
-        }
+    holot: 'Họ lót',
+    ten: 'Tên',
+    ngaysinh: 'Ngày sinh',
+    sex: 'Giới tính',
+    address: 'Địa chỉ',
+    phone: 'Số điện thoại',
+    usernameUser: 'User ID',
+    nameNV: "Tên nhân viên",
+    role: "Chức danh",
+    addressNV: "Địa chỉ nhân viên",
+    phoneNV: "SĐT",
+    TENSACH: "Tên sách",
+    DONGIA: "Đơn giá",
+    SOQUYEN: "Số quyển",
+    NAMXUATBAN: "Năm xuất bản",
+    TACGIA: "Tác giả",
+    MANXB: "Mã nhà xuất bản",
+    TENNXB: "Tên nhà xuất bản",
+    DIACHI: "Địa chỉ",
+    borrowing: "Hiện đang mượn sách",
+    userid: "Tên người dùng",
+    bookid: "Tên sách",
+    ngaymuon: "Ngày mượn",
+    ngaytra: "Ngày trả",
+    status: "Trạng thái",
+    DESC: "Mô tả"
+}
 
 export const ItemPageLimit = 4;
 
 export const dataAdd = {
-        user: 'user',
-        nhanvien: 'nv',
-        nxb: 'nxb',
-        books: 'book',
-        all: 'borrow',
-        pending: 'borrow'
-    }
+    user: 'user',
+    nhanvien: 'nv',
+    nxb: 'nxb',
+    books: 'book',
+    all: 'borrow',
+    pending: 'borrow'
+}
 
 export const dataDate = [
     '3 ngày',

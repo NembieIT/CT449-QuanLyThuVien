@@ -21,12 +21,12 @@ export default (baseURL) => {
                 localStorage.removeItem('accessToken');
                 window.location.href = '/auth';
             }
-            return res; 
+            return res;
         },
         (err) => {
             if (err.response?.status === 401 || err.response?.status === 403) {
                 localStorage.removeItem('accessToken');
-                window.location.href='/auth'
+                window.location.href = '/auth'
             }
             return Promise.reject(err);
         }

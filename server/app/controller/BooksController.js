@@ -1,18 +1,27 @@
 const BooksModel = require('../model/SACH');
 
+function normalizeName(str) {
+    return str
+        .normalize("NFD")                    // tách dấu
+        .replace(/[\u0300-\u036f]/g, "")     // bỏ dấu
+        .toLowerCase()                       // về lowercase
+        .trim()
+        .replace(/\s+/g, " ");               // gom khoảng trắng
+}
+
 const BooksController = {
     getAll: async (req, res) => {
         try {
             const data = await BooksModel.find({});
-            if(data){
+            if (data) {
                 return res.status(200).json({
-                    EC:1,
+                    EC: 1,
                     data
                 })
             }
             return res.json({
-                EC:0,
-                message:"Không có dữ liệu ! "
+                EC: 0,
+                message: "Không có dữ liệu ! "
             })
         } catch (err) {
             console.log("Loi backend", err);
@@ -24,13 +33,24 @@ const BooksController = {
     },
     addBook: async (req, res) => {
         try {
+            const inputName = normalizeName(req.body.tensach);
+            const books = await BooksModel.find({});
+            const existed = books.find(book => {
+                return normalizeName(book.TENSACH) === inputName;
+            });
+            console.log(existed);
+            if (existed) {
+                return res.json({ EC: 0, message: "Sách đã tồn tại!" });
+            }
             const newBook = new BooksModel({
                 TENSACH: req.body.tensach,
                 DONGIA: req.body.dongia,
                 SOQUYEN: req.body.soquyen,
                 NAMXUATBAN: req.body.namxuatban,
-                MANXB:req.body.manxb,
-                TACGIA:req.body.tacgia
+                MANXB: req.body.manxb,
+                TACGIA: req.body.tacgia,
+                IMAGEURL: req.body.imageUrl,
+                DESC: req.body.desc
             })
             await newBook.save();
             return res.status(200).json({
@@ -47,9 +67,9 @@ const BooksController = {
     findBook: async (req, res) => {
         try {
             const book = await BooksModel.findOne({
-                $or:[
-                    { TENSACH : req.body.value },
-                    { TACGIA : req.body.value }
+                $or: [
+                    { TENSACH: req.body.value },
+                    { TACGIA: req.body.value }
                 ]
             })
             if (!book) {
@@ -74,7 +94,7 @@ const BooksController = {
         try {
             const id = req.params.id;
             const book = await BooksModel.findById({
-                _id:id
+                _id: id
             })
             if (!book) {
                 return res.json({
@@ -102,8 +122,8 @@ const BooksController = {
                     DONGIA: req.body.dongia,
                     SOQUYEN: req.body.soquyen,
                     NAMXUATBAN: req.body.namxuatban,
-                    MANXB:req.body.manxb,
-                    TACGIA:req.body.tacgia
+                    MANXB: req.body.manxb,
+                    TACGIA: req.body.tacgia
                 }
                 , { new: true });
             if (!updatedBook) {

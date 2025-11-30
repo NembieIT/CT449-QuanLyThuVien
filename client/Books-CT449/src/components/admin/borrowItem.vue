@@ -36,6 +36,8 @@
             <button v-if="page=='all'" @click="handleDelete(props.id)"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá
                 đơn</button>
+                <button v-if="page=='user'" @click="handleGetID(props.id)"
+                class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Lấy ID</button>
             <button v-if="page=='user'" @click="handleDelete(props.id)"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá
                 người dùng</button>
@@ -66,7 +68,7 @@ const props = defineProps({
     page: String,
     darkmode: Boolean
 })
-const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete']);
+const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete', 'getid']);
 function handleDetail(id) {
     emit('details', id);
 }
@@ -81,5 +83,8 @@ function handleDeny(id) {
 }
 function handleComplete(id) {
     emit('complete', id);
+}
+function handleGetID(id) {
+    emit('getid', id);
 }
 </script>

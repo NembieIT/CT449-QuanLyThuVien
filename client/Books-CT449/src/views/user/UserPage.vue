@@ -33,10 +33,11 @@
                     <h2 class="text-4xl">Ten Sach</h2>
                     <span>Tac gia : Author</span>
                     <span>Love : 10</span>
+                    <span>Số lượng còn lại: 10</span>
                     <a-form-item label="Thời gian mượn" name="region">
                         <a-select v-model:value="formState.timeBorrow" placeholder="Chọn thời gian trả sách">
                             <a-select-option v-for="(item, index) in dataDate" :key="index" :value="item[index]">{{ item
-                                }}</a-select-option>
+                            }}</a-select-option>
                         </a-select>
                     </a-form-item>
                 </div>

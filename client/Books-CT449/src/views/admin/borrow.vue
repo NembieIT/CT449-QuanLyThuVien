@@ -116,7 +116,7 @@
         </BorrowItem>
         <BorrowItem v-if="page==='user'" v-for="(item, index) in visibleTask" :key="index" :id="item._id"
             :prop1="item.ten" :prop2="item.address" :prop3="item.phone" :status="item.status" :page="page"
-            @details="handleDetails" @delete="handleDelete" :darkmode="darkmode">
+            @details="handleDetails" @delete="handleDelete" :darkmode="darkmode" @getid="handleGetID">
         </BorrowItem>
         <BorrowItem v-if="page==='nhanvien'" v-for="(item, index) in visibleTask" :key="index" :id="item._id"
             :prop1="item.nameNV" :prop2="item.addressNV" :prop3="item.phoneNV" :page="page" @details="handleDetails"
@@ -411,6 +411,15 @@ async function handleDetails(id) {
     }
     currentDetail.value = detail;
     showDetail.value = true;
+}
+
+// handle GetID User
+function handleGetID(id) {
+    navigator.clipboard.writeText(id)
+        .then(() => toast.success("Copy thành công !", {
+            autoClose: 1200
+        }))
+        .catch(err => console.error("Error copying", err));
 }
 
 // handle Delete
