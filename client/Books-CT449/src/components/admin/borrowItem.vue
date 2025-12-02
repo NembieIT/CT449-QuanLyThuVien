@@ -3,7 +3,9 @@
         :class="`flex flex-col items-start md:flex-row md:items-center justify-start md:justify-between gap-5 p-2 md:p-5 rounded-[10px] ${darkmode?'bg-gray-800':'bg-backgroundItemAD'} min-h-[20%] overflow-auto md:overflow-hidden`">
         <div class="flex items-center justify-between gap-7 w-full xl:w-[60%]">
             <div class="flex items-center justify-start gap-5 w-[60%] md:w-[70%]">
-                <img src="../../assets/vue.svg" alt="AVT">
+                <div class="w-[50px] h-full">
+                    <img src="../../assets/vue.svg" alt="AVT">
+                </div>
                 <div :class="`flex items-center justify-start gap-7 ${darkmode?'text-white':''} font-bold`">
                     <h3>{{props.prop1}}</h3>
                     <h3>{{props.prop2}}</h3>
@@ -36,8 +38,9 @@
             <button v-if="page=='all'" @click="handleDelete(props.id)"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá
                 đơn</button>
-                <button v-if="page=='user'" @click="handleGetID(props.id)"
-                class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Lấy ID</button>
+            <button v-if="page=='user'" @click="handleGetID(props.id)"
+                class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Lấy
+                ID</button>
             <button v-if="page=='user'" @click="handleDelete(props.id)"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá
                 người dùng</button>
@@ -57,34 +60,35 @@
     </div>
 </template>
 <script setup>
-import { defineProps, defineEmits, onMounted } from 'vue';
-import { dataStatus } from '../../data/data'
-const props = defineProps({
-    id: String,
-    prop1: String,
-    prop2: String || Number,
-    prop3: String,
-    status: String,
-    page: String,
-    darkmode: Boolean
-})
-const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete', 'getid']);
-function handleDetail(id) {
-    emit('details', id);
-}
-function handleDelete(id) {
-    emit('delete', id);
-}
-function handleAccept(id) {
-    emit('accept', id);
-}
-function handleDeny(id) {
-    emit('deny', id);
-}
-function handleComplete(id) {
-    emit('complete', id);
-}
-function handleGetID(id) {
-    emit('getid', id);
-}
+    import { defineProps, defineEmits, onMounted } from 'vue';
+    import { dataStatus } from '../../data/data'
+    const props = defineProps({
+        id: String,
+        prop1: String,
+        prop2: String || Number,
+        prop3: String,
+        status: String,
+        img: String,
+        page: String,
+        darkmode: Boolean
+    })
+    const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete', 'getid']);
+    function handleDetail(id) {
+        emit('details', id);
+    }
+    function handleDelete(id) {
+        emit('delete', id);
+    }
+    function handleAccept(id) {
+        emit('accept', id);
+    }
+    function handleDeny(id) {
+        emit('deny', id);
+    }
+    function handleComplete(id) {
+        emit('complete', id);
+    }
+    function handleGetID(id) {
+        emit('getid', id);
+    }
 </script>

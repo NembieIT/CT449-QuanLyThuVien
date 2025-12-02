@@ -52,12 +52,12 @@ export const dataAdd = {
     pending: 'borrow'
 }
 
-export const dataDate = [
-    '3 ngày',
-    '1 tuần',
-    '2 tuần',
-    '1 tháng'
-]
+export const dataDate = {
+    threeday: '3 ngày',
+    oneweek: '1 tuần',
+    twoweek:'2 tuần',
+    onemonth:'1 tháng'
+}
 
 export const dataStatus = {
     done: "Đã xong",

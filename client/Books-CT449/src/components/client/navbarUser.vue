@@ -1,7 +1,8 @@
 <template>
     <div class="w-full h-full flex items-center bg-white">
-        <div class="w-[80%] h-full flex items-center justify-start p-5">
-            <div class="bg-gray-500/40 p-2 w-[50%] rounded-[10px] flex items-center gap-5">
+        <div class="w-[80%] h-full flex items-center justify-start p-5 gap-5">
+            <MenuOutlined class="visible lg:invisible lg:pointer-events-none cursor-pointer" @click="toggleSidebar" />
+            <div class="bg-gray-500/40 p-2 w-fit md:w-[50%] rounded-[10px] flex items-center gap-5 border">
                 <SearchOutlined class="cursor-pointer p-2 rounded-[10px] hover:bg-white/50" />
                 <input class="outline-none" type="text" placeholder="Tìm tên sách theo ý">
             </div>
@@ -12,7 +13,7 @@
                 <img src="../../../public/vite.svg" alt="Avt">
                 <a-dropdown>
                     <div class="ant-dropdown-link flex items-center gap-3" @click.prevent>
-                        <span>USER</span>
+                        <span>{{ props.user.username }}</span>
                         <DownOutlined />
                     </div>
                     <template #overlay>
@@ -43,11 +44,18 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
+const emit = defineEmits(['toggleSidebar']);
+
+function toggleSidebar() {
+    emit('toggleSidebar');
+}
+
 const handlelogout = () => {
     AuthControllerApi.logout();
     router.push("/auth");
 }
 const props = defineProps({
-    user: String
+    user: Object
 })
+
 </script>

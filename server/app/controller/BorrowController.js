@@ -1,6 +1,7 @@
 const BorrowBookModel = require('../model/THEODOIMUONSACH');
 const BookModel = require('../model/SACH');
 const UserModel = require('../model/DOCGIA');
+const UserAccount = require('../model/USERACCOUNT');
 const DocgiaController = require('../controller/UserController');
 
 const BorrowController = {
@@ -36,8 +37,10 @@ const BorrowController = {
                 SOQUYEN: { $gt: 0 }
             });
             if (IsvalidBorrow) {
-                const userBorrow = await UserModel.findById(req.body.userid)
-                    .populate('borrowing')
+                const AccountBorrow = await UserAccount.findById(req.body.userid)
+                const userBorrow = await UserModel.find({
+                    usernameUser: req.body.userid
+                }).populate('borrowing')
                 if (userBorrow) {
                     var ngaytra;
                     const ngaymuon = new Date(req.body.ngaymuon);
@@ -56,9 +59,15 @@ const BorrowController = {
                         bookid: req.body.bookid,
                         ngaymuon: req.body.ngaymuon,
                         ngaytra: ngaytra,
-                        status: req.body.status
+                        status: req.body.status,
+                        note: req.body.note
                     })
                     const savedBorrow = await newBorrow.save();
+                    await BookModel.findByIdAndUpdate(
+                        req.body.bookid,
+                        { $inc: { SOQUYEN: -1 } },
+                        { new: true }
+                    );
                     if (req.body.status == 'borrowing') {
                         var isValid = true;
                         if (userBorrow.borrowing.length > 0) {
@@ -181,13 +190,18 @@ const BorrowController = {
                 },
                 { new: true }
             );
-            if (req.body.status == 'deny' || req.body.status == 'done') {
+            if (updatedBorrow.status == 'deny' || updatedBorrow.status == 'done') {
                 const user = await UserModel.findById(updatedBorrow.userid);
                 user.borrowing = user.borrowing.filter(item => item != req.body.idborrow);
                 await UserModel.findByIdAndUpdate(user._id, user);
-            } else if (req.body.status == 'borrowing') {
-                const user = await UserModel.findById(updatedBorrow.userid);
+                await BookModel.findByIdAndUpdate(
+                    req.body.bookid,
+                    { $inc: { SOQUYEN: 1 } },
+                    { new: true }
+                );
+            } else if (updatedBorrow.status == 'borrowing') {
                 try {
+                    const user = await UserModel.findById(updatedBorrow.userid);
                     user.borrowing.push(req.body.idborrow);
                     await UserModel.findByIdAndUpdate(user._id, user)
                 } catch (err) {

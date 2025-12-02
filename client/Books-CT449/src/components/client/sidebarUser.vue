@@ -1,5 +1,8 @@
 <template lang="">
-    <div v-if="loaded" class="flex flex-col items-center h-full w-full bg-white">
+    <Motion v-if="loaded && props.sidebar" :initial="{ x: -500 }" :animate="load ? { x: 0 } : {x: -500}"
+        :transition="{ duration: 0.5 }"
+        class="absolute lg:static flex flex-col items-center h-full w-1/2 md:w-[40%] lg:w-full bg-white">
+        <CloseOutlined v-if="mobileSize" class="absolute right-5 top-5 cursor-pointer" @click="closeSidebar" />
         <div class="h-[20%] w-full">
             <img class="h-full w-full object-contain"
                 src="../../../public/Red_and_Blue_Modern_School_Logo-removebg-preview.png" alt="Logo">
@@ -51,21 +54,64 @@
                 <span>Đăng xuất</span>
             </router-link>
         </div>
-    </div>
+    </Motion>
 </template>
 <script setup>
 import { defineProps, ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { Motion } from "@motionone/vue";
 
 const route = useRoute();
 const page = ref('');
 const loaded = ref(false);
+const mobileSize = ref(false);
+const load = ref(false);
+
+const props = defineProps({
+    sidebar: Boolean
+})
+const emit = defineEmits(['closeSidebar', 'showSidebar']);
 
 watch(() => route.fullPath, (newVal, oldVal) => {
     page.value = newVal;
 })
+watch(() => props.sidebar, (newVal, oldVal) => {
+    if (!newVal) {
+        load.value = false;
+    } else {
+        load.value = true;
+    }
+})
+
+// Side function
+function closeSidebar() {
+    load.value = false;
+    setTimeout(() => {
+        emit('closeSidebar');
+    }, 500)
+}
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 1024) {
+        mobileSize.value = false
+        emit('showSidebar')
+        load.value = true
+    } else {
+        mobileSize.value = true
+        emit('closeSidebar')
+    }
+})
+
+function getSize() {
+    if (window.innerWidth > 1024) {
+        mobileSize.value = false;
+        emit('showSidebar');
+    } else {
+        mobileSize.value = true;
+    }
+}
 
 onMounted(() => {
+    getSize();
     page.value = route.fullPath;
     loaded.value = true;
 })

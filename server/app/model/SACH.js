@@ -11,7 +11,11 @@ const SACHSchema = new mongoose.Schema({
     },
     TACGIA: String,
     IMAGEURL: String,
-    DESC: String
+    DESC: String,
+    FAV: {
+        type: Number,
+        default: 0
+    }
 })
 const SACHModel = mongoose.model('SACH', SACHSchema);
 

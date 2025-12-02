@@ -128,7 +128,7 @@
         </BorrowItem>
         <BorrowItem v-if="page==='books'" v-for="(item, index) in visibleTask" :key="index" :id="item._id"
             :prop1="item.TENSACH" :prop2="item.DONGIA/1000+' Nghìn'" :prop3="item.SOQUYEN" :page="page"
-            @details="handleDetails" @delete="handleDelete" :darkmode="darkmode">
+            :img="item.IMAGEURL" @details="handleDetails" @delete="handleDelete" :darkmode="darkmode">
         </BorrowItem>
     </div>
     <div class="h-[10%] flex items-center justify-between">

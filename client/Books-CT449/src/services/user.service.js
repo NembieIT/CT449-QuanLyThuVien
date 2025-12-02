@@ -11,6 +11,12 @@ const UserClientService = {
   },
   async updateTTUser(data) {
     return (await api.put("/inform", data)).data;
+  },
+  async getAllBook(){
+    return (await api.get("/trangchu")).data;
+  },
+  async addBorrow(data){
+    return (await api.post("/borrow", data)).data;
   }
 };
 

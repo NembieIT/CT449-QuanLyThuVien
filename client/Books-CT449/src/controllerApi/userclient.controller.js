@@ -10,5 +10,11 @@ const UserClientControllerApi = {
   updateTTUser: async (data)=>{
     return (await UserClientService.updateTTUser(data));
   },
+  getAllBook: async ()=>{
+    return (await UserClientService.getAllBook());
+  },
+  addBorrow: async (data)=>{
+    return (await UserClientService.addBorrow(data));
+  }
 }
 export default UserClientControllerApi;
