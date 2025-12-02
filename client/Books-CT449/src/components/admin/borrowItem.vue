@@ -26,13 +26,13 @@
             </div>
         </div>
         <div class="flex items-center justify-end gap-2 md:gap-7 min-w-fit">
-            <button v-if="page=='all' && props.status=='borrowing'" @click="handleComplete(props.id)"
+            <button v-if="page=='all' && props.status=='borrowing'" @click="handleComplete({idborrow: props.id, bookid: props.bookid})"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-green-300 border transition-all duration-300">Hoàn
                 tất đơn</button>
             <button v-if="page=='pending'" @click="handleAccept(props.id)"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-green-300 border transition-all duration-300">Duyệt
                 đơn</button>
-            <button v-if="page=='pending'" @click="handleDeny(props.id)"
+            <button v-if="page=='pending'" @click="handleDeny({idborrow: props.id, bookid: props.bookid})"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Từ
                 chối</button>
             <button v-if="page=='all'" @click="handleDelete(props.id)"
@@ -60,35 +60,36 @@
     </div>
 </template>
 <script setup>
-    import { defineProps, defineEmits, onMounted } from 'vue';
-    import { dataStatus } from '../../data/data'
-    const props = defineProps({
-        id: String,
-        prop1: String,
-        prop2: String || Number,
-        prop3: String,
-        status: String,
-        img: String,
-        page: String,
-        darkmode: Boolean
-    })
-    const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete', 'getid']);
-    function handleDetail(id) {
-        emit('details', id);
-    }
-    function handleDelete(id) {
-        emit('delete', id);
-    }
-    function handleAccept(id) {
-        emit('accept', id);
-    }
-    function handleDeny(id) {
-        emit('deny', id);
-    }
-    function handleComplete(id) {
-        emit('complete', id);
-    }
-    function handleGetID(id) {
-        emit('getid', id);
-    }
+import { defineProps, defineEmits, onMounted } from 'vue';
+import { dataStatus } from '../../data/data'
+const props = defineProps({
+    id: String,
+    prop1: String,
+    prop2: String || Number,
+    prop3: String,
+    status: String,
+    bookid: String,
+    img: String,
+    page: String,
+    darkmode: Boolean
+})
+const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete', 'getid']);
+function handleDetail(id) {
+    emit('details', id);
+}
+function handleDelete(id) {
+    emit('delete', id);
+}
+function handleAccept(id) {
+    emit('accept', id);
+}
+function handleDeny(data) {
+    emit('deny', data);
+}
+function handleComplete(data) {
+    emit('complete', data);
+}
+function handleGetID(id) {
+    emit('getid', id);
+}
 </script>

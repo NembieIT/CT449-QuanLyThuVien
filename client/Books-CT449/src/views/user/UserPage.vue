@@ -95,6 +95,10 @@ async function addnewBorrow(e) {
         toast.success('Yêu cầu mượn thành công ! Đang chờ duyệt', {
             autoClose: 1500
         })
+    } else {
+        toast.error(res.message, {
+            autoClose: 1500
+        })
     }
 }
 

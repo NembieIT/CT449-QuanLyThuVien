@@ -36,6 +36,16 @@ const BorrowController = {
                 _id: req.body.bookid,
                 SOQUYEN: { $gt: 0 }
             });
+            const IsBorrowed = await BorrowBookModel.findOne({
+                bookid: req.body.bookid,
+                status: { $in: ['pending', 'borrowing'] }
+            });
+            if (IsBorrowed) {
+                return res.json({
+                    EC: 0,
+                    message: "Bạn đang mượn sách này !"
+                })
+            }
             if (IsvalidBorrow) {
                 const AccountBorrow = await UserAccount.findById(req.body.userid)
                 const userBorrow = await UserModel.find({
@@ -194,11 +204,12 @@ const BorrowController = {
                 const user = await UserModel.findById(updatedBorrow.userid);
                 user.borrowing = user.borrowing.filter(item => item != req.body.idborrow);
                 await UserModel.findByIdAndUpdate(user._id, user);
-                await BookModel.findByIdAndUpdate(
+                const updated = await BookModel.findByIdAndUpdate(
                     req.body.bookid,
                     { $inc: { SOQUYEN: 1 } },
                     { new: true }
                 );
+                console.log(updated);
             } else if (updatedBorrow.status == 'borrowing') {
                 try {
                     const user = await UserModel.findById(updatedBorrow.userid);

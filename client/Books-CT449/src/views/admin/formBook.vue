@@ -98,7 +98,7 @@
 
                     <div class="flex flex-col items-start justify-center w-[80%] p-5 mx-auto">
                         <span>Mô tả sách</span>
-                        <a-textarea v-model:value="formState.desc" required placeholder="Mô tả sách" auto-size />
+                        <a-textarea v-model:value="formState.desc" placeholder="Mô tả sách" auto-size />
                     </div>
 
                     <a-form-item class="flex items-center justify-center">

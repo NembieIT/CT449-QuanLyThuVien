@@ -111,8 +111,8 @@
     <div v-if="!loading && visibleTask.length>0" class="flex flex-col gap-[5%] h-[85%] mb-5 overflow-hidden">
         <BorrowItem v-if="page=='pending' || page==='all'" v-for="(item, index) in visibleTask" :id="item._id"
             :key="index" :prop1="item.userid.ten" :prop2="item.bookid.TENSACH" :prop3="item.ngaymuon"
-            :status="item.status" :page="page" @details=handleDetails @accept="handleAccept" @deny="handleDeny"
-            @complete="handleComplete" @delete="handleDelete" :darkmode="darkmode">
+            :bookid="item.bookid._id" :status="item.status" :page="page" @details=handleDetails @accept="handleAccept"
+            @deny="handleDeny" @complete="handleComplete" @delete="handleDelete" :darkmode="darkmode">
         </BorrowItem>
         <BorrowItem v-if="page==='user'" v-for="(item, index) in visibleTask" :key="index" :id="item._id"
             :prop1="item.ten" :prop2="item.address" :prop3="item.phone" :status="item.status" :page="page"
@@ -199,6 +199,7 @@ const currentDetail = ref(null); //chi tiet
 const deletingID = ref(null); //deleting
 const borrowID = ref(''); //don muon 
 const showDetail = ref(false); //drawer
+const bookid = ref(''); //id book hien tai
 var totalPage;
 var visibleTask = ref([]);
 
@@ -277,16 +278,17 @@ const openModalComplete = ref(false);
 const showModalComplete = () => {
     openModalComplete.value = true;
 };
-async function handleComplete(id) {
-    borrowID.value = id;
-    const borrow = dataBorrow.find(item => item._id == id);
+async function handleComplete(data) {
+    borrowID.value = data.idborrow;
+    bookid.value = data.bookid;
+    const borrow = dataBorrow.find(item => item._id == data.idborrow);
     showModalComplete();
 }
 const handleOkComplete = async () => {
     confirmLoading.value = true;
     if (borrowID.value) {
         try {
-            const res = BorrowControllerApi.updateBorrow(borrowID.value, { status: 'done', idborrow: borrowID.value })
+            const res = BorrowControllerApi.updateBorrow(borrowID.value, { status: 'done', idborrow: borrowID.value, bookid: bookid.value })
                 .then(res => {
                     if (res.EC == 1) {
                         setTimeout(() => {
@@ -345,15 +347,16 @@ const openModalDeny = ref(false);
 const showModalDeny = () => {
     openModalDeny.value = true;
 };
-async function handleDeny(id) {
-    borrowID.value = id;
+async function handleDeny(data) {
+    borrowID.value = data.idborrow;
+    bookid.value = data.bookid;
     showModalDeny();
 }
 const handleOkDeny = async () => {
     confirmLoading.value = true;
     if (borrowID.value) {
         try {
-            const res = BorrowControllerApi.updateBorrow(borrowID.value, { status: 'deny' })
+            const res = BorrowControllerApi.updateBorrow(borrowID.value, { status: 'deny', bookid: bookid.value })
                 .then(res => {
                     if (res.EC == 1) {
                         setTimeout(() => {

@@ -30,7 +30,7 @@
 import { defineProps, ref, onMounted, watch } from 'vue';
 import { Motion } from "@motionone/vue";
 
-const emit = defineEmits(["openModel", "closeDetail"]);
+const emit = defineEmits(["openModel", "closeDetail", "showDetail"]);
 const showDetail = ref(false);
 const mobileSize = ref(false);
 const load = ref(false);
