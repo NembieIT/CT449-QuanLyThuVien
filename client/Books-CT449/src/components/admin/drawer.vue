@@ -46,6 +46,10 @@ const formatValue = (key, value) => {
     if (key === 'ngaysinh' && value) {
         return new Date(value).toLocaleDateString('vi-VN')
     }
+    if (value && typeof value === 'object') {
+        if (value.MANXB) return value.MANXB;
+        if (value.TENTACGIA) return value.TENTACGIA;
+    }
     return value
 }
 

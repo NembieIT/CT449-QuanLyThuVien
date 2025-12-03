@@ -9,6 +9,7 @@ import FormBorrow from "../views/admin/formBorrow.vue";
 import FormNV from "../views/admin/formNV.vue";
 import FormNXB from "../views/admin/formNXB.vue";
 import FormBook from "../views/admin/formBook.vue";
+import FormAuthor from "../views/admin/formAuthor.vue";
 
 import Auth from "../views/Auth.vue"
 
@@ -21,7 +22,9 @@ const routes = [
   { path: "/admin/books", name: "DSBooks", component: Borrow },
   { path: "/admin/nxb", name: "DSNXB", component: Borrow },
   { path: "/admin/nhanvien", name: "DSNV", component: Borrow },
-  { path: "/admin/doanhthu", name: "DoanhthuAdmin", component: Borrow },
+  { path: "/admin/author", name: "AuthorAdmin", component: Borrow },
+  { path: "/admin/addauthor", name: "AddAuthor", component: FormAuthor },
+  { path: "/admin/addauthor/:id", name: "EditAuthor", component: FormAuthor },
   { path: "/admin/addborrow", name: "AddBorrow", component: FormBorrow },
   { path: "/admin/addborrow/:id", name: "AddPend", component: FormBorrow },
   { path: "/admin/adduser", name: "AddUser", component: FormUser },

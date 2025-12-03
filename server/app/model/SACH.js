@@ -7,9 +7,12 @@ const SACHSchema = new mongoose.Schema({
     NAMXUATBAN: String,
     MANXB: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'NXB'
+        ref: 'NHAXUATBAN'
     },
-    TACGIA: String,
+    TACGIA: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'TACGIA'
+    },
     IMAGEURL: String,
     DESC: String,
     FAV: {

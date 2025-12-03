@@ -3,6 +3,7 @@ const NhanvienController = require("../controller/NHANVIENController");
 const AuthUserController = require("../controller/auth/AuthUserController");
 const UserController = require("../controller/UserController");
 const BooksController = require("../controller/BooksController");
+const AuthorController = require("../controller/AuthorController");
 const BorrowController = require("../controller/BorrowController");
 const NXBController = require("../controller/NXBController");
 
@@ -37,11 +38,18 @@ router.post("/addnxb", NXBController.addNXB);
 router.put("/nxb/edit/:id", NXBController.updateNXB);
 router.delete("/nxb/:id", NXBController.deleteNXB);
 
-// CRUD BorrowBook
+// CRUD BorrowBook (done)
 router.get("/borrow", BorrowController.getAll);
 router.get("/borrow/:id", BorrowController.findBorrowID);
 router.post("/addborrow", BorrowController.addBorrow);
 router.put("/borrow/edit/:id", BorrowController.updateBorrow);
 router.delete("/borrow/:id", BorrowController.deleteBorrow);
+
+// CRUD tac gia
+router.get("/authors", AuthorController.getAll);
+router.get("/authors/:id", AuthorController.findAuthorByID);
+router.post("/addauthor/", AuthorController.addAuthor);
+router.put("/authors/edit/:id", AuthorController.updateAuthor);
+router.delete("/authors/:id", AuthorController.deleteAuthor);
 
 module.exports = router;

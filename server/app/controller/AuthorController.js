@@ -1,4 +1,4 @@
-const BooksModel = require('../model/SACH');
+const TacgiaModel = require('../model/TACGIA');
 
 function normalizeName(str) {
     return str
@@ -9,12 +9,10 @@ function normalizeName(str) {
         .replace(/\s+/g, " ");               // gom khoảng trắng
 }
 
-const BooksController = {
+const AuthorController = {
     getAll: async (req, res) => {
         try {
-            const data = await BooksModel.find({})
-                .populate({ path: "MANXB" })
-                .populate({ path: "TACGIA" });
+            const data = await TacgiaModel.find({});
             if (data) {
                 return res.status(200).json({
                     EC: 1,
@@ -33,30 +31,33 @@ const BooksController = {
             });
         }
     },
-    addBook: async (req, res) => {
+    addAuthor: async (req, res) => {
         try {
-            const inputName = normalizeName(req.body.tensach);
-            const books = await BooksModel.find({});
-            const existed = books.find(book => {
-                return normalizeName(book.TENSACH) === inputName;
+            const IsvalidAuthor = await TacgiaModel.findOne({
+                $or: [{ MATACGIA: req.body.matacgia || req.body.matacgianew }],
             });
-            console.log(existed);
-            if (existed) {
-                return res.json({ EC: 0, message: "Sách đã tồn tại!" });
+            if (IsvalidAuthor) {
+                return res.json({
+                    EC: 0,
+                    message: "Đã tồn tại mã tác giả này !"
+                });
             }
-            const newBook = new BooksModel({
-                TENSACH: req.body.tensach,
-                DONGIA: req.body.dongia,
-                SOQUYEN: req.body.soquyen,
-                NAMXUATBAN: req.body.namxuatban,
-                MANXB: req.body.manxb,
-                TACGIA: req.body.tacgia,
-                IMAGEURL: req.body.imageUrl,
-                DESC: req.body.desc
+            const inputName = normalizeName(req.body.tentacgia || req.body.tentacgianew);
+            const authors = await TacgiaModel.find({});
+            const existed = authors.find(author => {
+                return normalizeName(author.TENTACGIA) === inputName;
+            });
+            if (existed) {
+                return res.json({ EC: 0, message: "Tên tác giả đã tồn tại!" });
+            }
+            const newAuthor = new TacgiaModel({
+                MATACGIA: req.body.matacgia || req.body.matacgianew,
+                TENTACGIA: req.body.tentacgia || req.body.tentacgianew
             })
-            await newBook.save();
+            await newAuthor.save();
             return res.status(200).json({
-                EC: 1
+                EC: 1,
+                data: newAuthor
             })
         } catch (err) {
             console.log("Loi backend", err);
@@ -66,15 +67,15 @@ const BooksController = {
             });
         }
     },
-    findBook: async (req, res) => {
+    findAuthor: async (req, res) => {
         try {
-            const book = await BooksModel.findOne({
+            const author = await TacgiaModel.findOne({
                 $or: [
-                    { TENSACH: req.body.value },
-                    { TACGIA: req.body.value }
+                    { MATACGIA: req.body.value },
+                    { TENTACGIA: req.body.value }
                 ]
             })
-            if (!book) {
+            if (!author) {
                 return res.json({
                     EC: 0,
                     message: "Not Exist"
@@ -82,7 +83,7 @@ const BooksController = {
             }
             return res.status(200).json({
                 EC: 1,
-                book
+                author
             })
         } catch (err) {
             console.log("Loi backend", err);
@@ -92,13 +93,13 @@ const BooksController = {
             });
         }
     },
-    findBookByID: async (req, res) => {
+    findAuthorByID: async (req, res) => {
         try {
             const id = req.params.id;
-            const book = await BooksModel.findById({
+            const author = await TacgiaModel.findById({
                 _id: id
             })
-            if (!book) {
+            if (!author) {
                 return res.json({
                     EC: 0,
                     message: "Not Exist"
@@ -106,7 +107,7 @@ const BooksController = {
             }
             return res.status(200).json({
                 EC: 1,
-                book
+                author
             })
         } catch (err) {
             console.log("Loi backend", err);
@@ -116,27 +117,23 @@ const BooksController = {
             });
         }
     },
-    updateBook: async (req, res) => {
+    updateAuthor: async (req, res) => {
         try {
-            const updatedBook = await BooksModel.findByIdAndUpdate(req.params.id,
+            const updatedAuthor = await TacgiaModel.findByIdAndUpdate(req.params.id,
                 {
-                    TENSACH: req.body.tensach,
-                    DONGIA: req.body.dongia,
-                    SOQUYEN: req.body.soquyen,
-                    NAMXUATBAN: req.body.namxuatban,
-                    MANXB: req.body.manxb,
-                    TACGIA: req.body.tacgia
+                    MATACGIA: req.body.matacgia,
+                    TENTACGIA: req.body.tentacgia,
                 }
                 , { new: true });
-            if (!updatedBook) {
+            if (!updatedAuthor) {
                 return res.json({
                     EC: 0,
-                    messgae: "Không tìm thấy sách ! "
+                    messgae: "Không tìm thấy tác giả ! "
                 })
             }
             return res.status(200).json({
                 EC: 1,
-                updatedBook
+                updatedAuthor
             })
         } catch (err) {
             console.log("Loi backend", err);
@@ -146,13 +143,13 @@ const BooksController = {
             });
         }
     },
-    deleteBook: async (req, res) => {
+    deleteAuthor: async (req, res) => {
         try {
-            const deleted = await BooksModel.findByIdAndDelete(req.params.id);
+            const deleted = await TacgiaModel.findByIdAndDelete(req.params.id);
             if (!deleted) {
                 return res.json({
                     EC: 0,
-                    message: "Không tìm thấy sách"
+                    message: "Không tìm thấy tác giả"
                 })
             }
             return res.status(200).json({
@@ -168,4 +165,4 @@ const BooksController = {
     }
 }
 
-module.exports = BooksController;
+module.exports = AuthorController;

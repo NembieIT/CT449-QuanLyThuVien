@@ -9,13 +9,13 @@
                 :src="props.book?.IMAGEURL || 'https://play.google.com/books/publisher/content/images/frontcover/j5jzEAAAQBAJ?fife=w256-h256'"
                 alt="">
         </div>
-        <div class="h-[40%] text-left flex flex-col gap-2 overflow-scroll mt-5">
+        <div class="h-[40%] text-center flex flex-col gap-2 overflow-scroll mt-5">
             <span class="uppercase text-2xl text-center">{{props.book?.TENSACH || 'Tên Sách'}}</span>
-            <span class="text-gray-700/80 break-all">{{props.book?.TACGIA || 'Tác giả'}}</span>
+            <span class="text-gray-700/80 break-all">{{props.book?.TACGIA.TENTACGIA || 'Tác giả'}}</span>
             <span class="text-red-400 flex items-center gap-5">
                 <HeartOutlined class="cursor-pointer" /> <span>{{props.book?.FAV||0}}</span>
             </span>
-            <span>{{props.book?.DESC||'Miêu tả sách'}}</span>
+            <span class="text-left">{{props.book?.DESC||'Miêu tả sách'}}</span>
         </div>
         <div class="h-[10%] flex items-center justify-center">
             <div @click="openModel"

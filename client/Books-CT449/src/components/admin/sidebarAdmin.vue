@@ -11,10 +11,10 @@
             <SidebarItem :darkmode="darkmode" goto="/all" title="Tất cả" icon="fa-house"></SidebarItem>
             <SidebarItem :darkmode="darkmode" goto="/pending" title="Đợi duyệt" icon="fa-house"></SidebarItem>
             <SidebarItem :darkmode="darkmode" goto="/books" title="Sách" icon="fa-house"></SidebarItem>
+            <SidebarItem :darkmode="darkmode" goto="/author" title="Tác giả" icon="fa-house"></SidebarItem>
             <SidebarItem :darkmode="darkmode" goto="/nxb" title="Nhà xuất bản" icon="fa-house"></SidebarItem>
             <SidebarItem :darkmode="darkmode" goto="/user" title="Danh sách người dùng" icon="fa-house"></SidebarItem>
             <SidebarItem :darkmode="darkmode" goto="/nhanvien" title="Danh sách nhân viên" icon="fa-house"></SidebarItem>
-            <SidebarItem :darkmode="darkmode" goto="/doanhthu" title="Doanh thu" icon="fa-house"></SidebarItem>
         </div>
 
         <div class="h-[5%] w-full flex flex-col items-center justify-center text-center">

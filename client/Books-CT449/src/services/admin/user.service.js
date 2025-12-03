@@ -23,7 +23,7 @@ const UserService = {
   },
   async delete(id) {
     return (await api.delete(`user/${id}`)).data;
-  },
+  }
 };
 
 export default UserService;

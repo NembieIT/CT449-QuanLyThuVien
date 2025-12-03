@@ -46,16 +46,20 @@
                         <a-form-item label="Nhà xuất bản" name="manxb"
                             :rules="!BookEdit?[{ required: true, message: 'Hãy chọn nhà xuất bản!' }]:[]"
                             class="w-[40%]">
-                            <a-select @select="handleOther" v-model:value="formState.manxb"
-                                placeholder="Vui lòng chọn nhà xuất bản">
+                            <a-select @select="handleOtherNXB" v-model:value="formState.manxb">
                                 <a-select-option value="other">Nhà xuất bản khác</a-select-option>
                                 <a-select-option v-for="(item,index) in dataNXB" :key="index"
                                     :value="item._id">{{item.TENNXB}}</a-select-option>
                             </a-select>
                         </a-form-item>
                         <a-form-item label="Tác giả" name="tacgia"
-                            :rules="!BookEdit?[{ required: true, message: 'Hãy điền tác giả!' }]:[]" class="w-[40%]">
-                            <a-input v-model:value="formState.tacgia" :placeholder="BookEdit?.TACGIA" />
+                            :rules="!BookEdit?[{ required: true, message: 'Hãy chọn tác giả!' }]:[]"
+                            class="w-[40%]">
+                            <a-select @select="handleOtherAuthor" v-model:value="formState.tacgia">
+                                <a-select-option value="other">Tác giả khác</a-select-option>
+                                <a-select-option v-for="(item,index) in dataAuthor" :key="index"
+                                    :value="item._id">{{item.TENTACGIA}}</a-select-option>
+                            </a-select>
                         </a-form-item>
                     </div>
 
@@ -67,6 +71,16 @@
                         <a-form-item v-if="otherNXB" label="Tên NXB" name="tennxbnew"
                             :rules="!BookEdit?[{ required: true, message: 'Hãy điền tên nxb!' }]:[]" class="w-[40%]">
                             <a-input v-model:value="formState.tennxbnew" />
+                        </a-form-item>
+                    </div>
+                    <div class="flex items-center justify-center gap-5">
+                        <a-form-item v-if="otherAuthor" label="Mã tác giả" name="matacgianew"
+                            :rules="!BookEdit?[{ required: true, message: 'Hãy điền mã tác giả!' }]:[]" class="w-[40%]">
+                            <a-input v-model:value="formState.matacgianew" />
+                        </a-form-item>
+                        <a-form-item v-if="otherAuthor" label="Tên tác giả" name="tentacgianew"
+                            :rules="!BookEdit?[{ required: true, message: 'Hãy điền tên tác giả!' }]:[]" class="w-[40%]">
+                            <a-input v-model:value="formState.tentacgianew" />
                         </a-form-item>
                     </div>
 
@@ -115,6 +129,7 @@ import { useRoute } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import NXBControllerApi from "../../controllerApi/nxb.admincontroller.js"
 import BookControllerApi from "../../controllerApi/books.admincontroller.js"
+import AuthorControllerApi from '../../controllerApi/author.admincontroller.js';
 
 import { LoadingOutlined } from '@ant-design/icons-vue';
 import { h } from 'vue';
@@ -126,7 +141,9 @@ const indicator = h(LoadingOutlined, {
 });
 
 var dataNXB = ref([]);
+var dataAuthor = ref([]);
 const otherNXB = ref(false);
+const otherAuthor = ref(false);
 const route = useRoute();
 const id = ref('');
 const BookEdit = ref(null);
@@ -144,6 +161,8 @@ const formState = reactive({
     tacgia: '',
     manxbnew: '',
     tennxbnew: '',
+    matacgianew: '',
+    tentacgianew: '',
     diachinxbnew: '',
     imageUrl: '',
     desc: ''
@@ -195,11 +214,18 @@ const beforeUpload = file => {
     return isJpgOrPng && isLt2M;
 };
 
-const handleOther = (e) => {
+const handleOtherNXB = (e) => {
     if (e.includes('other')) {
         otherNXB.value = true;
     } else {
         otherNXB.value = false;
+    }
+}
+const handleOtherAuthor = (e) => {
+    if (e.includes('other')) {
+        otherAuthor.value = true;
+    } else {
+        otherAuthor.value = false;
     }
 }
 
@@ -247,23 +273,34 @@ async function onFinish(values) {
         }
     } else {
         try {
+            console.log(otherAuthor.value, otherNXB.value)
             var next = ref(false);
-            const { manxbnew, tennxbnew, diachinxbnew, manxb, ...payload } = values;
+            const { manxbnew, tennxbnew, diachinxbnew, matacgianew, tentacgianew, ...payload } = values;
             if (otherNXB.value) {
                 const res = await NXBControllerApi.addNXB({ manxbnew, tennxbnew, diachinxbnew });
                 if (res.EC === 1) {
                     next.value = true;
+                    payload.manxb = res.data._id;
                 } else {
                     toast.error(res.message, {
                         autoClose: 1600
                     })
                 }
-            } else {
-                next.value = true;
             }
+            if (otherAuthor.value) {
+                const res = await AuthorControllerApi.addAuthor({ matacgianew, tentacgianew });
+                if (res.EC === 1) {
+                    next.value = true;
+                    payload.tacgia = res.data._id;
+                } else {
+                    toast.error(res.message, {
+                        autoClose: 1600
+                    })
+                }
+            }
+            next.value = true;
             if (next.value) {
-                const manxbFinal = manxb.value == 'other' ? manxbnew.value : manxb.value;
-                const res = await BookControllerApi.addBook(payload, manxbFinal);
+                const res = await BookControllerApi.addBook(payload);
                 if (res.EC === 1) {
                     loading.value = false;
                     toast.success("Thêm thành công !", {
@@ -302,6 +339,7 @@ const onFinishFailed = errorInfo => {
 onMounted(async () => {
     id.value = route.params.id;
     dataNXB = (await NXBControllerApi.getNXB());
+    dataAuthor = (await AuthorControllerApi.getAuthor());
     if (id.value) BookEdit.value = (await BookControllerApi.getID(id.value))?.book;
     isLoaded.value = true;
 })

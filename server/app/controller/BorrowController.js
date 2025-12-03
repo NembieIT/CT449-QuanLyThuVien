@@ -209,7 +209,6 @@ const BorrowController = {
                     { $inc: { SOQUYEN: 1 } },
                     { new: true }
                 );
-                console.log(updated);
             } else if (updatedBorrow.status == 'borrowing') {
                 try {
                     const user = await UserModel.findById(updatedBorrow.userid);

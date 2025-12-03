@@ -10,7 +10,7 @@ export const dataSex = [
     }
 ]
 
-export const dataDisplayDetailIgnore = ['usernameUser', 'passwordNV', 'pin', '_id', 'createdAt', 'updatedAt', '__v', 'IMAGEURL'];
+export const dataDisplayDetailIgnore = ['usernameUser', 'passwordNV', 'pin', '_id', 'createdAt', 'updatedAt', '__v', 'IMAGEURL', 'COMMENT'];
 
 export const dataFormatName = {
     holot: 'Họ lót',
@@ -38,7 +38,10 @@ export const dataFormatName = {
     ngaymuon: "Ngày mượn",
     ngaytra: "Ngày trả",
     status: "Trạng thái",
-    DESC: "Mô tả"
+    DESC: "Mô tả",
+    MATACGIA: "Mã tác giả",
+    TENTACGIA: "Tên tác giả",
+    FAV: "Yêu thích"
 }
 
 export const ItemPageLimit = 4;
@@ -49,14 +52,15 @@ export const dataAdd = {
     nxb: 'nxb',
     books: 'book',
     all: 'borrow',
-    pending: 'borrow'
+    pending: 'borrow',
+    author: 'author'
 }
 
 export const dataDate = {
     threeday: '3 ngày',
     oneweek: '1 tuần',
-    twoweek:'2 tuần',
-    onemonth:'1 tháng'
+    twoweek: '2 tuần',
+    onemonth: '1 tháng'
 }
 
 export const dataStatus = {

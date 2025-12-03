@@ -50,6 +50,9 @@
             <button v-if="page=='nxb'" @click="handleDelete(props.id)"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá
                 nhà xuất bản</button>
+            <button v-if="page=='author'" @click="handleDelete(props.id)"
+                class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá
+                tác giả</button>
             <button v-if="page=='books'" @click="handleDelete(props.id)"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá
                 sách</button>
@@ -65,8 +68,8 @@ import { dataStatus } from '../../data/data'
 const props = defineProps({
     id: String,
     prop1: String,
-    prop2: String || Number,
-    prop3: String,
+    prop2: [String, Number],
+    prop3: [String, Number],
     status: String,
     bookid: String,
     img: String,
