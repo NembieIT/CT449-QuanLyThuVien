@@ -70,3 +70,11 @@ export const dataStatus = {
     borrowing: "Đang mượn",
     deny: "Từ chối"
 }
+
+export const dataYear = [
+    '1990 trở xuống',
+    '1990 - 2000',
+    '2000 - 2010',
+    '2010 - 2020',
+    '2020 - 2030'
+]

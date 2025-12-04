@@ -16,9 +16,11 @@
                         @click="handleDetail(item)"
                         :src="item.IMAGEURL || 'https://play.google.com/books/publisher/content/images/frontcover/j5jzEAAAQBAJ?fife=w256-h256'"
                         alt="Book">
-                    <div class="h-[40%] flex flex-col justify-center p-3 text-center">
-                        <span>{{ item.TENSACH }}</span>
-                        <span class="text-black/40">{{ item.TACGIA.TENTACGIA }}</span>
+                    <div class="h-[40%] flex flex-col justify-start p-3 text-left">
+                        <span class="text-center text-[20px] text-blue-500">{{ item.TENSACH }}</span>
+                        <span class="text-black/40 text-center">{{ item.TACGIA.TENTACGIA }}</span>
+                        <span>Năm xuất bản: {{ item.NAMXUATBAN }}</span>
+                        <span>Số quyển còn lại: {{ item.SOQUYEN }}</span>
                     </div>
                 </div>
                 <div v-else class="flex items-center justify-center h-full w-[20%]">
@@ -43,9 +45,11 @@
                         @click="handleDetail(item)"
                         :src="item.IMAGEURL || 'https://play.google.com/books/publisher/content/images/frontcover/j5jzEAAAQBAJ?fife=w256-h256'"
                         alt="Book">
-                    <div class="h-[40%] flex flex-col justify-center p-3 text-center">
-                        <span>{{ item.TENSACH }}</span>
-                        <span class="text-black/40">{{ item.TACGIA.TENTACGIA }}</span>
+                    <div class="h-[40%] flex flex-col justify-start p-3 text-left">
+                        <span class="text-center text-[20px] text-blue-500">{{ item.TENSACH }}</span>
+                        <span class="text-black/40 text-center">{{ item.TACGIA.TENTACGIA }}</span>
+                        <span>Năm xuất bản: {{ item.NAMXUATBAN }}</span>
+                        <span>Số quyển còn lại: {{ item.SOQUYEN }}</span>
                     </div>
                 </div>
             </div>
@@ -72,5 +76,6 @@ onMounted(() => {
     bookHot.value = props.dataBook.filter(item => item.FAV > 2).slice(0, 4);
     newestBook.value = props.dataBook.slice(-4);
     loaded.value = true;
+    console.log(newestBook.value)
 })
 </script>

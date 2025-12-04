@@ -13,7 +13,7 @@
                     <Homepage @details="handleDetail" :dataBook="dataBook"></Homepage>
                 </div>
                 <div v-if="page == '/category'" class="w-full lg:w-[80%] h-full overflow-y-scroll overflow-x-hidden">
-                    <Category :dataBook="dataBook"></Category>
+                    <Category @details="handleDetail" :dataBook="dataBook"></Category>
                 </div>
 
                 <div class="w-0 lg:w-[20%] h-full">
@@ -45,7 +45,7 @@
                     <a-form-item label="Thời gian mượn" name="ngaytra">
                         <a-select v-model:value="formState.ngaytra" placeholder="Chọn thời gian trả sách">
                             <a-select-option v-for="(item, index) in dataDate" :key="index" :value="item[index]">{{ item
-                                }}</a-select-option>
+                            }}</a-select-option>
                         </a-select>
                     </a-form-item>
                     <a-textarea v-model:value="formState.note" required placeholder="Ghi chú" auto-size />
