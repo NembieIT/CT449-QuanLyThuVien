@@ -1,4 +1,5 @@
 const AdminModel = require('../../model/ADMIN');
+const DocgiaModel = require("../../model/DOCGIA");
 const bcrypt = require("bcrypt");
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
@@ -14,6 +15,22 @@ const AuthAdminController = {
             const validPassword = await bcrypt.compare(req.body.password, validUsername.passwordAD);
             if (validPassword) {
                 const accessToken = jwt.sign({ username: req.body.username, role: validUsername.role, id: validUsername._id }, process.env.ACCESS_TOKEN_SECRET);
+                const inform = await DocgiaModel.findOne({
+                    usernameUser: validUsername._id
+                })
+                console.log(inform)
+                if (!inform) {
+                    const newTT = new DocgiaModel({
+                        usernameUser: validUsername._id,
+                        holot: '',
+                        ten: '',
+                        ngaysinh: '',
+                        sex: '',
+                        address: '',
+                        phone: ''
+                    });
+                    await newTT.save();
+                }
                 return res.status(200).json({
                     EC: 1,
                     accessToken,

@@ -10,6 +10,7 @@ import FormNV from "../views/admin/formNV.vue";
 import FormNXB from "../views/admin/formNXB.vue";
 import FormBook from "../views/admin/formBook.vue";
 import FormAuthor from "../views/admin/formAuthor.vue";
+import NotFound from "../views/NotFound.vue";
 
 import Auth from "../views/Auth.vue"
 
@@ -51,6 +52,13 @@ const routes = [
   //Route Auth
   { path: "/auth", name: "Auth", component: Auth },
   { path: "/auth/logout", name: "Logout", component: Auth },
+
+  //Not Found
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound
+  }
 ];
 
 // Tạo router

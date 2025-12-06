@@ -20,7 +20,7 @@
                                 <a-menu-item>
                                     <div class="flex items-center justify-start gap-5">
                                         <UserOutlined />
-                                        <router-link to="/admin/all">Giao diện người dùng</router-link>
+                                        <router-link to="/trangchu">Giao diện người dùng</router-link>
                                     </div>
                                 </a-menu-item>
                                 <a-menu-item>

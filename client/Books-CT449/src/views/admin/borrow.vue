@@ -74,27 +74,6 @@
     Bộ lọc
 </a-button>
 </a-dropdown>
-<a-dropdown v-if="page==='pending'">
-    <template #overlay>
-                            <a-menu @click="handleMenuClick">
-                                <a-menu-item key="pending">
-                                    Tất cả
-                                </a-menu-item>
-                                <a-menu-item key="today">
-                                    Hôm nay
-                                </a-menu-item>
-                                <a-menu-item key="thisweek">
-                                    Tuần này
-                                </a-menu-item>
-                                <a-menu-item key="thismonth">
-                                    Tháng này
-                                </a-menu-item>
-                            </a-menu>
-                        </template>
-    <a-button>
-        Bộ lọc
-    </a-button>
-</a-dropdown>
 </div>
 </div>
 <span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='user'">Tên | Email | SĐT</span>

@@ -4,7 +4,8 @@
             <span class="bg-pink-700 text-white text-2xl p-3 rounded-2xl transition-all">Sách
                 yêu thích</span>
         </div>
-        <div class="h-[90%] flex items-center justify-center gap-[5%] p-5 flex-wrap overflow-scroll bg-white">
+        <div v-if="detailUser"
+            class="h-[90%] flex items-center justify-center gap-[5%] p-5 flex-wrap overflow-scroll bg-white">
             <div v-if="visibleTask.length > 0" v-for="(item, index) in visibleTask" :key="item._id || index"
                 class="w-[40%] md:w-[35%] 2xl:w-[20%] h-1/2 2xl:h-[75%] bg-gray-500/40 rounded-2xl overflow-hidden cursor-pointer flex flex-col justify-between">
                 <img class="h-1/2 xl:h-[60%] w-full object-cover hover:object-contain hover:scale-90 transition-all rounded-2xl"
@@ -18,7 +19,7 @@
                     <span>Số quyển còn lại: {{ item.SOQUYEN }}</span>
                 </div>
             </div>
-            <div v-else class="flex flex-col items-center justify-center h-full w-full gap-5">
+            <div v-else class="flex flex-col items-center justify-center h-1/2 2xl:h-[90%] w-full gap-5">
                 <img class="h-1/2 w-1/2 object-contain" src="../../../public/notfound.png" alt="NotFound">
                 <span>Nội dung tìm kiếm không có !</span>
             </div>
@@ -78,10 +79,12 @@
 
     onMounted(async () => {
         detailUser.value = (await UserClientControllerApi.getTTUser(props.user.id)).data[0];
-        bookFav.value = props.dataBook.filter(book =>
-            detailUser.value.favorite?.includes(book._id)
-        );
-        visibleTask.value = bookFav.value;
+        if (detailUser.value) {
+            bookFav.value = props.dataBook.filter(book =>
+                detailUser.value.favorite?.includes(book._id)
+            );
+            visibleTask.value = bookFav.value;
+        }
         loaded.value = true;
     })
 </script>
