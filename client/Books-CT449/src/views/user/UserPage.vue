@@ -1,24 +1,53 @@
 <template>
     <div v-if="loaded" class="relative h-screen w-screen flex items-center justify-center font-text2">
         <div class="w-0 lg:w-[15vw] h-full">
-            <SidebarUser @closeSidebar="sidebar = false" @showSidebar="sidebar = true" :sidebar="sidebar"></SidebarUser>
+            <SidebarUser @closeSidebar="sidebar = false" @showSidebar="sidebar = true" :sidebar="sidebar">
+            </SidebarUser>
         </div>
 
         <div class="w-full lg:w-[85vw] h-full">
             <div class="h-[10vh] w-full">
-                <NavbarUser @toggleSidebar="sidebar = true" :user="user"></NavbarUser>
+                <NavbarUser @inputSearch="handleSearchInput" @toggleSidebar="sidebar = true" :user="user" :page="page">
+                </NavbarUser>
             </div>
             <div class="h-[90vh] w-full flex items-center bg-gray-500">
-                <div v-if="page == '/trangchu'" class="w-full lg:w-[80%] h-full overflow-y-scroll overflow-x-hidden">
+                <div v-if="page == '/trangchu'"
+                    class="w-full md:w-[65%] lg:w-[75%] 2xl:w-[80%] h-full overflow-y-scroll overflow-x-hidden">
                     <Homepage @details="handleDetail" :dataBook="dataBook"></Homepage>
                 </div>
-                <div v-if="page == '/category'" class="w-full lg:w-[80%] h-full overflow-y-scroll overflow-x-hidden">
+                <div v-if="page == '/category'"
+                    class="w-full md:w-[65%] lg:w-[75%] 2xl:w-[80%] h-full overflow-y-scroll overflow-x-hidden">
                     <Category @details="handleDetail" :dataBook="dataBook"></Category>
                 </div>
+                <div v-if="page == '/search'"
+                    class="w-full md:w-[65%] lg:w-[75%] 2xl:w-[80%] h-full overflow-y-scroll overflow-x-hidden">
+                    <Search @details="handleDetail" :dataBook="dataBook" :searchValue="searchValue"></Search>
+                </div>
+                <div v-if="page == '/borrow'"
+                    class="w-full md:w-[65%] lg:w-[75%] 2xl:w-[80%] h-full overflow-y-scroll overflow-x-hidden">
+                    <Borrowing @details="handleDetail" :dataBorrowing="dataBorrow" :user="user"
+                        :searchValue="searchValue">
+                    </Borrowing>
+                </div>
+                <div v-if="page == '/all/hot'"
+                    class="w-full md:w-[65%] lg:w-[75%] 2xl:w-[80%] h-full overflow-y-scroll overflow-x-hidden">
+                    <SeeAll @details="handleDetail" :dataBook="dataBook" :searchValue="searchValue"></SeeAll>
+                </div>
+                <div v-if="page == '/all/newest'"
+                    class="w-full md:w-[65%] lg:w-[75%] 2xl:w-[80%] h-full overflow-y-scroll overflow-x-hidden">
+                    <SeeAll @details="handleDetail" :dataBook="dataBook" :searchValue="searchValue"></SeeAll>
+                </div>
+                <div v-if="page == '/favorite'"
+                    class="w-full md:w-[65%] lg:w-[75%] 2xl:w-[80%] h-full overflow-y-scroll overflow-x-hidden">
+                    <Favorite @details="handleDetail" :dataBook="dataBook" :searchValue="searchValue" :user="user">
+                    </Favorite>
+                </div>
 
-                <div class="w-0 lg:w-[20%] h-full">
+                <div class="w-0 md:w-[35%] lg:w-[25%] 2xl:w-[20%] h-full">
                     <DetailBook :showDetailMobile="showDetailMobile" @closeDetail="showDetailMobile = false"
-                        @showDetail="showDetailMobile = true" :book="detailBook" @openModel="openModelDetail">
+                        @showDetail="showDetailMobile = true" :book="detailBook" @openModel="openModelDetail"
+                        :isFav="isFav" :Favlist="Favlist" @noFav="isFav = false" @Faved="isFav = true"
+                        :user="formState.userid" @updateData="getData">
                     </DetailBook>
                 </div>
             </div>
@@ -26,7 +55,7 @@
 
         <Motion v-if="modelDetail" :initial="{ scale: 0.5 }" :animate="load ? { scale: 1 } : { scale: 0 }"
             :transition="{ duration: 0.5 }"
-            class="absolute h-[65%] lg:h-fit w-[90%] lg:w-1/2 bg-gray-300 rounded-[10px] p-5 border overflow-scroll">
+            class="absolute h-[65%] lg:h-fit w-[90%] lg:w-1/2 bg-gray-300 rounded-[10px] p-5 border overflow-scroll z-20">
             <div class="w-full flex items-center justify-end">
                 <CloseCircleOutlined class="cursor-pointer scale-150" @click="openModelDetail" />
             </div>
@@ -45,7 +74,7 @@
                     <a-form-item label="Thời gian mượn" name="ngaytra">
                         <a-select v-model:value="formState.ngaytra" placeholder="Chọn thời gian trả sách">
                             <a-select-option v-for="(item, index) in dataDate" :key="index" :value="item[index]">{{ item
-                            }}</a-select-option>
+                                }}</a-select-option>
                         </a-select>
                     </a-form-item>
                     <a-textarea v-model:value="formState.note" required placeholder="Ghi chú" auto-size />
@@ -64,25 +93,34 @@ import NavbarUser from '../../components/client/navbarUser.vue';
 import SidebarUser from '../../components/client/sidebarUser.vue';
 import Homepage from '../../components/client/homepage.vue';
 import Category from '../../components/client/category.vue';
+import Search from '../../components/client/search.vue';
+import SeeAll from '../../components/client/seeall.vue';
 import DetailBook from '../../components/client/detailBook.vue';
+import Borrowing from '../../components/client/borrowing.vue';
+import Favorite from '../../components/client/favorite.vue';
 import UserClientControllerApi from '../../controllerApi/userclient.controller';
 import { toast } from 'vue3-toastify'
 import { jwtDecode } from "jwt-decode";
 import { Motion } from '@motionone/vue';
 import { ref, onMounted, reactive, watch } from 'vue';
 import { dataDate } from '../../data/data';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
 const user = ref({});
 const loaded = ref(false);
 const modelDetail = ref(false);
 const sidebar = ref(false);
 const load = ref(false);
 const dataBook = ref([]);
+const dataBorrow = ref([]);
 const detailBook = ref(null);
 const showDetailMobile = ref(false);
 const page = ref('');
+const isFav = ref(false);
+const Favlist = ref([]);
+const searchValue = ref('');
 
 const formState = reactive({
     userid: undefined,
@@ -93,6 +131,10 @@ const formState = reactive({
     note: undefined
 })
 
+function handleSearchInput(searchData) {
+    searchValue.value = searchData;
+}
+
 async function addnewBorrow(e) {
     e.preventDefault();
     formState.bookid = detailBook.value._id;
@@ -102,6 +144,9 @@ async function addnewBorrow(e) {
         toast.success('Yêu cầu mượn thành công ! Đang chờ duyệt', {
             autoClose: 1500
         })
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500)
     } else {
         toast.error(res.message, {
             autoClose: 1500
@@ -112,6 +157,10 @@ async function addnewBorrow(e) {
 function handleDetail(item) {
     detailBook.value = item;
     showDetailMobile.value = true;
+    isFav.value = false;
+    Favlist.value?.forEach(fav => {
+        if (item._id === fav) isFav.value = true;
+    })
 }
 
 const openModelDetail = () => {
@@ -126,19 +175,37 @@ const openModelDetail = () => {
     }
 }
 
-watch(() => route.fullPath, (newVal, oldVal) => {
+async function CheckAuth(path) {
+    if (path.includes('borrow')) {
+        await UserClientControllerApi.AuthenticateBorrowPage();
+    } else if (path.includes('favorite')) {
+        await UserClientControllerApi.AuthenticateFavPage();
+    }
+}
+
+watch(() => route.fullPath, async (newVal, oldVal) => {
     page.value = newVal;
+    CheckAuth(newVal);
+    getData();
 })
 
-onMounted(async () => {
+async function getData() {
     page.value = route.fullPath;
-    const token = localStorage.getItem('accessToken');
+    const token = sessionStorage.getItem('accessToken');
     if (token) {
         const userInfo = jwtDecode(token);
         user.value = userInfo;
         formState.userid = (await UserClientControllerApi.getTTUser(userInfo.id)).data[0];
+        Favlist.value = formState.userid.favorite;
+        dataBorrow.value = (await UserClientControllerApi.getBorrowByIDUser(formState.userid._id)).data;
     }
     dataBook.value = (await UserClientControllerApi.getAllBook()).data;
     loaded.value = true;
+}
+
+onMounted(async () => {
+    const path = route.fullPath;
+    CheckAuth(path);
+    getData();
 })
 </script>

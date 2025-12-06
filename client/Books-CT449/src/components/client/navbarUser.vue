@@ -2,13 +2,15 @@
     <div class="w-full h-full flex items-center bg-white">
         <div class="w-[80%] h-full flex items-center justify-start p-5 gap-5">
             <MenuOutlined class="visible lg:invisible lg:pointer-events-none cursor-pointer" @click="toggleSidebar" />
-            <div class="bg-gray-500/40 p-2 w-fit md:w-[50%] rounded-[10px] flex items-center gap-5 border">
+            <form @submit="handleSubmit" v-if="useSearch"
+                class="bg-gray-500/40 p-2 w-fit md:w-1/2 rounded-[10px] flex items-center gap-5">
                 <SearchOutlined class="cursor-pointer p-2 rounded-[10px] hover:bg-white/50" />
-                <input class="outline-none" type="text" placeholder="Tìm tên sách theo ý">
-            </div>
+                <input @input="inputSearch" v-model="searchValue" class="outline-none w-[80%] md:w-full text-[15px]"
+                    type="text" placeholder="Tìm tên sách theo ý">
+            </form>
         </div>
-        <div v-if="props.user" class="w-[20%] h-full flex items-center justify-end gap-5 p-5">
-            <BellOutlined class="cursor-pointer scale-150" />
+        <div v-if="props.user && Object.keys(props.user).length > 0"
+            class="w-[20%] h-full flex items-center justify-end gap-5 p-5">
             <div class="flex items-center gap-5">
                 <img src="../../../public/vite.svg" alt="Avt">
                 <a-dropdown>
@@ -38,13 +40,28 @@
     </div>
 </template>
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, ref, watch, onMounted } from 'vue';
 import AuthControllerApi from '../../controllerApi/auth.controller';
 import { useRouter } from 'vue-router';
 
+const props = defineProps({
+    user: Object,
+    page: String,
+})
+
+const useSearch = ref(false);
+
 const router = useRouter();
 
-const emit = defineEmits(['toggleSidebar']);
+const searchValue = ref('');
+const emit = defineEmits(['toggleSidebar', 'inputSearch']);
+
+function inputSearch() {
+    emit('inputSearch', searchValue.value);
+}
+function handleSubmit(e) {
+    e.preventDefault();
+}
 
 function toggleSidebar() {
     emit('toggleSidebar');
@@ -54,8 +71,14 @@ const handlelogout = () => {
     AuthControllerApi.logout();
     router.push("/auth");
 }
-const props = defineProps({
-    user: Object
+watch(() => props.page, () => {
+    if (props.page == '/search' || props.page == '/all/hot' || props.page == '/all/newest' || props.page == '/borrow' || props.page == '/favorite') useSearch.value = true;
+    else useSearch.value = false;
+})
+
+onMounted(() => {
+    if (props.page == '/search' || props.page == '/all/hot' || props.page == '/all/newest' || props.page == '/borrow' || props.page == '/favorite') useSearch.value = true;
+    else useSearch.value = false;
 })
 
 </script>

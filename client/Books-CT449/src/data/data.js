@@ -10,7 +10,7 @@ export const dataSex = [
     }
 ]
 
-export const dataDisplayDetailIgnore = ['usernameUser', 'passwordNV', 'pin', '_id', 'createdAt', 'updatedAt', '__v', 'IMAGEURL', 'COMMENT'];
+export const dataDisplayDetailIgnore = ['usernameUser', 'passwordNV', 'pin', '_id', 'createdAt', 'updatedAt', '__v', 'IMAGEURL', 'COMMENT', 'favorite'];
 
 export const dataFormatName = {
     holot: 'Họ lót',
@@ -41,7 +41,8 @@ export const dataFormatName = {
     DESC: "Mô tả",
     MATACGIA: "Mã tác giả",
     TENTACGIA: "Tên tác giả",
-    FAV: "Yêu thích"
+    FAV: "Yêu thích",
+    note: "Chú thích"
 }
 
 export const ItemPageLimit = 4;

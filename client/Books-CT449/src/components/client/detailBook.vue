@@ -1,9 +1,9 @@
 <template lang="">
     <Motion v-if="props.showDetailMobile" :initial="{ x: 500 }" :animate="load ? { x: 0 } : {x: 500}"
         :transition="{ duration: 0.5 }"
-        class="absolute top-0 right-0 lg:static bg-blue-200 h-full  w-1/2 md:w-[40%] lg:w-full flex flex-col p-5">
+        class="absolute top-0 right-0 md:static bg-blue-200 h-full  w-[65%] md:w-full flex flex-col p-5 z-10">
         <CloseOutlined v-if="mobileSize" @click="closeDetail"
-            class="absolute right-5 top-5 cursor-pointer scale-120 bg-gray-400 p-2 rounded-full hover:bg-white transition-all" />
+            class="absolute right-5 top-5 cursor-pointer scale-120 bg-gray-400 p-2 rounded-full hover:bg-white transition-all z-10" />
         <div v-if="!props.book" class="mb-5">
             <h1 class="text-2xl text-center uppercase">Chào mừng bạn tới website quản lý sách !
             </h1>
@@ -16,10 +16,12 @@
                 Đây là giải pháp
                 hiện đại giúp tối ưu thời gian và nâng cao hiệu quả hoạt động của thư viện.</span>
         </div>
-        <div class="p-5 h-[50%] flex items-center justify-center bg-white/70 rounded-2xl">
+        <div class="relative p-5 h-[50%] flex items-center justify-center bg-white/70 rounded-2xl">
             <img class="h-full"
                 :src="props.book?.IMAGEURL || 'https://play.google.com/books/publisher/content/images/frontcover/j5jzEAAAQBAJ?fife=w256-h256'"
                 alt="">
+            <i v-if="!isFav && props.book" @click="handleAddFav" class="fa-regular fa-heart absolute top-7 right-7 scale-150 cursor-pointer bg-white rounded-full p-2 hover:bg-red-400 transition-all"></i>
+            <i v-if="isFav && props.book" @click="handleRemoveFav" class="fa-solid fa-heart absolute top-7 right-7 scale-150 cursor-pointer bg-white rounded-full p-2 hover:bg-gray-300 transition-all text-red-400"></i>
         </div>
         <div v-if="props.book" class="h-[40%] text-center flex flex-col gap-2 overflow-scroll mt-5">
             <span class="uppercase text-2xl text-center">{{props.book?.TENSACH || ''}}</span>
@@ -39,57 +41,112 @@
     </Motion>
 </template>
 <script setup>
-    import { defineProps, ref, onMounted, watch } from 'vue';
-    import { Motion } from "@motionone/vue";
+import { defineProps, ref, onMounted, watch } from 'vue';
+import UserClientControllerApi from '../../controllerApi/userclient.controller';
+import { toast } from 'vue3-toastify'
+import { Motion } from "@motionone/vue";
 
-    const emit = defineEmits(["openModel", "closeDetail", "showDetail"]);
-    const showDetail = ref(false);
-    const mobileSize = ref(false);
-    const load = ref(false);
+const emit = defineEmits(["openModel", "closeDetail", "showDetail", "noFav", "Faved", 'updateData']);
+const showDetail = ref(false);
+const mobileSize = ref(false);
+const load = ref(false);
 
-    const props = defineProps({
-        book: Object,
-        showDetailMobile: Boolean
-    })
+const props = defineProps({
+    book: Object,
+    showDetailMobile: Boolean,
+    isFav: Boolean, //false = unlike, true = like
+    Favlist: Array,
+    user: Object
+})
 
-    watch(() => props.showDetailMobile, (newVal, oldVal) => {
-        if (!newVal) {
-            load.value = false;
-        } else {
-            load.value = true;
-        }
-    })
-
-    function closeDetail() {
+watch(() => props.showDetailMobile, (newVal, oldVal) => {
+    if (!newVal) {
         load.value = false;
-        setTimeout(() => {
-            emit('closeDetail');
-        }, 500)
+    } else {
+        load.value = true;
     }
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 1024) {
-            mobileSize.value = false
-            emit('showDetail')
-            load.value = true
-        } else {
-            mobileSize.value = true
-            emit('closeDetail');
-        }
-    })
+})
 
-    function getSize() {
-        if (window.innerWidth > 1024) {
-            mobileSize.value = false;
-            emit('showDetail');
+async function handleAddFav() {
+    try {
+        props.Favlist.push(props.book._id);
+        const res = await UserClientControllerApi.updateTTUser({ id: props.user._id, favorite: props.Favlist });
+        const res2 = await UserClientControllerApi.updateBook(props.book._id, { addFav: true });
+        if (res.EC == 1 && res2.EC == 1) {
+            toast.success("Đã thêm vào yêu thích !", {
+                autoClose: 1500
+            })
+            emit('Faved');
+            emit('updateData');
         } else {
-            mobileSize.value = true;
+            console.log('loi else')
+            toast.error(res.message, {
+                autoClose: 1500
+            })
         }
+    } catch (err) {
+        toast.error("Lỗi ở backed", {
+            autoClose: 1500
+        })
+        console.log(err);
     }
-    const openModel = () => {
-        emit('openModel');
+}
+async function handleRemoveFav() {
+    try {
+        const newList = props.Favlist.filter(item => item !== props.book._id);
+        console.log(newList);
+        const res = await UserClientControllerApi.updateTTUser({ id: props.user._id, favorite: newList });
+        const res2 = await UserClientControllerApi.updateBook(props.book._id, { addFav: false })
+        if (res.EC == 1 && res2.EC == 1) {
+            toast.success("Đã xoá khỏi yêu thích !", {
+                autoClose: 700
+            })
+            emit('noFav');
+            emit('updateData');
+        } else {
+            console.log('loi else')
+            toast.error(res.message, {
+                autoClose: 700
+            })
+        }
+    } catch (err) {
+        toast.error("Lỗi ở backed", {
+            autoClose: 1500
+        })
+        console.log(err);
     }
+}
 
-    onMounted(() => {
-        getSize();
-    })
+function closeDetail() {
+    load.value = false;
+    setTimeout(() => {
+        emit('closeDetail');
+    }, 500)
+}
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 815) {
+        mobileSize.value = false
+        emit('showDetail')
+        load.value = true
+    } else {
+        mobileSize.value = true
+        emit('closeDetail');
+    }
+})
+
+function getSize() {
+    if (window.innerWidth > 815) {
+        mobileSize.value = false;
+        emit('showDetail');
+    } else {
+        mobileSize.value = true;
+    }
+}
+const openModel = () => {
+    emit('openModel');
+}
+
+onMounted(() => {
+    getSize();
+})
 </script>

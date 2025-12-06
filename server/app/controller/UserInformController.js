@@ -29,7 +29,7 @@ const UserInformController = {
         ngaysinh: req.body.ngaysinh,
         sex: req.body.sex,
         address: req.body.address,
-        phone:req.body.phone
+        phone: req.body.phone
       });
       await newTT.save();
       return res.status(200).json({
@@ -45,7 +45,6 @@ const UserInformController = {
   },
   updateTT: async (req, res) => {
     try {
-        console.log('update : ', req.body)
       const updatedTT = await DocgiaModel.findByIdAndUpdate(
         req.body.id,
         {
@@ -56,6 +55,7 @@ const UserInformController = {
           address: req.body.address,
           phone: req.body.phone,
           usernameuser: req.body.usernameuser,
+          favorite: req.body.favorite
         },
         { new: true }
       );

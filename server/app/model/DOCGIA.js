@@ -6,34 +6,37 @@ const Docgia = new mongoose.Schema({
         default: ""
     },
     ten: {
-        type: String,
-        required: true,
+        type: String
     },
     ngaysinh: {
-        type: Date,
-        required: true,
+        type: Date
     },
     sex: {
-        type: String,
-        required: true
+        type: String
     },
     address: {
-        type: String,
-        required: true,
+        type: String
     },
     phone: {
-        type: String,
-        required: true,
+        type: String
     },
     usernameUser: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    borrowing: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'BorrowBook'
-    }]
+    borrowing: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'BorrowBook'
+        }
+    ],
+    favorite: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'SACH'
+        }
+    ]
 });
 const DocgiaModel = mongoose.model('DOCGIA', Docgia);
 

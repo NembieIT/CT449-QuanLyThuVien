@@ -24,7 +24,11 @@ const BorrowBook = new mongoose.Schema({
         enum: ["pending", "done", "late", "borrowing", "deny"],
         default: "pending"
     },
-    note:String
+    tienphat: {
+        type: Number,
+        default: 0
+    },
+    note: String
 }, { timestamps: true })
 
 const BorrowBookModel = mongoose.model('BorrowBook', BorrowBook);

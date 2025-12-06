@@ -1,4 +1,5 @@
 const UserAccModel = require('../../model/USERACCOUNT');
+const DocgiaModel = require("../../model/DOCGIA");
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
@@ -52,6 +53,16 @@ const UserAccController = {
                 passwordUser: hashed,
             })
             await newUser.save();
+            const newTT = new DocgiaModel({
+                usernameUser: newUser._id,
+                holot: '',
+                ten: '',
+                ngaysinh: '',
+                sex: '',
+                address: '',
+                phone: ''
+            });
+            await newTT.save();
             return res.status(200).json({
                 EC: 1,
                 message: "Đăng ký thành công ! "

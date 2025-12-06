@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from '../router/index';
 
 export default (baseURL) => {
     const instance = axios.create({
@@ -9,7 +10,7 @@ export default (baseURL) => {
         },
     })
     instance.interceptors.request.use((config) => {
-        const token = localStorage.getItem("accessToken");
+        const token = sessionStorage.getItem("accessToken");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -18,15 +19,15 @@ export default (baseURL) => {
     instance.interceptors.response.use(
         (res) => {
             if (res.status === 204) {
-                localStorage.removeItem('accessToken');
-                window.location.href = '/auth';
+                sessionStorage.removeItem('accessToken');
+                router.push('/auth');
             }
             return res;
         },
         (err) => {
             if (err.response?.status === 401 || err.response?.status === 403) {
-                localStorage.removeItem('accessToken');
-                window.location.href = '/auth'
+                sessionStorage.removeItem('accessToken');
+                router.push('/auth');
             }
             return Promise.reject(err);
         }

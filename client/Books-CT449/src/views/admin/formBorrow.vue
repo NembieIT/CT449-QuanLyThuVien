@@ -118,9 +118,12 @@ const onFinish = async values => {
                 dataUpdate[key] = values[key];
             }
         }
-        dataUpdate.ngaymuon = BorrowEdit.value.ngaymuon;
+        if (!dataUpdate.ngaymuon) {
+            dataUpdate.ngaymuon = BorrowEdit.value.ngaymuon;
+        }
         if (Object.keys(dataUpdate).length > 0) {
             try {
+                console.log(dataUpdate)
                 const res = await BorrowControllerApi.updateBorrow(id.value, dataUpdate);
                 if (res.EC == 1) {
                     toast.success("Chỉnh sửa thành công !", {

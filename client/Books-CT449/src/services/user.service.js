@@ -15,6 +15,12 @@ const UserClientService = {
   async getAllBook() {
     return (await api.get("/trangchu")).data;
   },
+  async getBookID(id) {
+    return (await api.get(`/borrow/${id}`)).data;
+  },
+  async updateBook(id, data) {
+    return (await api.post(`/updateBook/${id}`, data)).data;
+  },
   async addBorrow(data) {
     return (await api.post("/borrow", data)).data;
   },
@@ -23,6 +29,15 @@ const UserClientService = {
   },
   async getNXB() {
     return (await api.get("/category/nxb")).data;
+  },
+  async getBorrowByIDUser(id) {
+    return (await api.get(`/trangchu/borrow/${id}`)).data;
+  },
+  async AuthenticateBorrowPage() {
+    return (await api.get('/borrow')).data;
+  },
+  async AuthenticateFavPage() {
+    return (await api.get('/favorite')).data;
   }
 };
 

@@ -15,6 +15,7 @@ import Auth from "../views/Auth.vue"
 
 // Khai báo routes
 const routes = [
+  { path: "/", redirect: "/trangchu" },
   //Route Admin
   { path: "/admin/pending", name: "PendingAdmin", component: Borrow },
   { path: "/admin/all", name: "HomepageAdmin", component: Borrow },
@@ -38,7 +39,11 @@ const routes = [
 
   //Route Client
   { path: "/trangchu", name: "UserHomePage", component: UserPage },
+  { path: "/all/newest", name: "SeeAllNewest", component: UserPage },
+  { path: "/all/hot", name: "SeeAllHot", component: UserPage },
   { path: "/category", name: "UserCategoryPage", component: UserPage },
+  { path: "/search", name: "UserSearchPage", component: UserPage },
+  { path: "/search/:id", name: "UserSearchPageSubmit", component: UserPage },
   { path: "/borrow", name: "UserBorrowPage", component: UserPage },
   { path: "/favorite", name: "UserFavPage", component: UserPage },
   { path: "/inform", name: "InformPage", component: InformPage },

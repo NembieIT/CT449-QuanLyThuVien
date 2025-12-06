@@ -10,7 +10,6 @@
 
             <div class="relative flex items-center justify-center gap-5 text-2xl md:text-3xl">
                 <i @click="toggleDarkmode" class="fa-solid fa-moon hover:text-white transition-all"></i>
-                <i class="fa-solid fa-bell"></i>
                 <div>
                     <a-dropdown>
                         <a class="ant-dropdown-link" @click.prevent>

@@ -98,6 +98,8 @@ const BooksController = {
             const book = await BooksModel.findById({
                 _id: id
             })
+                .populate('MANXB')
+                .populate('TACGIA')
             if (!book) {
                 return res.json({
                     EC: 0,
@@ -106,7 +108,7 @@ const BooksController = {
             }
             return res.status(200).json({
                 EC: 1,
-                book
+                data: book
             })
         } catch (err) {
             console.log("Loi backend", err);
@@ -118,16 +120,24 @@ const BooksController = {
     },
     updateBook: async (req, res) => {
         try {
-            const updatedBook = await BooksModel.findByIdAndUpdate(req.params.id,
-                {
-                    TENSACH: req.body.tensach,
-                    DONGIA: req.body.dongia,
-                    SOQUYEN: req.body.soquyen,
-                    NAMXUATBAN: req.body.namxuatban,
-                    MANXB: req.body.manxb,
-                    TACGIA: req.body.tacgia
-                }
-                , { new: true });
+            const updateData = {
+                TENSACH: req.body.tensach,
+                DONGIA: req.body.dongia,
+                SOQUYEN: req.body.soquyen,
+                NAMXUATBAN: req.body.namxuatban,
+                MANXB: req.body.manxb,
+                TACGIA: req.body.tacgia
+            };
+            // Nếu addFav = true thì tăng FAV lên 1, ngược lại -1
+            if (req.body.addFav !== undefined) {
+                updateData.$inc = { FAV: req.body.addFav === true ? 1 : -1 };
+                delete updateData.addFav;
+            }
+            const updatedBook = await BooksModel.findByIdAndUpdate(
+                req.params.id,
+                updateData,
+                { new: true }
+            );
             if (!updatedBook) {
                 return res.json({
                     EC: 0,

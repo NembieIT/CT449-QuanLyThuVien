@@ -13,6 +13,12 @@ const UserClientControllerApi = {
   getAllBook: async () => {
     return (await UserClientService.getAllBook());
   },
+  getBookID: async (id) => {
+    return (await UserClientService.getBookID(id));
+  },
+  updateBook: async (id, data) => {
+    return (await UserClientService.updateBook(id, data));
+  },
   addBorrow: async (data) => {
     return (await UserClientService.addBorrow(data));
   },
@@ -21,6 +27,15 @@ const UserClientControllerApi = {
   },
   getNXB: async () => {
     return (await UserClientService.getNXB());
+  },
+  getBorrowByIDUser: async (id) => {
+    return (await UserClientService.getBorrowByIDUser(id));
+  },
+  AuthenticateBorrowPage: async () => {
+    return (await UserClientService.AuthenticateBorrowPage());
+  },
+  AuthenticateFavPage: async () => {
+    return (await UserClientService.AuthenticateFavPage());
   }
 }
 export default UserClientControllerApi;

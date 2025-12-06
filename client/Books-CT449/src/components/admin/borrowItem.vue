@@ -10,6 +10,7 @@
                     <h3>{{props.prop1}}</h3>
                     <h3>{{props.prop2}}</h3>
                     <h3>{{props.prop3}}</h3>
+                    <h3>{{props.prop4}}</h3>
                 </div>
             </div>
             <div class="w-[40%] md:w-[30%] text-center flex items-center justify-end">
@@ -26,7 +27,8 @@
             </div>
         </div>
         <div class="flex items-center justify-end gap-2 md:gap-7 min-w-fit">
-            <button v-if="page=='all' && props.status=='borrowing'" @click="handleComplete({idborrow: props.id, bookid: props.bookid})"
+            <button v-if="page=='all' && props.status=='borrowing'"
+                @click="handleComplete({idborrow: props.id, bookid: props.bookid})"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-green-300 border transition-all duration-300">Hoàn
                 tất đơn</button>
             <button v-if="page=='pending'" @click="handleAccept(props.id)"
@@ -63,36 +65,37 @@
     </div>
 </template>
 <script setup>
-import { defineProps, defineEmits, onMounted } from 'vue';
-import { dataStatus } from '../../data/data'
-const props = defineProps({
-    id: String,
-    prop1: String,
-    prop2: [String, Number],
-    prop3: [String, Number],
-    status: String,
-    bookid: String,
-    img: String,
-    page: String,
-    darkmode: Boolean
-})
-const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete', 'getid']);
-function handleDetail(id) {
-    emit('details', id);
-}
-function handleDelete(id) {
-    emit('delete', id);
-}
-function handleAccept(id) {
-    emit('accept', id);
-}
-function handleDeny(data) {
-    emit('deny', data);
-}
-function handleComplete(data) {
-    emit('complete', data);
-}
-function handleGetID(id) {
-    emit('getid', id);
-}
+    import { defineProps, defineEmits, onMounted } from 'vue';
+    import { dataStatus } from '../../data/data'
+    const props = defineProps({
+        id: String,
+        prop1: String,
+        prop2: [String, Number],
+        prop3: [String, Number],
+        prop4: [String, Number],
+        status: String,
+        bookid: String,
+        img: String,
+        page: String,
+        darkmode: Boolean
+    })
+    const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete', 'getid']);
+    function handleDetail(id) {
+        emit('details', id);
+    }
+    function handleDelete(id) {
+        emit('delete', id);
+    }
+    function handleAccept(id) {
+        emit('accept', id);
+    }
+    function handleDeny(data) {
+        emit('deny', data);
+    }
+    function handleComplete(data) {
+        emit('complete', data);
+    }
+    function handleGetID(id) {
+        emit('getid', id);
+    }
 </script>

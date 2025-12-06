@@ -4,6 +4,13 @@ const UserModel = require('../model/DOCGIA');
 const UserAccount = require('../model/USERACCOUNT');
 const DocgiaController = require('../controller/UserController');
 
+function parseVNDate(str) {
+    if (!str) return null;
+
+    const [day, month, year] = str.split('/').map(Number);
+    return new Date(year, month - 1, day);
+}
+
 const BorrowController = {
     getAll: async (req, res) => {
         try {
@@ -12,10 +19,29 @@ const BorrowController = {
             })
                 .populate('bookid')
                 .populate('userid')
+            const formatted = result.map(item => {
+                const obj = item.toObject();
+                const ngayTraDate = item.ngaytra ? parseVNDate(item.ngaytra) : null;
+                let fee = 0;
+                if (ngayTraDate) {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    ngayTraDate.setHours(0, 0, 0, 0);
+                    const songaymuon = 1000 * 60 * 60 * 24; //songaymuon theo ms
+                    const diff = Math.floor((today - ngayTraDate) / songaymuon);
+                    if (diff > 0 && (item.status == 'borrowing' || item.status == 'late')) {
+                        fee = diff * 3000;       // 3000 VND/ngay
+                    } else {
+                        fee = 0;
+                    }
+                }
+                obj.tienphat = fee;
+                return obj;
+            });
             if (result) {
                 return res.status(200).json({
                     EC: 1,
-                    result
+                    data: formatted
                 })
             }
             return res.json({
@@ -123,13 +149,41 @@ const BorrowController = {
     },
     findBorrow: async (req, res) => {
         try {
-            const borrow = await BorrowBookModel.findOne({
-                $or: [
-                    { userid: req.body.value },
-                    { userid: req.body.value }
-                ]
+            const borrow = await BorrowBookModel.find({
+                userid: req.params.id
             })
-            if (!borrow) {
+                .populate('userid')
+                .populate('bookid');
+            const formatted = borrow.map(item => {
+                const obj = item.toObject();
+                const ngayMuonDate = item.ngaymuon ? new Date(item.ngaymuon) : null;
+                const ngayTraDate = item.ngaytra ? parseVNDate(item.ngaytra) : null;
+                if (ngayMuonDate) {
+                    obj.ngaymuon = ngayMuonDate.toLocaleDateString('vi-VN');
+                }
+                if (item.createdAt) {
+                    obj.createdAt = (new Date(item.createdAt)).toLocaleDateString('vi-VN');
+                }
+                if (item.updatedAt) {
+                    obj.updatedAt = (new Date(item.updatedAt)).toLocaleDateString('vi-VN');
+                }
+                let fee = 0;
+                if (ngayTraDate) {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    ngayTraDate.setHours(0, 0, 0, 0);
+                    const songaymuon = 1000 * 60 * 60 * 24; //songaymuon theo ms
+                    const diff = Math.floor((today - ngayTraDate) / songaymuon);
+                    if (diff > 0 && (item.status == 'borrowing' || item.status == 'late')) {
+                        fee = diff * 3000;       // 3000 VND/ngay
+                    } else {
+                        fee = 0;
+                    }
+                }
+                obj.tienphat = fee;
+                return obj;
+            });
+            if (borrow.length === 0) {
                 return res.json({
                     EC: 0,
                     message: "Not Exist"
@@ -137,7 +191,7 @@ const BorrowController = {
             }
             return res.status(200).json({
                 EC: 1,
-                borrow
+                data: formatted
             })
         } catch (err) {
             console.log("Loi backend", err);
