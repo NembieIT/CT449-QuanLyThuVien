@@ -11,12 +11,12 @@ const AuthNVControler = {
       usernameNV: req.body.username,
     });
     if (validUsername) {
-      const validPassword = await bcrypt.compare(
+      const validPassword = bcrypt.compare(
         req.body.password,
         validUsername.passwordNV
       );
       if (validPassword) {
-        const accessToken = jwt.sign({ username: req.body.username, role: 'NV', id: validUsername._id }, process.env.ACCESS_TOKEN_SECRET);
+        const accessToken = jwt.sign({ username: req.body.username, role: validUsername.role, id: validUsername._id }, process.env.ACCESS_TOKEN_SECRET);
         return res.status(200).json({
           EC: 1,
           accessToken,

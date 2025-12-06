@@ -1,10 +1,10 @@
 <template lang="">
-    <div v-if="!loading" class="relative w-full h-[100vh] flex items-start justify-center gap-5 p-2 font-text1"
+    <div v-if="!loading && loaded" class="relative w-full h-[100vh] flex items-start justify-center gap-5 p-2 font-text1"
         :style="{backgroundImage:`radial-gradient(125% 125% at 50% 90%, #000000 40%, #0d1a36 100%)`}">
         <Motion v-if="visible" :initial="{ x: -500 }" :animate="load ? { x: 0 } : {x: -500}"
             :transition="{ duration: 0.5 }"
             class="absolute z-10 w-[55vw] md:w-[35vw] lg:w-[15vw]  lg:static top-0 left-0 h-full">
-            <SidebarAdmin :mobileSize="mobileSize" @toggleSidebar="toggleSidebar" :darkmode="darkmode"></SidebarAdmin>
+            <SidebarAdmin :mobileSize="mobileSize" @toggleSidebar="toggleSidebar" :darkmode="darkmode" :isAdmin="isAdmin"></SidebarAdmin>
         </Motion>
 
         <div
@@ -189,6 +189,7 @@ import Badge from '../../components/admin/badge.vue'
 import BorrowItem from '../../components/admin/borrowItem.vue'
 import Button from '../../components/admin/button.vue'
 import Drawer from '../../components/admin/drawer.vue'
+import { jwtDecode } from "jwt-decode";
 import { Motion } from "@motionone/vue";
 import { useRoute } from 'vue-router';
 
@@ -201,9 +202,12 @@ import AuthorControllerApi from '../../controllerApi/author.admincontroller';
 import BorrowControllerApi from '../../controllerApi/borrow.admincontroller';
 
 // Variable
+const isAdmin = ref(false);
+const currentLog = ref({});
 const darkmode = ref(false);
 const route = useRoute()
-const load = ref(true)
+const load = ref(true);
+const loaded = ref(false);
 const visible = ref(true)
 const mobileSize = ref(false);
 const page = ref(''); //bien luu tru de xac dinh dang o trang nao
@@ -730,6 +734,15 @@ async function getAllData() {
 
 onMounted(async () => {
     await getAllData();
+    const token = sessionStorage.getItem('accessToken');
+    if (token) {
+        const userInfo = jwtDecode(token);
+        currentLog.value = userInfo;
+        if (currentLog.value.role == 'AD') {
+            isAdmin.value = true;
+        }
+    }
+    loaded.value = true;
 })
 
 // Side function
