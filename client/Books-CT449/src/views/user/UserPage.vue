@@ -24,7 +24,7 @@
                     <Search @details="handleDetail" :dataBook="dataBook" :searchValue="searchValue"></Search>
                 </div>
                 <div v-if="page == '/borrow'"
-                    class="w-full md:w-[65%] lg:w-[75%] 2xl:w-[80%] h-full overflow-y-scroll overflow-x-hidden">
+                    :class="[(page == '/borrow' ? 'min-w-full' : ''), 'w-full md:w-[65%] lg:w-[75%] 2xl:w-[80%] h-full overflow-y-scroll overflow-x-hidden']">
                     <Borrowing @details="handleDetail" :dataBorrowing="dataBorrow" :user="user"
                         :searchValue="searchValue">
                     </Borrowing>
@@ -43,11 +43,12 @@
                     </Favorite>
                 </div>
 
-                <div class="w-0 md:w-[35%] lg:w-[25%] 2xl:w-[20%] h-full">
-                    <DetailBook :showDetailMobile="showDetailMobile" @closeDetail="showDetailMobile = false"
-                        @showDetail="showDetailMobile = true" :book="detailBook" @openModel="openModelDetail"
-                        :isFav="isFav" :Favlist="Favlist" @noFav="isFav = false" @Faved="isFav = true"
-                        :user="formState.userid" @updateData="getData">
+                <div
+                    :class="[(page == '/borrow') ? 'w-0 border-red-500' : '', 'w-0 md:w-[35%] lg:w-[25%] 2xl:w-[20%] h-full']">
+                    <DetailBook v-show="!(page == '/borrow')" :showDetailMobile="showDetailMobile"
+                        @closeDetail="showDetailMobile = false" @showDetail="showDetailMobile = true" :book="detailBook"
+                        @openModel="openModelDetail" :isFav="isFav" :Favlist="Favlist" @noFav="isFav = false"
+                        @Faved="isFav = true" :user="formState.userid" @updateData="getData">
                     </DetailBook>
                 </div>
             </div>
@@ -74,7 +75,7 @@
                     <a-form-item label="Thời gian mượn" name="ngaytra">
                         <a-select v-model:value="formState.ngaytra" placeholder="Chọn thời gian trả sách">
                             <a-select-option v-for="(item, index) in dataDate" :key="index" :value="item[index]">{{ item
-                                }}</a-select-option>
+                            }}</a-select-option>
                         </a-select>
                     </a-form-item>
                     <a-textarea v-model:value="formState.note" required placeholder="Ghi chú" auto-size />

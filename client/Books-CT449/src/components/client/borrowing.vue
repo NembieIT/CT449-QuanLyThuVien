@@ -20,9 +20,15 @@
                     <span v-if="item.status=='deny'" class="text-red-500 w-[10%]">Trạng thái: {{
                         formatStatus(item.status)
                         }}</span>
+                    <span v-if="item.status=='pending'" class="text-blue-500 w-[10%]">Trạng thái: {{
+                        formatStatus(item.status)
+                        }}</span>
+                    <span v-if="item.status=='borrowing'" class="text-gray-700 w-[10%]">Trạng thái: {{
+                        formatStatus(item.status)
+                        }}</span>
                     <span class="text-red-500 w-[10%]">Số tiền trễ: {{item.tienphat}}</span>
                 </div>
-                <div v-if="item.status=='borrowing' || item.status=='late'"
+                <div v-if="item.status=='borrowing' || item.status=='late' || item.status=='borrowing'"
                     class="w-[15%] h-full flex items-center justify-center">
                     <span @click="openModelDetail(item.bookid?._id)"
                         class="w-fit p-2 text-[15px] rounded-2xl cursor-pointer bg-white hover:bg-gray-400 transition-all text-center">Tôi
@@ -65,93 +71,93 @@
     </div>
 </template>
 <script setup>
-    import { defineProps, reactive, onMounted, ref, watch } from 'vue';
-    import UserClientControllerApi from '../../controllerApi/userclient.controller';
-    import { useRoute } from 'vue-router';
-    import { dataStatus } from '../../data/data';
-    import { toast } from 'vue3-toastify';
-    import { Motion } from "@motionone/vue";
+import { defineProps, reactive, onMounted, ref, watch } from 'vue';
+import UserClientControllerApi from '../../controllerApi/userclient.controller';
+import { useRoute } from 'vue-router';
+import { dataStatus } from '../../data/data';
+import { toast } from 'vue3-toastify';
+import { Motion } from "@motionone/vue";
 
-    // Hàm xoá dấu tiếng việt
-    function removeVietnameseTones(str) {
-        return str
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/đ/g, 'd')
-            .replace(/Đ/g, 'd')
-            .toLowerCase()
-            .replace(/\s+/g, '')
-            .trim()
-    }
+// Hàm xoá dấu tiếng việt
+function removeVietnameseTones(str) {
+    return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'd')
+        .toLowerCase()
+        .replace(/\s+/g, '')
+        .trim()
+}
 
-    const route = useRoute();
-    const visibleTask = ref([]);
-    const loaded = ref(false);
-    const load = ref(false);
-    const modelDetail = ref(false);
-    const detailBook = ref({});
+const route = useRoute();
+const visibleTask = ref([]);
+const loaded = ref(false);
+const load = ref(false);
+const modelDetail = ref(false);
+const detailBook = ref({});
 
-    const props = defineProps({
-        dataBorrowing: Array,
-        user: Object,
-        searchValue: String,
-    })
+const props = defineProps({
+    dataBorrowing: Array,
+    user: Object,
+    searchValue: String,
+})
 
-    const emit = defineEmits(['details']);
-    function handleDetail(item) {
-        emit('details', item);
-    }
+const emit = defineEmits(['details']);
+function handleDetail(item) {
+    emit('details', item);
+}
 
-    function formatStatus(key) {
-        return dataStatus[key]
-    }
+function formatStatus(key) {
+    return dataStatus[key]
+}
 
-    async function getBook(id) {
-        try {
-            const res = (await UserClientControllerApi.getBookID(id));
-            if (res.EC == 1) {
-                detailBook.value = res.data;
-            }
-        } catch (err) {
-            console.log(err);
+async function getBook(id) {
+    try {
+        const res = (await UserClientControllerApi.getBookID(id));
+        if (res.EC == 1) {
+            detailBook.value = res.data;
         }
+    } catch (err) {
+        console.log(err);
     }
+}
 
-    const openModelDetail = async (id) => {
-        getBook(id);
-        modelDetail.value = true;
-        load.value = true;
-    }
-    const closeModelDetail = () => {
-        load.value = false;
-        setTimeout(() => {
-            modelDetail.value = false;
-        }, 500);
-    }
+const openModelDetail = async (id) => {
+    getBook(id);
+    modelDetail.value = true;
+    load.value = true;
+}
+const closeModelDetail = () => {
+    load.value = false;
+    setTimeout(() => {
+        modelDetail.value = false;
+    }, 500);
+}
 
-    function handleBuy(e) {
-        e.preventDefault();
-        toast.success("Gửi đơn thành công, hãy chờ duyệt !", {
-            autoClose: 1200
+function handleBuy(e) {
+    e.preventDefault();
+    toast.success("Gửi đơn thành công, hãy chờ duyệt !", {
+        autoClose: 1200
+    })
+    setTimeout(() => {
+        window.location.reload();
+    }, 1200);
+}
+
+watch(() => props.searchValue, () => {
+    if (props.searchValue) {
+        const searchFinal = removeVietnameseTones(props.searchValue);
+        visibleTask.value = props.dataBorrowing.filter(item => {
+            return removeVietnameseTones(item.bookid.TENSACH).includes(searchFinal);
         })
-        setTimeout(() => {
-            window.location.reload();
-        }, 1200);
-    }
-
-    watch(() => props.searchValue, () => {
-        if (props.searchValue) {
-            const searchFinal = removeVietnameseTones(props.searchValue);
-            visibleTask.value = props.dataBorrowing.filter(item => {
-                return removeVietnameseTones(item.bookid.TENSACH).includes(searchFinal);
-            })
-        } else {
-            visibleTask.value = props.dataBorrowing;
-        }
-    })
-
-    onMounted(async () => {
+    } else {
         visibleTask.value = props.dataBorrowing;
-        loaded.value = true;
-    })
+    }
+})
+
+onMounted(async () => {
+    visibleTask.value = props.dataBorrowing;
+    loaded.value = true;
+})
 </script>
