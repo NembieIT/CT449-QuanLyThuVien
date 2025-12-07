@@ -81,7 +81,7 @@
 </a-dropdown>
 </div>
 </div>
-<span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='user'">Tên | Email | SĐT</span>
+<span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='user'">Tên | Địa chỉ | SĐT</span>
 <span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='nhanvien'">Họ tên | Địa chỉ NV |
     SĐT | Tình trạng</span>
 <span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='nxb'">Mã NXB | Tên NXB | Địa chỉ</span>

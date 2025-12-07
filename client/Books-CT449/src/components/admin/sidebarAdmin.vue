@@ -9,12 +9,12 @@
         </div>
         <div class="flex flex-col items-center justify-start gap-5 w-full h-fit">
             <SidebarItem :darkmode="props.darkmode" goto="/all" title="Tất cả" icon="fa-house"></SidebarItem>
-            <SidebarItem :darkmode="props.darkmode" goto="/pending" title="Đợi duyệt" icon="fa-house"></SidebarItem>
-            <SidebarItem :darkmode="props.darkmode" goto="/books" title="Sách" icon="fa-house"></SidebarItem>
-            <SidebarItem :darkmode="props.darkmode" goto="/author" title="Tác giả" icon="fa-house"></SidebarItem>
-            <SidebarItem :darkmode="props.darkmode" goto="/nxb" title="Nhà xuất bản" icon="fa-house"></SidebarItem>
-            <SidebarItem :darkmode="props.darkmode" goto="/user" title="Danh sách người dùng" icon="fa-house"></SidebarItem>
-            <SidebarItem v-if="props.isAdmin" :darkmode="props.darkmode" goto="/nhanvien" title="Danh sách nhân viên" icon="fa-house"></SidebarItem>
+            <SidebarItem :darkmode="props.darkmode" goto="/pending" title="Đợi duyệt" icon="fa-clock"></SidebarItem>
+            <SidebarItem :darkmode="props.darkmode" goto="/books" title="Sách" icon="fa-book"></SidebarItem>
+            <SidebarItem :darkmode="props.darkmode" goto="/author" title="Tác giả" icon="fa-users"></SidebarItem>
+            <SidebarItem :darkmode="props.darkmode" goto="/nxb" title="Nhà xuất bản" icon="fa-building"></SidebarItem>
+            <SidebarItem :darkmode="props.darkmode" goto="/user" title="Danh sách người dùng" icon="fa-user"></SidebarItem>
+            <SidebarItem v-if="props.isAdmin" :darkmode="props.darkmode" goto="/nhanvien" title="Danh sách nhân viên" icon="fa-building-user"></SidebarItem>
         </div>
 
         <div class="h-[5%] w-full flex flex-col items-center justify-center text-center">

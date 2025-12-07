@@ -127,6 +127,8 @@ async function handleSubmit(e) {
                             theme: "dark"
                         })
                         openModel.value = true;
+                    } else if (res.message) {
+                        toast.error(res.message, { autoClose: 1200 })
                     } else {
                         admin = false; //neu la nhan vien
                     }

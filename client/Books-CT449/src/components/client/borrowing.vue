@@ -5,7 +5,7 @@
         </div>
         <div class="h-[90%] flex flex-col items-start justify-start gap-5 p-5 overflow-scroll bg-white">
             <div v-if="visibleTask?.length > 0" v-for="(item, index) in visibleTask" :key="item._id || index"
-                class="w-full bg-gray-500/40 rounded-2xl overflow-hidden flex items-center justify-center">
+                class="w-full bg-gray-500/40 rounded-2xl overflow-hidden flex items-center justify-start">
                 <div
                     class="h-fit w-[85%] flex items-center justify-start p-5 text-left gap-5 overflow-x-scroll xl:overflow-x-hidden">
                     <span class="text-blue-600 w-[30%]">{{ item.bookid?.TENSACH }}</span>
@@ -70,108 +70,108 @@
     </div>
 </template>
 <script setup>
-    import { defineProps, reactive, onMounted, ref, watch } from 'vue';
-    import UserClientControllerApi from "../../controllerApi/userclient.controller";
-    import { useRoute } from 'vue-router';
-    import { dataStatus } from '../../data/data';
-    import { toast } from 'vue3-toastify';
-    import { Motion } from "@motionone/vue";
+import { defineProps, reactive, onMounted, ref, watch } from 'vue';
+import UserClientControllerApi from "../../controllerApi/userclient.controller";
+import { useRoute } from 'vue-router';
+import { dataStatus } from '../../data/data';
+import { toast } from 'vue3-toastify';
+import { Motion } from "@motionone/vue";
 
-    // Hàm xoá dấu tiếng việt
-    function removeVietnameseTones(str) {
-        return str
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/đ/g, 'd')
-            .replace(/Đ/g, 'd')
-            .toLowerCase()
-            .replace(/\s+/g, '')
-            .trim()
-    }
+// Hàm xoá dấu tiếng việt
+function removeVietnameseTones(str) {
+    return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'd')
+        .toLowerCase()
+        .replace(/\s+/g, '')
+        .trim()
+}
 
-    const route = useRoute();
-    const visibleTask = ref([]);
-    const loaded = ref(false);
-    const load = ref(false);
-    const modelDetail = ref(false);
-    const detailBook = ref({});
-    const updatingID = ref(''); //id borrow
+const route = useRoute();
+const visibleTask = ref([]);
+const loaded = ref(false);
+const load = ref(false);
+const modelDetail = ref(false);
+const detailBook = ref({});
+const updatingID = ref(''); //id borrow
 
-    const props = defineProps({
-        dataBorrowing: Array,
-        user: Object,
-        searchValue: String,
-    })
+const props = defineProps({
+    dataBorrowing: Array,
+    user: Object,
+    searchValue: String,
+})
 
-    const emit = defineEmits(['details', 'getAllData']);
-    function handleDetail(item) {
-        emit('details', item);
-    }
+const emit = defineEmits(['details', 'getAllData']);
+function handleDetail(item) {
+    emit('details', item);
+}
 
-    function formatStatus(key) {
-        return dataStatus[key]
-    }
+function formatStatus(key) {
+    return dataStatus[key]
+}
 
-    async function getBook(id) {
-        try {
-            const res = (await UserClientControllerApi.getBookID(id));
-            if (res.EC == 1) {
-                detailBook.value = res.data;
-            }
-        } catch (err) {
-            console.log(err);
+async function getBook(id) {
+    try {
+        const res = (await UserClientControllerApi.getBookID(id));
+        if (res.EC == 1) {
+            detailBook.value = res.data;
         }
+    } catch (err) {
+        console.log(err);
     }
+}
 
-    const openModelDetail = async (id, idBorrow) => {
-        await getBook(id);
-        updatingID.value = idBorrow;
-        modelDetail.value = true;
-        load.value = true;
-    }
-    const closeModelDetail = () => {
+const openModelDetail = async (id, idBorrow) => {
+    await getBook(id);
+    updatingID.value = idBorrow;
+    modelDetail.value = true;
+    load.value = true;
+}
+const closeModelDetail = () => {
+    load.value = false;
+    setTimeout(() => {
+        modelDetail.value = false;
+    }, 500);
+}
+
+async function handleReturnBook(e) {
+    e.preventDefault();
+    const res = await UserClientControllerApi.updateBorrow(updatingID.value, { status: 'waiting' });
+    if (res.EC == 1) {
+        emit('getAllData')
+        toast.success("Gửi đơn thành công, hãy đến trả sách !", {
+            autoClose: 1200
+        })
         load.value = false;
         setTimeout(() => {
             modelDetail.value = false;
-        }, 500);
+        }, 1000)
+    } else {
+        toast.error(res.message, {
+            autoClose: 1200
+        })
     }
+}
 
-    async function handleReturnBook(e) {
-        e.preventDefault();
-        const res = await UserClientControllerApi.updateBorrow(updatingID.value, { status: 'waiting' });
-        if (res.EC == 1) {
-            emit('getAllData')
-            toast.success("Gửi đơn thành công, hãy đến trả sách !", {
-                autoClose: 1200
-            })
-            load.value = false;
-            setTimeout(() => {
-                modelDetail.value = false;
-            }, 1000)
-        } else {
-            toast.error(res.message, {
-                autoClose: 1200
-            })
-        }
+watch(() => props.searchValue, () => {
+    if (props.searchValue) {
+        const searchFinal = removeVietnameseTones(props.searchValue);
+        visibleTask.value = props.dataBorrowing.filter(item => {
+            return removeVietnameseTones(item.bookid.TENSACH).includes(searchFinal);
+        })
+    } else {
+        visibleTask.value = props.dataBorrowing;
     }
+})
 
-    watch(() => props.searchValue, () => {
-        if (props.searchValue) {
-            const searchFinal = removeVietnameseTones(props.searchValue);
-            visibleTask.value = props.dataBorrowing.filter(item => {
-                return removeVietnameseTones(item.bookid.TENSACH).includes(searchFinal);
-            })
-        } else {
-            visibleTask.value = props.dataBorrowing;
-        }
-    })
+watch(() => props.dataBorrowing, () => {
+    visibleTask.value = props.dataBorrowing;
+})
 
-    watch(() => props.dataBorrowing, () => {
-        visibleTask.value = props.dataBorrowing;
-    })
-
-    onMounted(async () => {
-        visibleTask.value = props.dataBorrowing;
-        loaded.value = true;
-    })
+onMounted(async () => {
+    visibleTask.value = props.dataBorrowing;
+    loaded.value = true;
+})
 </script>
