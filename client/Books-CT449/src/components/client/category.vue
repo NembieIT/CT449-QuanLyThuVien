@@ -103,7 +103,10 @@ function handleFilter() {
 
         const matchFrom = from ? year >= from : true;
         const matchTo = to ? year <= to : true;
-
+        if (!to) {
+            const matchTime = year <= 1990;
+            return matchNXB && matchTG & matchTime
+        }
         return matchNXB && matchTG && matchFrom && matchTo;
     });
 }

@@ -108,8 +108,7 @@ function validForm() {
     formErr.value.username = !formState.username;
     formErr.value.password = !formState.password;
     formErr.value.minpassword = formState.password.length < 6;
-    formErr.value.email = !formState.email;
-    errMsg.value = (formErr.value.username || formErr.value.password || formErr.value.email)
+    errMsg.value = (formErr.value.username || formErr.value.password)
 }
 
 async function handleSubmit(e) {

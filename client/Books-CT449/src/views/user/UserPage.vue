@@ -186,11 +186,18 @@ async function CheckAuth(path) {
 
 watch(() => route.fullPath, async (newVal, oldVal) => {
     page.value = newVal;
-    sidebar.value = false;
-    showDetailMobile.value = false;
+    if (getSize()) {
+        sidebar.value = false;
+        showDetailMobile.value = false;
+    }
     CheckAuth(newVal);
     getData();
 })
+
+function getSize() {
+    if (window.innerWidth > 1024) return false;
+    return true;
+}
 
 async function getData() {
     page.value = route.fullPath;
