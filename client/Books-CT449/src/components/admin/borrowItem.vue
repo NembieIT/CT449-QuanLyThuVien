@@ -24,10 +24,12 @@
                     :class="`w-full font-text2 text-[18px] text-yellow-600 ${darkmode?'md:bg-white':'md:bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
                 <span v-if="props.status=='deny'"
                     :class="`w-full font-text2 text-[18px] text-red-600 ${darkmode?'md:bg-white':'md:bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
+                <span v-if="props.status=='waiting'"
+                    :class="`w-full font-text2 text-[18px] text-violet-500 ${darkmode?'md:bg-white':'md:bg-black/15'} p-2 rounded-2xl`">{{dataStatus[props.status]}}</span>
             </div>
         </div>
         <div class="flex items-center justify-end gap-2 md:gap-7 min-w-fit">
-            <button v-if="page=='all' && props.status=='borrowing'"
+            <button v-if="page=='all' && (props.status=='borrowing'||props.status=='waiting')"
                 @click="handleComplete({idborrow: props.id, bookid: props.bookid})"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-green-300 border transition-all duration-300">Hoàn
                 tất đơn</button>

@@ -18,6 +18,7 @@ router.post('/updateBook/:id', BooksController.updateBook);
 router.get('/borrow', Authenticated.Authentication, (req, res) => { return res.status(200) });
 router.post('/borrow', BorrowController.addBorrow);
 router.get('/borrow/:id', BooksController.findBookByID);
+router.put('/borrow/waiting/:id', BorrowController.updateBorrow);
 
 router.get('/category/authors', AuthorController.getAll);
 router.get('/category/nxb', NXBController.getAll);

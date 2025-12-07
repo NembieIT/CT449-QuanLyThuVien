@@ -36,6 +36,9 @@ const UserClientControllerApi = {
   },
   AuthenticateFavPage: async () => {
     return (await UserClientService.AuthenticateFavPage());
+  },
+  updateBorrow: async (id, data) => {
+    return (await UserClientService.updateBorrow(id, data));
   }
 }
 export default UserClientControllerApi;

@@ -26,14 +26,16 @@
                     <span v-if="item.status=='borrowing'" class="text-gray-700 w-[10%]">Trạng thái: {{
                         formatStatus(item.status)
                         }}</span>
+                    <span v-if="item.status=='waiting'" class="text-violet-500 w-[10%]">Trạng thái: {{
+                        formatStatus(item.status)
+                        }}</span>
                     <span class="text-red-500 w-[10%]">Số tiền trễ: {{item.tienphat}}</span>
                 </div>
                 <div v-if="item.status=='borrowing' || item.status=='late' || item.status=='borrowing'"
                     class="w-[15%] h-full flex items-center justify-center">
-                    <span @click="openModelDetail(item.bookid?._id)"
-                        class="w-fit p-2 text-[15px] rounded-2xl cursor-pointer bg-white hover:bg-gray-400 transition-all text-center">Tôi
-                        muốn
-                        mua sách</span>
+                    <span @click="openModelDetail(item.bookid?._id, item._id)"
+                        class="w-fit p-2 text-[15px] rounded-2xl cursor-pointer bg-white hover:bg-gray-400 transition-all text-center">Yêu
+                        cầu trả sách</span>
                 </div>
             </div>
             <div v-else class="flex flex-col items-center justify-center h-full w-full gap-5">
@@ -58,106 +60,113 @@
                     <h2 class="text-4xl">{{ detailBook.TENSACH }}</h2>
                     <span class="text-[15px] text-gray-600">Tác giả: {{ detailBook.TACGIA.TENTACGIA }}</span>
                     <span class="text-[15px] text-gray-600">Nhà xuất bản: {{ detailBook.MANXB.TENNXB }}</span>
-                    <span class="text-[20px] text-green-600">Giá: {{ detailBook.DONGIA }} VND</span>
-                    <span class="text-gray-700 text-[15px]">Nội dung chuyển khoản: {{ props.user.username
-                        }} {{removeVietnameseTones(detailBook.TENSACH)}}</span>
-                    <img src="../../../public/qrcode.jpg" alt="QRCODE">
-                    <button @click="handleBuy"
-                        class="bg-black text-white w-[70%] mx-auto p-3 rounded-[10px] cursor-pointer hover:bg-gray-500 hover:text-black transition-all">Xác
-                        nhận đã thanh toán</button>
+                    <span class="text-gray-900 text-[18px]">Sau khi xác nhận, vui lòng trả sách trong hôm nay</span>
+                    <button @click="handleReturnBook"
+                        class="bg-black text-white w-full mx-auto p-3 rounded-[10px] cursor-pointer hover:bg-gray-500 hover:text-black transition-all">Xác
+                        nhận yêu cầu trả sách</button>
                 </form>
             </div>
         </Motion>
     </div>
 </template>
 <script setup>
-import { defineProps, reactive, onMounted, ref, watch } from 'vue';
-import UserClientControllerApi from '../../controllerApi/userclient.controller';
-import { useRoute } from 'vue-router';
-import { dataStatus } from '../../data/data';
-import { toast } from 'vue3-toastify';
-import { Motion } from "@motionone/vue";
+    import { defineProps, reactive, onMounted, ref, watch } from 'vue';
+    import UserClientControllerApi from "../../controllerApi/userclient.controller";
+    import { useRoute } from 'vue-router';
+    import { dataStatus } from '../../data/data';
+    import { toast } from 'vue3-toastify';
+    import { Motion } from "@motionone/vue";
 
-// Hàm xoá dấu tiếng việt
-function removeVietnameseTones(str) {
-    return str
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/đ/g, 'd')
-        .replace(/Đ/g, 'd')
-        .toLowerCase()
-        .replace(/\s+/g, '')
-        .trim()
-}
-
-const route = useRoute();
-const visibleTask = ref([]);
-const loaded = ref(false);
-const load = ref(false);
-const modelDetail = ref(false);
-const detailBook = ref({});
-
-const props = defineProps({
-    dataBorrowing: Array,
-    user: Object,
-    searchValue: String,
-})
-
-const emit = defineEmits(['details']);
-function handleDetail(item) {
-    emit('details', item);
-}
-
-function formatStatus(key) {
-    return dataStatus[key]
-}
-
-async function getBook(id) {
-    try {
-        const res = (await UserClientControllerApi.getBookID(id));
-        if (res.EC == 1) {
-            detailBook.value = res.data;
-        }
-    } catch (err) {
-        console.log(err);
+    // Hàm xoá dấu tiếng việt
+    function removeVietnameseTones(str) {
+        return str
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .replace(/Đ/g, 'd')
+            .toLowerCase()
+            .replace(/\s+/g, '')
+            .trim()
     }
-}
 
-const openModelDetail = async (id) => {
-    getBook(id);
-    modelDetail.value = true;
-    load.value = true;
-}
-const closeModelDetail = () => {
-    load.value = false;
-    setTimeout(() => {
-        modelDetail.value = false;
-    }, 500);
-}
+    const route = useRoute();
+    const visibleTask = ref([]);
+    const loaded = ref(false);
+    const load = ref(false);
+    const modelDetail = ref(false);
+    const detailBook = ref({});
+    const updatingID = ref(''); //id borrow
 
-function handleBuy(e) {
-    e.preventDefault();
-    toast.success("Gửi đơn thành công, hãy chờ duyệt !", {
-        autoClose: 1200
+    const props = defineProps({
+        dataBorrowing: Array,
+        user: Object,
+        searchValue: String,
     })
-    setTimeout(() => {
-        window.location.reload();
-    }, 1200);
-}
 
-watch(() => props.searchValue, () => {
-    if (props.searchValue) {
-        const searchFinal = removeVietnameseTones(props.searchValue);
-        visibleTask.value = props.dataBorrowing.filter(item => {
-            return removeVietnameseTones(item.bookid.TENSACH).includes(searchFinal);
-        })
-    } else {
-        visibleTask.value = props.dataBorrowing;
+    const emit = defineEmits(['details', 'getAllData']);
+    function handleDetail(item) {
+        emit('details', item);
     }
-})
 
-onMounted(async () => {
-    visibleTask.value = props.dataBorrowing;
-    loaded.value = true;
-})
+    function formatStatus(key) {
+        return dataStatus[key]
+    }
+
+    async function getBook(id) {
+        try {
+            const res = (await UserClientControllerApi.getBookID(id));
+            if (res.EC == 1) {
+                detailBook.value = res.data;
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const openModelDetail = async (id, idBorrow) => {
+        await getBook(id);
+        updatingID.value = idBorrow;
+        modelDetail.value = true;
+        load.value = true;
+    }
+    const closeModelDetail = () => {
+        load.value = false;
+        setTimeout(() => {
+            modelDetail.value = false;
+        }, 500);
+    }
+
+    async function handleReturnBook(e) {
+        e.preventDefault();
+        const res = await UserClientControllerApi.updateBorrow(updatingID.value, { status: 'waiting' });
+        console.log(res);
+        if (res.EC == 1) {
+            toast.success("Gửi đơn thành công, hãy đến trả sách !", {
+                autoClose: 1200
+            })
+            setTimeout(() => {
+                window.location.reload();
+            }, 1200);
+        } else {
+            toast.error(res.message, {
+                autoClose: 1200
+            })
+        }
+    }
+
+    watch(() => props.searchValue, () => {
+        if (props.searchValue) {
+            const searchFinal = removeVietnameseTones(props.searchValue);
+            visibleTask.value = props.dataBorrowing.filter(item => {
+                return removeVietnameseTones(item.bookid.TENSACH).includes(searchFinal);
+            })
+        } else {
+            visibleTask.value = props.dataBorrowing;
+        }
+    })
+
+    onMounted(async () => {
+        visibleTask.value = props.dataBorrowing;
+        loaded.value = true;
+    })
 </script>

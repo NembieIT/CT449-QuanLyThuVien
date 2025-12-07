@@ -26,7 +26,7 @@
                 <div v-if="page == '/borrow'"
                     :class="[(page == '/borrow' ? 'min-w-full' : ''), 'w-full md:w-[65%] lg:w-[75%] 2xl:w-[80%] h-full overflow-y-scroll overflow-x-hidden']">
                     <Borrowing @details="handleDetail" :dataBorrowing="dataBorrow" :user="user"
-                        :searchValue="searchValue">
+                        :searchValue="searchValue" @getAllData="getData">
                     </Borrowing>
                 </div>
                 <div v-if="page == '/all/hot'"
@@ -75,7 +75,7 @@
                     <a-form-item label="Thời gian mượn" name="ngaytra">
                         <a-select v-model:value="formState.ngaytra" placeholder="Chọn thời gian trả sách">
                             <a-select-option v-for="(item, index) in dataDate" :key="index" :value="item[index]">{{ item
-                                }}</a-select-option>
+                            }}</a-select-option>
                         </a-select>
                     </a-form-item>
                     <a-textarea v-model:value="formState.note" required placeholder="Ghi chú" auto-size />

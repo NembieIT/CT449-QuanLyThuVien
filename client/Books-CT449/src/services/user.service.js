@@ -38,6 +38,9 @@ const UserClientService = {
   },
   async AuthenticateFavPage() {
     return (await api.get('/favorite')).data;
+  },
+  async updateBorrow(id, data) {
+    return (await api.put(`/borrow/waiting/${id}`, data)).data;
   }
 };
 

@@ -70,7 +70,8 @@ export const dataStatus = {
     pending: "Đang chờ",
     late: "Trễ",
     borrowing: "Đang mượn",
-    deny: "Từ chối"
+    deny: "Từ chối",
+    waiting: "Chờ trả sách"
 }
 
 export const dataYear = [

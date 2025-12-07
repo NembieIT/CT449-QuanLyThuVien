@@ -18,8 +18,7 @@ const SACHSchema = new mongoose.Schema({
     FAV: {
         type: Number,
         default: 0
-    },
-    COMMENT: Array
+    }
 }, {
     timestamps: true
 })

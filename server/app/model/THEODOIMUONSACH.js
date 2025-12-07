@@ -21,7 +21,7 @@ const BorrowBook = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["pending", "done", "late", "borrowing", "deny"],
+        enum: ["pending", "done", "late", "borrowing", "deny", "waiting"],
         default: "pending"
     },
     tienphat: {

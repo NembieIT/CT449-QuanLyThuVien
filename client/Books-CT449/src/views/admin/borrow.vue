@@ -24,6 +24,8 @@
                     </Badge>
                     <Badge v-if="page=='all'" title="Đang mượn" :count="cntLate" class="bg-gray-400">
                     </Badge>
+                    <Badge v-if="page=='all'" title="Chờ trả sách" :count="cntWaiting" class="bg-violet-400">
+                    </Badge>
                     <Badge v-if="page=='user'" title="Tổng số user" :count="cntUser" class="bg-white">
                     </Badge>
                     <Badge v-if="page=='nhanvien'" title="Tổng số nhân viên" :count="cntNV" class="bg-white">
@@ -67,6 +69,9 @@
                                 </a-menu-item>
                                 <a-menu-item key="deny">
                                     Từ chối
+                                </a-menu-item>
+                                <a-menu-item key="waiting">
+                                    Chờ trả sách
                                 </a-menu-item>
                             </a-menu>
                         </template>
@@ -220,7 +225,7 @@ function removeVietnameseTones(str) {
 }
 
 // Filter Data
-var dataPending, dataLate, dataDone, dataBorrowing, dataDeny, cntDone, cntLate, cntPend, cntBorrowing, cntDeny;
+var dataPending, dataLate, dataDone, dataBorrowing, dataDeny, dataWaiting, cntWaiting, cntDone, cntLate, cntPend, cntBorrowing, cntDeny;
 const cntUser = ref(0);
 const cntNV = ref(0);
 const cntBooks = ref(0);
@@ -233,11 +238,13 @@ function FilterDataAll() {
         dataDone = dataBorrow.filter(item => item.status.includes('done'));
         dataBorrowing = dataBorrow.filter(item => item.status.includes('borrowing'));
         dataDeny = dataBorrow.filter(item => item.status.includes('deny'));
+        dataWaiting = dataBorrow.filter(item => item.status.includes('waiting'));
         cntDeny = dataDeny.length || 0;
         cntBorrowing = dataBorrowing.length || 0;
         cntDone = dataDone.length || 0;
         cntLate = dataLate.length || 0;
         cntPend = dataPending.length || 0;
+        cntWaiting = dataWaiting.length || 0;
     }
 }
 
@@ -615,6 +622,9 @@ const getPageData = (path) => {
     } else if (path.includes('deny')) {
         totalPage = Math.ceil(dataDeny?.length / ItemPageLimit) || 0
         return dataDeny
+    } else if (path.includes('waiting')) {
+        totalPage = Math.ceil(dataWaiting?.length / ItemPageLimit) || 0
+        return dataWaiting
     } else {
         totalPage = Math.ceil(dataBorrow?.length / ItemPageLimit) || 0
         page.value = 'all'
