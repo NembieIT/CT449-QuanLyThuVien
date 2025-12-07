@@ -18,7 +18,6 @@ const AuthAdminController = {
                 const inform = await DocgiaModel.findOne({
                     usernameUser: validUsername._id
                 })
-                console.log(inform)
                 if (!inform) {
                     const newTT = new DocgiaModel({
                         usernameUser: validUsername._id,

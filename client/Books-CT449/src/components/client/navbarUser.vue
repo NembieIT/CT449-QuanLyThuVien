@@ -33,9 +33,9 @@
         </div>
         <div v-else class="w-[20%] h-full flex items-center justify-end gap-5 p-5">
             <router-link to="/auth"
-                class="bg-gray-600 p-3 text-white rounded-[5px] hover:bg-gray-900 transition-all">Đăng
+                class="bg-gray-600 p-3 text-white rounded-[5px] hover:bg-gray-900 transition-all text-center">Đăng
                 Ký</router-link>
-            <router-link to="/auth" class="text-gray-500 hover:text-gray-900">Đăng Nhập</router-link>
+            <router-link to="/auth" class="text-gray-500 hover:text-gray-900 text-center">Đăng Nhập</router-link>
         </div>
     </div>
 </template>

@@ -1,7 +1,7 @@
 <template lang="">
     <Motion v-if="props.showDetailMobile" :initial="{ x: 500 }" :animate="load ? { x: 0 } : {x: 500}"
         :transition="{ duration: 0.5 }"
-        class="absolute top-0 right-0 md:static bg-blue-200 h-full  w-[65%] md:w-full flex flex-col p-5 z-10">
+        class="absolute top-0 right-0 md:static bg-blue-200 h-full overflow-y-scroll w-[65%] md:w-full flex flex-col p-5 z-10">
         <CloseOutlined v-if="mobileSize" @click="closeDetail"
             class="absolute right-5 top-5 cursor-pointer scale-120 bg-gray-400 p-2 rounded-full hover:bg-white transition-all z-10" />
         <div v-if="!props.book" class="mb-5">

@@ -3,11 +3,11 @@
         <div class="h-[10%] flex items-center justify-between p-5 bg-white">
             <h2 class="uppercase border-b-1 text-2xl">Đơn mượn hiện có</h2>
         </div>
-        <div class="h-[90%] flex flex-col items-start justify-start gap-5 p-5 overflow-scroll bg-white">
+        <div class="h-[90%] flex flex-col items-start justify-start gap-5 p-5 overflow-y-scroll bg-white">
             <div v-if="visibleTask?.length > 0" v-for="(item, index) in visibleTask" :key="item._id || index"
-                class="w-full bg-gray-500/40 rounded-2xl overflow-hidden flex items-center justify-start">
+                class="w-full bg-gray-500/40 h-full rounded-2xl overflow-scroll flex items-center justify-start flex-wrap border">
                 <div
-                    class="h-fit w-[85%] flex items-center justify-start p-5 text-left gap-5 overflow-x-scroll xl:overflow-x-hidden">
+                    class="h-full w-full flex items-center justify-center p-5 text-left gap-5 overflow-hidden">
                     <span class="text-blue-600 w-[30%]">{{ item.bookid?.TENSACH }}</span>
                     <span>Ngày mượn: {{ item.ngaymuon }}</span>
                     <span>Ngày trả: {{ item.ngaytra }}</span>
@@ -46,7 +46,7 @@
 
         <Motion v-if="modelDetail" :initial="{ scale: 0.5 }" :animate="load ? { scale: 1 } : { scale: 0 }"
             :transition="{ duration: 0.5 }"
-            class="absolute top-0 left-1/2 -translate-x-1/2 h-[65%] lg:h-fit w-[90%] lg:w-1/2 bg-gray-300 rounded-[10px] p-5 border overflow-scroll z-20">
+            class="absolute top-0 left-1/2 -translate-x-1/2 h-[80%] lg:h-fit w-[90%] lg:w-1/2 bg-gray-300 rounded-[10px] p-5 border overflow-scroll z-20">
             <div class="w-full flex items-center justify-end">
                 <CloseCircleOutlined class="cursor-pointer scale-150" @click="closeModelDetail" />
             </div>
