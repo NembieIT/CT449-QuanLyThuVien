@@ -5,7 +5,7 @@
         </div>
         <div class="h-[90%] flex flex-col items-start justify-start gap-5 p-5 overflow-scroll bg-white">
             <div v-if="visibleTask?.length > 0" v-for="(item, index) in visibleTask" :key="item._id || index"
-                class="w-full bg-gray-500/40 rounded-2xl overflow-hidden flex items-center justify-between">
+                class="w-full bg-gray-500/40 rounded-2xl overflow-hidden flex items-center justify-center">
                 <div
                     class="h-fit w-[85%] flex items-center justify-start p-5 text-left gap-5 overflow-x-scroll xl:overflow-x-hidden">
                     <span class="text-blue-600 w-[30%]">{{ item.bookid?.TENSACH }}</span>
@@ -139,14 +139,15 @@
     async function handleReturnBook(e) {
         e.preventDefault();
         const res = await UserClientControllerApi.updateBorrow(updatingID.value, { status: 'waiting' });
-        console.log(res);
         if (res.EC == 1) {
+            emit('getAllData')
             toast.success("Gửi đơn thành công, hãy đến trả sách !", {
                 autoClose: 1200
             })
+            load.value = false;
             setTimeout(() => {
-                window.location.reload();
-            }, 1200);
+                modelDetail.value = false;
+            }, 1000)
         } else {
             toast.error(res.message, {
                 autoClose: 1200
@@ -163,6 +164,10 @@
         } else {
             visibleTask.value = props.dataBorrowing;
         }
+    })
+
+    watch(() => props.dataBorrowing, () => {
+        visibleTask.value = props.dataBorrowing;
     })
 
     onMounted(async () => {

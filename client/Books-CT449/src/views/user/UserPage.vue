@@ -77,8 +77,9 @@
                             <a-select-option v-for="(item, index) in dataDate" :key="index" :value="item[index]">{{ item
                             }}</a-select-option>
                         </a-select>
+                        <span v-if="msgerr" class="text-red-500">Vui lòng chọn thời gian trả sách !</span>
                     </a-form-item>
-                    <a-textarea v-model:value="formState.note" required placeholder="Ghi chú" auto-size />
+                    <a-textarea v-model:value="formState.note" placeholder="Ghi chú" auto-size />
                     <button
                         class="bg-black text-white w-[70%] mx-auto p-3 rounded-[10px] cursor-pointer hover:bg-gray-500 hover:text-black transition-all">Đăng
                         ký
@@ -122,6 +123,7 @@ const page = ref('');
 const isFav = ref(false);
 const Favlist = ref([]);
 const searchValue = ref('');
+const msgerr = ref(false);
 
 const formState = reactive({
     userid: undefined,
@@ -138,16 +140,23 @@ function handleSearchInput(searchData) {
 
 async function addnewBorrow(e) {
     e.preventDefault();
+    msgerr.value = false;
+    if (!formState.ngaytra) {
+        msgerr.value = true;
+        return
+    }
     formState.bookid = detailBook.value._id;
     const payload = { ...formState };
     const res = await UserClientControllerApi.addBorrow(payload);
     if (res.EC == 1) {
+        getData();
         toast.success('Yêu cầu mượn thành công ! Đang chờ duyệt', {
             autoClose: 1500
         })
+        load.value = false;
         setTimeout(() => {
-            window.location.reload();
-        }, 1500)
+            modelDetail.value = false;
+        }, 1200)
     } else {
         toast.error(res.message, {
             autoClose: 1500

@@ -29,7 +29,7 @@ const BorrowController = {
                     ngayTraDate.setHours(0, 0, 0, 0);
                     const songaymuon = 1000 * 60 * 60 * 24; //songaymuon theo ms
                     const diff = Math.floor((today - ngayTraDate) / songaymuon);
-                    if (diff > 0 && (item.status == 'borrowing' || item.status == 'late')) {
+                    if (diff > 0 && (item.status == 'borrowing' || item.status == 'late' || item.status == 'waiting')) {
                         fee = diff * 3000;       // 3000 VND/ngay
                     } else {
                         fee = 0;
