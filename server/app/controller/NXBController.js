@@ -3,7 +3,7 @@ const NXBModel = require("../model/NXB");
 const NXBController = {
   getAll: async (req, res) => {
     try {
-      const data = await NXBModel.find({});
+      const data = await NXBModel.find({}).sort({ createdAt: -1 });
       if (data) {
         return res.status(200).json({
           EC: 1,

@@ -12,7 +12,7 @@ function normalizeName(str) {
 const AuthorController = {
     getAll: async (req, res) => {
         try {
-            const data = await TacgiaModel.find({});
+            const data = await TacgiaModel.find({}).sort({ createdAt: -1 });
             if (data) {
                 return res.status(200).json({
                     EC: 1,

@@ -55,12 +55,12 @@ const UserAccController = {
             await newUser.save();
             const newTT = new DocgiaModel({
                 usernameUser: newUser._id,
-                holot: '',
-                ten: '',
-                ngaysinh: '',
-                sex: '',
-                address: '',
-                phone: ''
+                holot: req.body.holot || '',
+                ten: req.body.ten || '',
+                ngaysinh: req.body.ngaysinh || '',
+                sex: req.body.sex || '',
+                address: req.body.address || '',
+                phone: req.body.phone || ''
             });
             await newTT.save();
             return res.status(200).json({

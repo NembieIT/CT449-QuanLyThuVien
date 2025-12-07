@@ -89,7 +89,7 @@ async function onFinish(values) {
                 const res = await NVControllerApi.updateNV(id.value, dataUpdate);
                 if (res.EC == 1) {
                     loading.value = false
-                    toast.success("OK cu", {
+                    toast.success("Thành công !", {
                         autoClose: 1600
                     })
                     setTimeout(() => {

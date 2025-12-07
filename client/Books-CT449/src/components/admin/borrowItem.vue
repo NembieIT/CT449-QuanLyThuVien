@@ -46,8 +46,18 @@
             <button v-if="page=='user'" @click="handleDelete(props.id)"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá
                 người dùng</button>
+            <button v-if="page=='user' && props.prop4=='unlock'" @click="handleLock(props.id)"
+                class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Khoá
+                người dùng</button>
+            <button v-if="page=='user' && props.prop4=='lock'" @click="handleUnLock(props.id)"
+                class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Mở khoá
+                người dùng</button>
+            <button v-if="page=='nhanvien' && props.prop4=='unlock'" @click="handleLock(props.id)"
+                class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Khoá tài khoản</button>
+            <button v-if="page=='nhanvien' && props.prop4=='lock'" @click="handleUnLock(props.id)"
+                class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Mở khoá tài khoản</button>
             <button v-if="page=='nhanvien'" @click="handleDelete(props.id)"
-                class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá
+                class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-500 border transition-all duration-300">Xoá
                 nhân viên</button>
             <button v-if="page=='nxb'" @click="handleDelete(props.id)"
                 class="bg-white text-black p-1 md:p-2 rounded-[5px] cursor-pointer hover:bg-red-300 border transition-all duration-300">Xoá
@@ -65,37 +75,43 @@
     </div>
 </template>
 <script setup>
-    import { defineProps, defineEmits, onMounted } from 'vue';
-    import { dataStatus } from '../../data/data'
-    const props = defineProps({
-        id: String,
-        prop1: String,
-        prop2: [String, Number],
-        prop3: [String, Number],
-        prop4: [String, Number],
-        status: String,
-        bookid: String,
-        img: String,
-        page: String,
-        darkmode: Boolean
-    })
-    const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete', 'getid']);
-    function handleDetail(id) {
-        emit('details', id);
-    }
-    function handleDelete(id) {
-        emit('delete', id);
-    }
-    function handleAccept(id) {
-        emit('accept', id);
-    }
-    function handleDeny(data) {
-        emit('deny', data);
-    }
-    function handleComplete(data) {
-        emit('complete', data);
-    }
-    function handleGetID(id) {
-        emit('getid', id);
-    }
+import { defineProps, defineEmits, onMounted } from 'vue';
+import { dataStatus } from '../../data/data'
+const props = defineProps({
+    id: String,
+    prop1: String,
+    prop2: [String, Number],
+    prop3: [String, Number],
+    prop4: [String, Number],
+    status: String,
+    bookid: String,
+    img: String,
+    page: String,
+    darkmode: Boolean
+})
+const emit = defineEmits(['details', 'delete', 'accept', 'deny', 'complete', 'getid', 'lock', 'unlock']);
+function handleDetail(id) {
+    emit('details', id);
+}
+function handleDelete(id) {
+    emit('delete', id);
+}
+function handleLock(id) {
+    emit('lock', id);
+}
+function handleUnLock(id) {
+    emit('unlock', id);
+}
+function handleAccept(id) {
+    emit('accept', id);
+}
+function handleDeny(data) {
+    emit('deny', data);
+}
+function handleComplete(data) {
+    emit('complete', data);
+}
+function handleGetID(id) {
+    emit('getid', id);
+}
 </script>

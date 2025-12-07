@@ -60,7 +60,7 @@
                             <a-input v-model:value="formState.username" />
                         </a-form-item>
                         <a-form-item label="Password" name="password"
-                            :rules="!userEdit?[{ required: true, message: 'Hãy điền password!' }]:[]" type="password"
+                            :rules="!userEdit?[{ required: true, message: 'Hãy điền password!' }, { validator: validatePasswd}]:[]" type="password"
                             class="w-1/3">
                             <a-input v-model:value="formState.password" />
                         </a-form-item>
@@ -114,6 +114,13 @@ const validateBirthday = async (_rule, value) => {
     }
     return Promise.resolve()
 }
+const validatePasswd = async (_rule, value) => {
+    if (value && value.length >= 6) {
+        return Promise.resolve()
+    } else {
+        return Promise.reject('Ít nhất 6 ký tự')
+    }
+}
 
 async function onFinish(values) {
     const { holot, ten, ngaysinh, sex, address, phone, ...payload } = values
@@ -131,7 +138,7 @@ async function onFinish(values) {
                 const res = await UserControllerApi.updateUser(id.value, dataUpdate)
                 if (res.EC == 1) {
                     loading.value = false
-                    toast.success("OK cu", {
+                    toast.success("Thành công !", {
                         autoClose: 1600
                     })
                     setTimeout(() => {
@@ -160,10 +167,8 @@ async function onFinish(values) {
         }
     } else {
         try {
-            const res = await UserControllerApi.adduserAccount(payload);
+            const res = await UserControllerApi.adduserAccount(values);
             if (res.EC === 1) {
-                const { password, ...payload } = values
-                const res = await UserControllerApi.adduserInfo(payload);
                 if (res.EC === 1) {
                     loading.value = false;
                     toast.success("Thêm thành công !", {

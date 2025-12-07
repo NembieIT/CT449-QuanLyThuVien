@@ -1,17 +1,19 @@
 const DocgiaModel = require("../model/DOCGIA");
 const AccUserModel = require("../model/USERACCOUNT");
+const AccAdminModel = require("../model/ADMIN");
+const AccNVModel = require("../model/NHANVIEN");
 
 const DocgiaController = {
   getAll: async (req, res) => {
     try {
-      const data = await DocgiaModel.find({})
+      const data = await DocgiaModel.find({}).sort({ createdAt: -1 })
         .populate({
           path: 'borrowing',
           populate: {
             path: 'bookid',
             select: 'TENSACH -_id'
           }
-        });
+        })
       return res.status(200).json({
         EC: 1,
         data,
@@ -22,6 +24,38 @@ const DocgiaController = {
         EC: 0,
         message: "Có lỗi ở backend",
       });
+    }
+  },
+  getAccADID: async (req, res) => {
+    try {
+      const admin = await AccAdminModel.findById(req.params.id);
+      if (admin) {
+        return res.json({
+          EC: 1
+        })
+      } else {
+        return res.json({
+          EC: 0
+        })
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  getAccNVID: async (req, res) => {
+    try {
+      const NV = await AccNVModel.findById(req.params.id);
+      if (NV) {
+        return res.json({
+          EC: 1
+        })
+      } else {
+        return res.json({
+          EC: 0
+        })
+      }
+    } catch (err) {
+      console.log(err);
     }
   },
   addUserInfo: async (req, res) => {

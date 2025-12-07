@@ -42,7 +42,8 @@ export const dataFormatName = {
     MATACGIA: "Mã tác giả",
     TENTACGIA: "Tên tác giả",
     FAV: "Yêu thích",
-    note: "Chú thích"
+    note: "Chú thích",
+    tienphat: "Tiền phạt"
 }
 
 export const ItemPageLimit = 4;

@@ -9,7 +9,7 @@
 
         <div
             :class="`w-[95%] lg:w-[80vw] h-full flex flex-col gap-5 rounded-2xl p-5 ${darkmode?'bg-gray-900':'bg-white'}`">
-            <NavbarAdmin @toggleDarkmode="darkmode=!darkmode" :mobileSize="mobileSize" @toggleSidebar="toggleSidebar">
+            <NavbarAdmin @toggleDarkmode="darkmode=!darkmode" :mobileSize="mobileSize" @toggleSidebar="toggleSidebar" :username="currentLog.username">
             </NavbarAdmin>
             <div
                 :class="`flex flex-col gap-5 md:flex-row items-start md:items-center justify-between px-5 ${darkmode?'bg-gray-700':'bg-backgroundItemAD'} p-3 rounded-[10px]`">
@@ -78,7 +78,7 @@
 </div>
 <span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='user'">Tên | Email | SĐT</span>
 <span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='nhanvien'">Họ tên | Địa chỉ NV |
-    SĐT</span>
+    SĐT | Tình trạng</span>
 <span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='nxb'">Mã NXB | Tên NXB | Địa chỉ</span>
 <span :class="`${darkmode?'text-white':'text-black'}`" v-if="page==='author'">Mã tác giả | Tên tác
     giả</span>
@@ -454,6 +454,8 @@ const handleOkDel = async () => {
                                 })
                             }, 500);
                             getAllData();
+                        } else {
+                            toast.error(res.message);
                         }
                     })
             } catch (err) {
@@ -685,7 +687,21 @@ async function getAllData() {
     }
 
     // GetDataUser
-    dataUser = await UserControllerApi.getUser();
+    const data = await UserControllerApi.getUser();
+    if (isAdmin.value) {
+        dataUser = data;
+    } else {
+        const filteredUser = await Promise.all(
+            data.map(async (item) => {
+                const resAD = await UserControllerApi.getAccADID(item.usernameUser);
+                if (resAD.EC === 1) return null;
+                const resNV = await UserControllerApi.getAccNVID(item.usernameUser);
+                if (resNV.EC === 1) return null;
+                return item; // là user hợp lệ
+            })
+        );
+        dataUser = filteredUser.filter(item => item !== null);
+    }
     cntUser.value = dataUser?.length || 0;
 
     // GetDataNV
@@ -712,7 +728,6 @@ async function getAllData() {
 }
 
 onMounted(async () => {
-    await getAllData();
     const token = sessionStorage.getItem('accessToken');
     if (token) {
         const userInfo = jwtDecode(token);
@@ -721,6 +736,7 @@ onMounted(async () => {
             isAdmin.value = true;
         }
     }
+    await getAllData();
     loaded.value = true;
 })
 

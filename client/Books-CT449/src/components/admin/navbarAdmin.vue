@@ -5,7 +5,7 @@
             <button v-if="mobileSize" @click="toggleSidebar"><i
                     class="fa-solid fa-bars hover:text-white transition-all"></i></button>
             <div :class="`${darkmode?'text-white':''}`">
-                <h1>Xin chào Tiến Dũng !</h1>
+                <h1>Xin chào {{username}} !</h1>
             </div>
 
             <div class="relative flex items-center justify-center gap-5 text-2xl md:text-3xl">
@@ -42,7 +42,8 @@ import { defineProps, defineEmits, ref } from 'vue';
 import AuthControllerApi from '../../controllerApi/auth.controller';
 
 defineProps({
-    mobileSize: Boolean
+    mobileSize: Boolean,
+    username: String
 })
 const darkmode = ref(false);
 const emit = defineEmits(['toggleSidebar', 'toggleDarkmode'])

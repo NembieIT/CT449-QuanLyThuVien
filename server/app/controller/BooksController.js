@@ -12,7 +12,7 @@ function normalizeName(str) {
 const BooksController = {
     getAll: async (req, res) => {
         try {
-            const data = await BooksModel.find({})
+            const data = await BooksModel.find({}).sort({ createdAt: -1 })
                 .populate({ path: "MANXB" })
                 .populate({ path: "TACGIA" });
             if (data) {

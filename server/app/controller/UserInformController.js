@@ -1,5 +1,10 @@
 const DocgiaModel = require("../model/DOCGIA");
-const dotenv = require("dotenv");
+const UserAccModel = require("../model/USERACCOUNT");
+const bcrypt = require("bcrypt");
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+
+dotenv.config();
 
 dotenv.config();
 const UserInformController = {
@@ -45,6 +50,26 @@ const UserInformController = {
   },
   updateTT: async (req, res) => {
     try {
+      if (req.body.oldpasswd) {
+        const docgia = await DocgiaModel.findById(req.body.id);
+        const accUser = await UserAccModel.findOne({ _id: docgia.usernameUser });
+        const validPassword = await bcrypt.compare(req.body.oldpasswd, accUser.passwordUser);
+        if (validPassword) {
+          const genSalt = await bcrypt.genSalt(Number(process.env.NODE_GENSALT || 10));
+          const hashed = await bcrypt.hash(req.body.newpasswd, genSalt);
+          const updatedAcc = await UserAccModel.findByIdAndUpdate(
+            accUser._id,
+            {
+              passwordUser: hashed
+            }
+          )
+        } else {
+          return res.json({
+            EC: 0,
+            message: "Mật khẩu cũ không đúng !"
+          })
+        }
+      }
       const updatedTT = await DocgiaModel.findByIdAndUpdate(
         req.body.id,
         {
@@ -79,7 +104,9 @@ const UserInformController = {
   },
   deleteTT: async (req, res) => {
     try {
-      const deleted = await DocgiaModel.findByIdAndDelete(req.params.id);
+      const deleted = await DocgiaModel.findOneAndDelete({
+        usernameUser: req.params.id
+      });
       if (!deleted) {
         return res.json({
           EC: 0,

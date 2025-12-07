@@ -1,30 +1,26 @@
 const mongoose = require('mongoose');
 
-const Nhanvien =  new mongoose.Schema({
-    usernameNV:{
-        type:String
+const Nhanvien = new mongoose.Schema({
+    usernameNV: {
+        type: String
     },
     nameNV: {
-        type:String
+        type: String
     },
-    passwordNV:{
-        type:String
+    passwordNV: {
+        type: String
     },
-    role:{
-        type:String,
-        default:"NV"
+    role: {
+        type: String,
+        default: "NV"
     },
-    addressNV:{
-        type:String,
+    addressNV: {
+        type: String,
     },
-    phoneNV:{
-        type:String,
-    },
-    pin:{
-        type:String,
-        default:"1111"
+    phoneNV: {
+        type: String,
     }
-}, {timestamps:true});
+}, { timestamps: true });
 const NhanvienModel = mongoose.model('Nhanvien', Nhanvien);
 
 module.exports = NhanvienModel;

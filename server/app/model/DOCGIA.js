@@ -37,6 +37,8 @@ const Docgia = new mongoose.Schema({
             ref: 'SACH'
         }
     ]
+}, {
+    timestamps: true
 });
 const DocgiaModel = mongoose.model('DOCGIA', Docgia);
 

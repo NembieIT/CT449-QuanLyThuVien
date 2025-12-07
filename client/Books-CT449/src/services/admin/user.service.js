@@ -19,10 +19,16 @@ const UserService = {
     return (await api.get(`/adduser/${id}`)).data;
   },
   async update(id, data) {
-    return (await api.put(`user/edit/${id}`, data)).data;
+    return (await api.put(`/user/edit/${id}`, data)).data;
   },
-  async delete(id) {
-    return (await api.delete(`user/${id}`)).data;
+  async delete(id, data) {
+    return (await api.delete(`/user/${id}`)).data;
+  },
+  async getAccADID(id) {
+    return (await api.get(`/user/accad/${id}`)).data;
+  },
+  async getAccNVID(id) {
+    return (await api.get(`/user/accnv/${id}`)).data;
   }
 };
 

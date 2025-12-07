@@ -6,6 +6,7 @@ const BooksController = require("../controller/BooksController");
 const AuthorController = require("../controller/AuthorController");
 const BorrowController = require("../controller/BorrowController");
 const NXBController = require("../controller/NXBController");
+const UserInform = require("../controller/UserInformController");
 
 
 // CRUD nhan vien (done)
@@ -23,6 +24,8 @@ router.get("/user/:id", UserController.findUser);
 router.get("/adduser/:id", UserController.findUserByID);
 router.put("/user/edit/:id", UserController.updateUser);
 router.delete("/user/:id", UserController.deleteUser);
+router.get("/user/accad/:id", UserController.getAccADID);
+router.get("/user/accnv/:id", UserController.getAccNVID);
 
 // CRUD Books (done)
 router.get("/books", BooksController.getAll);
@@ -51,5 +54,8 @@ router.get("/authors/:id", AuthorController.findAuthorByID);
 router.post("/addauthor/", AuthorController.addAuthor);
 router.put("/authors/edit/:id", AuthorController.updateAuthor);
 router.delete("/authors/:id", AuthorController.deleteAuthor);
+
+// User Inform
+router.delete("/user/:id", UserInform.deleteTT);
 
 module.exports = router;

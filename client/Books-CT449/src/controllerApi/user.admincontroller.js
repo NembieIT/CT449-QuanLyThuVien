@@ -1,23 +1,29 @@
 import UserService from "../services/admin/user.service";
 
 const UserControllerApi = {
-  getUser: async ()=>{
+  getUser: async () => {
     return (await UserService.getAll()).data;
   },
-  deleteUser: async (id)=>{
+  deleteUser: async (id) => {
     return (await UserService.delete(id));
   },
-  updateUser: async (id, data)=>{
+  updateUser: async (id, data) => {
     return (await UserService.update(id, data));
   },
-  getID: async (id)=>{
+  getID: async (id) => {
     return (await UserService.getID(id));
   },
-  adduserAccount: async (data)=>{
+  adduserAccount: async (data) => {
     return (await UserService.createUserAccount(data));
   },
-  adduserInfo: async (data)=>{
+  adduserInfo: async (data) => {
     return (await UserService.createUserInfo(data));
+  },
+  getAccADID: async (id) => {
+    return (await UserService.getAccADID(id));
+  },
+  getAccNVID: async (id) => {
+    return (await UserService.getAccNVID(id));
   }
 }
 export default UserControllerApi;

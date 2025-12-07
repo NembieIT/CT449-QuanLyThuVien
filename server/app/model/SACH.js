@@ -20,6 +20,8 @@ const SACHSchema = new mongoose.Schema({
         default: 0
     },
     COMMENT: Array
+}, {
+    timestamps: true
 })
 const SACHModel = mongoose.model('SACH', SACHSchema);
 

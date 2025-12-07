@@ -75,7 +75,7 @@
                     <a-form-item label="Thời gian mượn" name="ngaytra">
                         <a-select v-model:value="formState.ngaytra" placeholder="Chọn thời gian trả sách">
                             <a-select-option v-for="(item, index) in dataDate" :key="index" :value="item[index]">{{ item
-                            }}</a-select-option>
+                                }}</a-select-option>
                         </a-select>
                     </a-form-item>
                     <a-textarea v-model:value="formState.note" required placeholder="Ghi chú" auto-size />
@@ -186,6 +186,8 @@ async function CheckAuth(path) {
 
 watch(() => route.fullPath, async (newVal, oldVal) => {
     page.value = newVal;
+    sidebar.value = false;
+    showDetailMobile.value = false;
     CheckAuth(newVal);
     getData();
 })

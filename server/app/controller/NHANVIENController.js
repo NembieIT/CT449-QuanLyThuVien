@@ -6,7 +6,7 @@ dotenv.config();
 const NhanvienController = {
   getAll: async (req, res) => {
     try {
-      const data = await NhanvienModel.find({});
+      const data = await NhanvienModel.find({}).sort({ createdAt: -1 });
       return res.status(200).json({
         EC: 1,
         data,

@@ -11,7 +11,7 @@ const UserAccScheme = new mongoose.Schema({
     },
     emailUser: {
         type: String,
-        default: "admin@admin.admin"
+        default: "User@ct449.com"
     },
     role: {
         type: String,

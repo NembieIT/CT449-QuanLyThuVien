@@ -1,5 +1,5 @@
 <template lang="">
-    <div v-if="!loaded" class="h-full w-full flex items-center justify-center">
+    <div v-if="!loaded" class="h-full w-full flex items-center justify-center scale-500">
         <a-spin class="bg-white rounded-full" :indicator="indicator" />
     </div>
     <div v-else class="h-full w-full bg-gray p-5">
@@ -58,60 +58,62 @@
     </div>
 </template>
 <script setup>
-    import { defineProps, reactive, onMounted, ref } from 'vue';
-    import UserClientControllerApi from '../../controllerApi/userclient.controller';
-    import { dataYear } from "../../data/data";
-    import { LoadingOutlined } from '@ant-design/icons-vue';
-    import { h } from 'vue';
-    const indicator = h(LoadingOutlined, {
-        style: {
-            fontSize: '24px',
-        },
-        spin: true,
+import { defineProps, reactive, onMounted, ref } from 'vue';
+import UserClientControllerApi from '../../controllerApi/userclient.controller';
+import { dataYear } from "../../data/data";
+import { LoadingOutlined } from '@ant-design/icons-vue';
+import { h } from 'vue';
+const indicator = h(LoadingOutlined, {
+    style: {
+        fontSize: '24px',
+    },
+    spin: true,
+});
+
+const dataNXB = ref([]);
+const dataAuthor = ref([]);
+const visibleTask = ref([]);
+const loaded = ref(false);
+const props = defineProps({
+    dataBook: Array
+})
+
+const emit = defineEmits(['details']);
+function handleDetail(item) {
+    emit('details', item);
+}
+
+const categoryState = reactive({
+    tacgia: '',
+    year: '',
+    nxb: '',
+})
+
+function handleFilter() {
+    var from = 0, to = 9999;
+    if (categoryState.year) {
+        from = categoryState.year.split(' - ')[0];
+        to = categoryState.year.split(' - ')[1];
+    }
+    visibleTask.value = props.dataBook.filter(item => {
+        const year = parseInt(item.NAMXUATBAN);
+
+        const matchNXB = categoryState.nxb ? item.MANXB._id === categoryState.nxb : true;
+        const matchTG = categoryState.tacgia ? item.TACGIA._id === categoryState.tacgia : true;
+
+        const matchFrom = from ? year >= from : true;
+        const matchTo = to ? year <= to : true;
+
+        return matchNXB && matchTG && matchFrom && matchTo;
     });
+}
 
-    const dataNXB = ref([]);
-    const dataAuthor = ref([]);
-    const visibleTask = ref([]);
-    const loaded = ref(false);
-    const props = defineProps({
-        dataBook: Array
-    })
-
-    const emit = defineEmits(['details']);
-    function handleDetail(item) {
-        emit('details', item);
-    }
-
-    const categoryState = reactive({
-        tacgia: '',
-        year: '',
-        nxb: '',
-    })
-
-    function handleFilter() {
-        var from = 0, to = 9999;
-        if (categoryState.year) {
-            from = categoryState.year.split(' - ')[0];
-            to = categoryState.year.split(' - ')[1];
-        }
-        visibleTask.value = props.dataBook.filter(item => {
-            const year = parseInt(item.NAMXUATBAN);
-
-            const matchNXB = categoryState.nxb ? item.MANXB._id === categoryState.nxb : true;
-            const matchTG = categoryState.tacgia ? item.TACGIA._id === categoryState.tacgia : true;
-
-            const matchFrom = from ? year >= from : true;
-            const matchTo = to ? year <= to : true;
-
-            return matchNXB && matchTG && matchFrom && matchTo;
-        });
-    }
-
-    onMounted(async () => {
-        dataNXB.value = (await UserClientControllerApi.getNXB()).data;
-        dataAuthor.value = (await UserClientControllerApi.getTacgia()).data;
-        visibleTask.value = props.dataBook;
+onMounted(async () => {
+    dataNXB.value = (await UserClientControllerApi.getNXB()).data;
+    dataAuthor.value = (await UserClientControllerApi.getTacgia()).data;
+    visibleTask.value = props.dataBook;
+    setTimeout(() => {
         loaded.value = true;
-    })
+    }, 300)
+})
 </script>
