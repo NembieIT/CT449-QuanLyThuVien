@@ -21,7 +21,7 @@
                 :class="{
                     'bg-blue-200' : page == '/category',
                 }">
-                <HomeOutlined />
+                <UnorderedListOutlined />
                 <span>Phân loại</span>
             </router-link>
             <router-link to="/search"
@@ -29,7 +29,7 @@
                 :class="{
                     'bg-blue-200' : page == '/search',
                 }">
-                <HomeOutlined />
+                <SearchOutlined />
                 <span>Tìm kiếm</span>
             </router-link>
             <router-link to="/borrow"
@@ -37,7 +37,7 @@
                 :class="{
                     'bg-blue-200' : page == '/borrow',
                 }">
-                <HomeOutlined />
+                <BookOutlined />
                 <span>Sách đang mượn</span>
             </router-link>
             <router-link to="/favorite"
@@ -45,7 +45,7 @@
                 :class="{
                     'bg-blue-200' : page == '/favorite',
                 }">
-                <HomeOutlined />
+                <HeartOutlined />
                 <span>Sách yêu thích</span>
             </router-link>
         </div>

@@ -1,7 +1,7 @@
 <template lang="">
     <div v-if="loaded" class="h-full w-full bg-gray p-5">
         <div class="h-[10%] flex items-center justify-between p-5 bg-white">
-            <span class="bg-pink-700 text-white text-2xl p-3 rounded-2xl transition-all">Sách
+            <span class="bg-pink-700 text-white text-2xl p-2 rounded-2xl transition-all">Sách
                 yêu thích</span>
         </div>
         <div v-if="detailUser"

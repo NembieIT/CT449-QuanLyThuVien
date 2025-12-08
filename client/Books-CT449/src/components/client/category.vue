@@ -1,11 +1,11 @@
 <template lang="">
-    <div v-if="!loaded" class="h-full w-full flex items-center justify-center scale-500">
+    <!-- <div v-if="!loaded" class="h-full w-full flex items-center justify-center scale-500">
         <a-spin class="bg-white rounded-full" :indicator="indicator" />
-    </div>
-    <div v-else class="h-full w-full bg-gray p-5">
+    </div> -->
+    <div v-if="loaded" class="h-full w-full bg-gray p-5">
         <div class="w-full h-[20%] p-5 bg-white z-5">
             <span>Phân loại</span>
-            <div class="flex items-center justify-start flex-wrap gap-2">
+            <div class="flex items-center justify-start gap-2">
                 <div class="w-1/3">
                     <a-form-item label="Nhà xuất bản" name="nxb" class="w-full">
                         <a-select @change="handleFilter" v-model:value="categoryState.nxb">
@@ -115,8 +115,9 @@ onMounted(async () => {
     dataNXB.value = (await UserClientControllerApi.getNXB()).data;
     dataAuthor.value = (await UserClientControllerApi.getTacgia()).data;
     visibleTask.value = props.dataBook;
-    setTimeout(() => {
-        loaded.value = true;
-    }, 300)
+    // setTimeout(() => {
+    //     loaded.value = true;
+    // }, 100)
+    loaded.value = true;
 })
 </script>
