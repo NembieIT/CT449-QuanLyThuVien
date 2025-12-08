@@ -27,64 +27,79 @@
     </div>
 </template>
 <script setup>
-    import { defineProps, reactive, onMounted, ref, watch } from 'vue';
-    import UserClientControllerApi from '../../controllerApi/userclient.controller';
-    import { useRoute } from 'vue-router';
+import { defineProps, reactive, onMounted, ref, watch } from 'vue';
+import UserClientControllerApi from '../../controllerApi/userclient.controller';
+import { useRoute } from 'vue-router';
 
-    const route = useRoute();
+const route = useRoute();
 
-    const bookHot = ref([]);
-    const bookFav = ref([]);
-    const detailUser = ref({});
-    const StateBook = ref(false); //false là sách hot, true là newest book
-    const visibleTask = ref([]);
-    const loaded = ref(false);
-    const props = defineProps({
-        dataBook: Array,
-        searchValue: String,
-        user: Object
-    })
+const bookHot = ref([]);
+const bookFav = ref([]);
+const detailUser = ref({});
+const StateBook = ref(false); //false là sách hot, true là newest book
+const visibleTask = ref([]);
+const loaded = ref(false);
+const props = defineProps({
+    dataBook: Array,
+    searchValue: String,
+    user: Object
+})
 
-    // Hàm xoá dấu tiếng việt
-    function removeVietnameseTones(str) {
-        return str
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/đ/g, 'd')
-            .replace(/Đ/g, 'd')
-            .toLowerCase()
-            .replace(/\s+/g, '')
-            .trim()
+// Hàm xoá dấu tiếng việt
+function removeVietnameseTones(str) {
+    return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'd')
+        .toLowerCase()
+        .replace(/\s+/g, '')
+        .trim()
+}
+
+const emit = defineEmits(['details']);
+function handleDetail(item) {
+    emit('details', item);
+}
+
+const categoryState = reactive({
+    searchValue: ''
+})
+
+watch(() => props.searchValue, () => {
+    if (props.searchValue) {
+        const searchFinal = removeVietnameseTones(props.searchValue);
+        visibleTask.value = bookFav.value.filter(item => {
+            return removeVietnameseTones(item.TENSACH).includes(searchFinal);
+        })
+    } else {
+        visibleTask.value = bookFav.value;
     }
+})
 
-    const emit = defineEmits(['details']);
-    function handleDetail(item) {
-        emit('details', item);
+watch(() => props.dataBook, () => {
+    getFavoriteBook();
+})
+
+async function getFavoriteBook(paams) {
+    detailUser.value = (await UserClientControllerApi.getTTUser(props.user.id)).data[0];
+    if (detailUser.value) {
+        bookFav.value = props.dataBook.filter(book =>
+            detailUser.value.favorite?.includes(book._id)
+        );
+        visibleTask.value = bookFav.value;
     }
+}
 
-    const categoryState = reactive({
-        searchValue: ''
-    })
-
-    watch(() => props.searchValue, () => {
-        if (props.searchValue) {
-            const searchFinal = removeVietnameseTones(props.searchValue);
-            visibleTask.value = bookFav.value.filter(item => {
-                return removeVietnameseTones(item.TENSACH).includes(searchFinal);
-            })
-        } else {
-            visibleTask.value = bookFav.value;
-        }
-    })
-
-    onMounted(async () => {
-        detailUser.value = (await UserClientControllerApi.getTTUser(props.user.id)).data[0];
-        if (detailUser.value) {
-            bookFav.value = props.dataBook.filter(book =>
-                detailUser.value.favorite?.includes(book._id)
-            );
-            visibleTask.value = bookFav.value;
-        }
-        loaded.value = true;
-    })
+onMounted(async () => {
+    // detailUser.value = (await UserClientControllerApi.getTTUser(props.user.id)).data[0];
+    // if (detailUser.value) {
+    //     bookFav.value = props.dataBook.filter(book =>
+    //         detailUser.value.favorite?.includes(book._id)
+    //     );
+    //     visibleTask.value = bookFav.value;
+    // }
+    getFavoriteBook();
+    loaded.value = true;
+})
 </script>

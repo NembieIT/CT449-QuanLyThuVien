@@ -5,7 +5,7 @@
         </div>
         <div class="h-[90%] flex flex-col items-start justify-start gap-5 p-5 overflow-y-scroll bg-white">
             <div v-if="visibleTask?.length > 0" v-for="(item, index) in visibleTask" :key="item._id || index"
-                class="w-full bg-gray-500/40 h-full rounded-2xl overflow-scroll flex items-center justify-start flex-wrap border">
+                class="w-full bg-gray-500/40 h-[20%] rounded-2xl overflow-scroll flex items-center justify-end flex-wrap border">
                 <div
                     class="h-full w-full flex items-center justify-center p-5 text-left gap-5 overflow-hidden">
                     <span class="text-blue-600 w-[30%]">{{ item.bookid?.TENSACH }}</span>
@@ -31,7 +31,7 @@
                         }}</span>
                     <span class="text-red-500 w-[10%]">Số tiền trễ: {{item.tienphat}}</span>
                 </div>
-                <div v-if="item.status=='borrowing' || item.status=='late' || item.status=='borrowing'"
+                <div v-if="item.status=='borrowing' || item.status=='late'"
                     class="w-[15%] h-full flex items-center justify-center">
                     <span @click="openModelDetail(item.bookid?._id, item._id)"
                         class="w-fit p-2 text-[15px] rounded-2xl cursor-pointer bg-white hover:bg-gray-400 transition-all text-center">Yêu

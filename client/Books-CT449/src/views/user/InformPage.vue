@@ -94,7 +94,7 @@ const isLoaded = ref(false);
 const changingPasswd = ref(false);
 const user = ref({});
 
-const formState = reactive({
+const defaultState = {
     id: '',
     holot: '',
     ten: '',
@@ -104,7 +104,11 @@ const formState = reactive({
     phone: '',
     oldpasswd: '',
     newpasswd: ''
+};
+const formState = reactive({
+    ...defaultState
 });
+
 
 const validateBirthday = async (_rule, value) => {
     if (dayjs(value).isAfter(dayjs(), 'day')) {
@@ -141,9 +145,8 @@ async function onFinish(values) {
                     toast.success("Thành công", {
                         autoClose: 1600
                     })
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1600);
+                    Object.assign(formState, defaultState);
+                    getData();
                 } else {
                     loading.value = false
                     toast.error(res.message, {
@@ -176,14 +179,23 @@ const onFinishFailed = errorInfo => {
     console.log("Error : ", errorInfo);
 };
 
-onMounted(async () => {
+async function getData() {
     const token = sessionStorage.getItem('accessToken');
     if (token) {
         user.value = jwtDecode(token);
         formState.id = user.value.id;
     }
-    console.log(formState.id)
     userEdit.value = (await UserClientControllerApi.getTTUser(formState.id)).data[0];
+}
+
+onMounted(async () => {
+    // const token = sessionStorage.getItem('accessToken');
+    // if (token) {
+    //     user.value = jwtDecode(token);
+    //     formState.id = user.value.id;
+    // }
+    getData();
+    // userEdit.value = (await UserClientControllerApi.getTTUser(formState.id)).data[0];
     isLoaded.value = true;
 })
 </script>
